@@ -1,0 +1,66 @@
+
+// ====================================================================================================
+// >>>  Douglas Neiva - This Git Repository - References  =============================================
+/*
+
+   >>> [Udemy]  Learn C++ for Game Development - by Stephen Ulibarri
+
+       https://www.udemy.com/course/learn-cpp-for-ue4-unit-1/
+
+
+   >>> [Udemy]  Learn Advanced Modern C++ - by James Raynard
+
+       https://www.udemy.com/course/learn-intermediate-modern-c/)
+
+
+   >>> [Udemy]  Design Patterns in Modern C++ - by Dmitri Nesteruk
+
+       https://www.udemy.com/course/patterns-cplusplus/)
+
+
+   >>> [Udemy]  Learn Multithreading with Modern C++ - by James Raynard
+
+       https://www.udemy.com/course/learn-modern-cplusplus-concurrency/)
+
+
+   >>> [References]
+
+       >> C++ References
+
+https://cplusplus.com/
+https://en.cppreference.com/w/
+https://www.ascii-code.com/
+
+http://ithare.com/infographics-operation-costs-in-cpu-clock-cycles/
+https://en.wikibooks.org/wiki/Optimizing_C%2B%2B#
+
+       >> Stephen Ulibarri References
+
+https://www.udemy.com/user/stephen-ulibarri-3/
+https://www.youtube.com/@DruidMechanicsGameDevelopment/videos
+
+       >> DruidMech videos (Procedural Generation, EOS, IK, etc...)
+
+https://www.youtube.com/watch?v=dXK-bLbmwAo&list=PLkTBPljJTq2iYiay0HVODk7F3RroeYiB7
+https://www.youtube.com/watch?v=Fd9m4cG2hnU
+
+       >> Programming Paradigms
+
+https://en.wikipedia.org/wiki/Comparison_of_programming_paradigms
+
+       >> Free C++ courses
+
+https://www.udemy.com/course/circuit-design-embedded/
+https://www.udemy.com/course/cracking-cpp-interview/
+https://www.udemy.com/course/learn-basics-of-c-plus-plus-programming/
+https://www.udemy.com/course/learn-c_plus-with-real-world-examples/
+https://www.udemy.com/course/c-plus-plus-from-beginners-to-advance-step-by-step/
+https://www.udemy.com/course/intermediate-level-c/
+https://www.udemy.com/course/object-oriented-programming-in-c-m/
+https://www.udemy.com/course/inheritance-and-constructor-in-c/
+https://www.udemy.com/course/c-plus-plus-exceptional-handling-with-examples-basic-to-advanced/
+https://www.udemy.com/course/math-algo-computing/
+
+
+// ====================================================================================================
+*/

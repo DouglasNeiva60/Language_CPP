@@ -1,0 +1,19 @@
+
+# Douglas Neiva - Learning Notes - Programming Language - C++
+# File:  '.gitignore'
+
+# The '**/' symbol means that the following filetype (or folder)
+# will be ignored on all folders and subfolders
+
+**/.vs/
+**/.vscode/
+**/Debug/
+**/bin/
+**/obj/
+
+*.vs
+*.sln
+*.vcxproj
+*.filters
+*.user
+*.db

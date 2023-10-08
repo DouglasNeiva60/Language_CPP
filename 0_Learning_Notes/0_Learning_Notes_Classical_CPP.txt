@@ -1,0 +1,48 @@
+
+// Douglas Neiva - Learning Notes - Programming Language - Classical C++
+// ====================================================================================================
+// >>>  Learning Notes - Classical C++  ===============================================================
+
+
+   >>> Section 02
+
+Section 2: Input/Output Streams, Variables, Truth Values, Relational Operators
+All C++ programs need an entry point (the “main” function) to be compiled (compiler ignores blank spaces).
+Visual C++ files are used to create Graphical User Interfaces (GUI).
+.cpp    source file, ...
+.h    header file, ...
+On header files, the description “#pragma once” is a preprocessor directive used to prevent header files from being included multiple times (included only once in a single compilation).
+“Expression” is a combination of operators that causes side effects, “Statement” is a execution of a set of instructions (like the “if” statement:  if (expression) { statement 1; statement 2; ... statement N; } )
+Each line of code is an Expression Statement (expressions returns / modifies values, statement ends by the “;” symbol)
+“Debugging” is a Visual Studio feature, used for ...
+Each variable must be declared to allocate it’s memory space. 1 byte is 8 bits
+Single quotes denotes a single character (“char” variable), double quotes denotes a string (str variable)
+* ASCII is a 7-bit character-coding set containing 128 characters. It contains the numbers from 0-9, the upper and lower case English letters from A to Z, and some special characters. The character sets used in modern computers, in HTML, and on the Internet, are all based on ASCII.
+
+
+   >>> Section 03
+
+Section 3: Scope, Identifiers, Keywords and Functions
+Everything inside curly braces {} (which represents a block, the body of the function) is a local scope of the function. Every variable declared (char myChar = ‘S’) on the scope within the block exists only on that block (a local variable, that cannot be used outside of it’s function block). When a variable is created without scope (outside of any blocks of any functions), is is a global variable, and can be used by all functions (or all blocks). When the same variable name is declared both globally and locally, the local variable will be used. Global variables won’t be deleted after running all the scope, and will take more space (implies on more memory-usage), avoid them when possible.
+The C++ identifiers are names assigned to a program element: variable, type, function, namespace, template, class (C++ identifiers are case-sensitive, and Unreal Engine have naming convention [like Camel_Case conventioning). Identifier names can have only letters, numbers and underscores (but cannot start with numbers). A good practice is to use the variable type (lower-case) at the beggining of the varibale name (ex.: b_Enabler, int_Counter, etc), and function names and classes starting with upper-case letters (ex.: CheckEnabler, TimeCounter, etc).
+
+Variables (int Counter) can be created using variable types (int) the same ways Objects can be created using a Class.
+Each Class (or an Object Type) have its own attributes (variables within the Class) and its own methods (functions within the Class). Every Object is an instance of the Class (whereas every variable is an instance of the variable type).
+Functions are reusable pieces of code (and have their own scope) that can have inputs and outputs, or just code routines (void Function ()). When functions are declares, inputs on functions are called Parameters; and every function returns an datatype (void, int, etc). When a function is called (invoked) on a line of code, the whole expression need to match the inputs (the outputs can be ignored / unused by the expression), passing them correctly to the function.
+The “flow of control” means that the code can execute one line (one expression) at the time, and when a function is called, the code will stop the execution of the current flow (from the “caller” block) to run the flow (all code lines) of the called function, passing the input values (parameters called “arguments”) and returning the output variables to the caller. Every function’s inputs are kind of local variable declarations, which exists only inside the scope of the function.
+As C++ runs the code from top to bottom, all functions must be declared and implemented: when a function is written ABOVE the “int main()” function, the same line of code will declare and implement the function; when a function is written BELOW the “int main()” function, it must be declared above the “int main()” function (otherwise the complier will return the error “identifier not found”, because the function was not declared above the “int main()” function [only was written below it]). To save both memory usage and lines of code, write all functions immediatly above the “int main ()” function.
+
+
+   >>> Section 04
+
+Section 04: Section 4: Increment Operators, Loops, Overloading, Classes, and Inheritance
+Operators in C++ can be classified into 6 types:
+- Arithmetic Operators;
+- Assignment Operators;
+- Relational Operators;
+- Logical Operators;
+- Bitwise Operators;
+- Other Operators.
+Assignment operators “=” works from right to left (meaning the right side of the “=” expression will be done first, and then the result will be assigned to the left side [a variable]).
+Implicit conversion: convert one datatype (ex.: float) into another datatype (ex.: int,  by  “int k = 7,2 / 1,5”)
+
