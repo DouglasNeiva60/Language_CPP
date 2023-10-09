@@ -1,4 +1,3 @@
-#pragma once
 
 // Douglas Neiva - Learning Notes - Programming Language - Modern C++
 // ====================================================================================================

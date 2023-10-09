@@ -4,30 +4,48 @@
 // >>>  Source file (.cpp) - C++ Code  ================================================================
 
 
-#include <iostream>
+#include "Classical_CPP.h"
 
 using namespace std;
 
-// ====================================================================================================
-// int main()
+#include <iostream>
+#include <string>
+#include <cstdlib>
+#include <iomanip>
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 
-int Practice_XX_main ()
+
+// Standard "main" function - Classical C++
+// ====================================================================================================
+
+int C_Practice_01_main()
+// int main()
 {
 	cout << endl;
 // ====================================================================================================
+// Section 01 - Only once, before loop
 
 
-// ====================================================================================================
+
 	for (;;)
 	{
 		cout << endl;
 // ====================================================================================================
+// Section 02 - Loop
 
 
-// ====================================================================================================
-		cout << "Hello World!" << endl << endl;
+
 		system("pause");
 	}
+// ====================================================================================================
+// Section 03 - Only once, after loop
+
+
+
+	cout << endl;
+	system("pause");
 	return 0;
 }
 
@@ -36,10 +54,6 @@ int Practice_XX_main ()
 // >>> Practice_01
 
 
-#include <iostream>
-#include <string>
-
-using namespace std;
 
 void Goodbye();  // Only forward declaration [above "int main()"], needs to be implemented [below "int main()"]
                  // Forward declaration is a technique to declare an identifier before before it is defined; and its useful
@@ -73,7 +87,7 @@ void PassByValue(int Num);
 void PassByReference(int& Num);
 
 // int main()
-int Practice_01_1_main()
+int C_Practice_01_1_main()
 {
 	for (;;)
 	{
@@ -202,7 +216,7 @@ const float pi = 3.141592F;
 const int ConstChar = 'X';
 
 // int main()
-int Practice_01_2_main()
+int C_Practice_01_2_main()
 {
 	for (;;)
 	{
@@ -284,21 +298,8 @@ void PrintValue(string var1, char[5])
 // >>> Practice_02
 
 
-#include <cstdlib>
-#include <iostream>
-#include <iomanip>
-
-#include <string>
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
-
-
-using namespace std;
-
 // int main()
-int Practice_02_main()
+int C_Practice_02_main()
 {
 	// ====================================================================================================
 
@@ -313,7 +314,7 @@ int Practice_02_main()
 	long int lInt = 5L;
 
 	int RandomValues[10];
-	srand((time(NULL))*1.123);
+	srand((time(NULL))*1.123F);
 
 	enum PlayerStatus {   // Defining the enum "PlayerStatus" (it's like creating a constant variable of type "PlayerStatus")
 		PS_Crouched,   // implicitly equals 0
@@ -438,9 +439,6 @@ int Practice_02_main()
 // >>> Practice_03
 
 
-#include <iostream>
-using namespace std;
-
 int MyFunction1(int Param_one, int Param_two)
 {
 	int local_variable;
@@ -467,7 +465,7 @@ void MyFunction3()
 }
 
 // int main()
-int Practice_03_main()
+int C_Practice_03_main()
 {
 	for (;;)
 	{
@@ -519,12 +517,6 @@ int Practice_03_main()
 // >>> Practice_04
 
 
-#include <iostream>
-#include <string>
-
-using namespace std;
-
-
 struct Docker {   // Struct definition, all struct members are public by default
 public:
 	// Docker();
@@ -559,7 +551,7 @@ public:
 };
 
 // int main()
-int Practice_04_main()
+int C_Practice_04_main()
 {
 	// ====================================================================================================
 
@@ -658,10 +650,6 @@ void Kubernetes::cToBeQualified()
 // ====================================================================================================
 // >>> Practice_05
 
-
-#include <iostream>
-
-using namespace std;
 
 // Object-oriented programming: class inheritance
 // Parent class (C++ base class) and child class (C++ derived class)
@@ -780,9 +768,9 @@ public:   // "public:" access modifier: accessible from outside the class scope 
 	}
 	Mite(string message);
 protected:   // "protected:" access modifier: not accessible from outside the class scope, but accessible by derived classes
-	int LegLength;
+	int LegLength = 1;
 private:   // "private:" access modifier: not accessible from outside the class scope (can only be used within the class and its functions)
-	int BiteLength;
+	int BiteLength = 1;
 };
 
 Arachnid::Arachnid(string message)
@@ -821,7 +809,7 @@ public:
 };
 
 
-int Practice_05_main()
+int C_Practice_05_main()
 // int main()
 {
 	cout << endl;
@@ -877,10 +865,6 @@ int Practice_05_main()
 // ====================================================================================================
 // >>> Practice_06
 
-
-#include <iostream>
-
-using namespace std;
 
 // Object-oriented programming: access modifiers
 // When a class has protected and private variables (properties) that could be changed,
@@ -975,8 +959,6 @@ void Creature::Report()
 	cout << ".  Key values are: " << endl << "- Public: " << iC_Public << endl << "- Protected: " << iC_Protected  << " and " << cC_Protected << endl << "- Private: " << iC_Private << endl;
 }
 
-
-
 class Player : public Creature
 {
 public:
@@ -1048,7 +1030,7 @@ void Player::TakeDamage(int damage)
 
 // ====================================================================================================
 // int main()
-int Practice_06_main()
+int C_Practice_06_main()
 {
 	cout << endl;
 	// ====================================================================================================
@@ -1107,10 +1089,6 @@ int Practice_06_main()
 // ====================================================================================================
 // >>> Practice_07
 
-
-#include <iostream>
-
-using namespace std;
 
 // Memory management: variables created at compile time (automatically managed) and at the runtime (manually managed)
 // Ctrl+Shift+X = Visual Studio Class Wizard
@@ -1232,7 +1210,7 @@ void Ally::SetType()
 }
 
 // ====================================================================================================
-int Practice_07_main()
+int C_Practice_07_1_main()
 {
 	for (;;)
 	{
@@ -1356,7 +1334,7 @@ int Practice_07_main()
 }
 
 
-int Practice_07_main_2()
+int C_Practice_07_2_main()
 {
 	cout << endl;
 	// ====================================================================================================
@@ -1406,10 +1384,6 @@ int Practice_07_main_2()
 // ====================================================================================================
 // >>> Practice_08
 
-
-#include <iostream>
-
-using namespace std;
 
 // Multiple inheritance, Virtual inheritance and casting
 // Diamond inheritance must be avoided (a sub-class derived from 2 sub-classes that derives from the same base-class, causing errors)
@@ -1541,9 +1515,11 @@ class L : virtual public J, virtual public K   // Diamond inheritance
 
 // ====================================================================================================
 // int main()
-int Practice_08_main()
+/*
+// int C_Practice_08_main()
 {
-	for(;;){
+	for(;;)
+	{
 	cout << endl;
 	// ====================================================================================================
 
@@ -1597,6 +1573,7 @@ int Practice_08_main()
 	break;
 	}
 
+	
 	// ====================================================================================================
 	for (;;)
 	{
@@ -1660,6 +1637,7 @@ int Practice_08_main()
 		system("pause");
 		break;
 	}
+
 	for (;;)
 	{
 		// Casting
@@ -1707,27 +1685,21 @@ int Practice_08_main()
 		system("pause");
 		break;
 	}
+	
 	return 0;
 
 }
-
+*/
 
 // ====================================================================================================
 // >>> Practice_09
-
-
-#include "CPP.h"
-
-#include <string>
-using namespace std;
-
-#include <iostream>
 
 
 int Practice_09::ClassCount = 0;
 
 Practice_09::Practice_09()
 {
+	string ClassType;
 	ClassType = "Practice_09";
 	static int ClassCount = 0;
 	ClassCount++;
@@ -1752,8 +1724,8 @@ void Practice_09::ClassFunction()
 
 
 // ====================================================================================================
-int main()
-// int Practice_09_main()
+// int main()
+int C_Practice_09_main()
 {
 	cout << endl;
 	// ====================================================================================================

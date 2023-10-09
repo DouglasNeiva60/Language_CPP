@@ -4,6 +4,7 @@
 // >>>  Learning Notes - Modern C++  ==================================================================
 
 
+// ====================================================================================================
    >>> Section 01
 
 Classical C++ [ C++98 ] works with arrays, pointers and inheritance [ C with classes ]
@@ -18,6 +19,7 @@ ISO/IEC 14882:2020 - C++20
 
        >> C++11 / C++14 / C++17 main features
 
+nullptr
 Operator overloading
 Lambda Expressions
 Inheritance
@@ -37,3 +39,76 @@ Modules
 Coroutines
 Ranges
 
+
+// ====================================================================================================
+       >> Review of Classical C++
+
+Variable scope inside {}
+
+Pass by value [less efficient, creates memory overhead, copies the variable to a function] - int func(int Y); return Y
+    the copied variable scope is the function body, and the returned variable is also copied
+
+Pass by address [uses a pointer pointing to the addres of the variable to be changed] - void func(int *Y)
+    the addressed variable will be used within the function scope, without needing a return type
+
+Pass by reference [more efficient, uses the addres of the variable to be changed, commonly used as out parameters] - void func(int& Y)
+    the addressed variable will be used within the function scope, without needing a return type
+
+Pass by const reference [uses the addres of the variable to be changed, read-only] - void func(const CustomClass& Z)
+    the addressed variable will be used within the function scope, without needing a return type
+
+C++ uses Value Semantics by default [doesn't have a garbage collector, unlike languages with Reference Semantics]
+    arguments are passed by value, initialization creates an entirely new object
+    objects exists only within a scope
+C++ can also use Reference Semantics
+    arguments can be passed by reference, and initialization can create an alias [Pseudonym] to an existing object [references and pointers]
+    heap-allocated objects can exist beyond the end of the scope, but must be deallocated manually by the developer [Modern C++ mitigates this by using smart pointers]
+
+C++ structs are the same as classes only with variables, but all the variables are public by default
+
+Object Oriented Programming
+
+Classes: a class is a compound data structure with properties [variable] and methods [functions], and access to class's members are private by default
+[only class's objects can access private members], but class members can be made "public" or "protected" [a public member can be accessed by any code on any time]
+The public members provide the interface of the class - "What it does"
+The private members provide the implementation of the class - "How it does it"
+
+Member functions are implemented as global functions, with the class name followed by the "::" [scope resolution operator]
+When a member function is called on an class's object, the object is passed by address in a hidden argument, and the pointer to the object is available as "this" variable
+Dereferencing "this" gives access to members of the object [variables and functions]
+
+Special member functions are functions related to the class, like constructor and destructor member functions, sometimes created automatically by the compiler to manage objects lifetime
+Classical C++ has 4 special member functions:
+    Constructor: has the same name of the class, used to initialize new objects, gets called immediately after crating a new object
+    Copy Constructor: similar to the constructos, but uses another object for initialization
+    Assignment operator: assigns an existing object from another object and returns a reference to the assigned object
+    Destructor: has the same name of the class with the tilde ~ prefix symbol, used to clean objects before deletion from the memory, gets called immediately before destroying an object
+
+A pointer is a variable that contains a memory address [it can be either on the stack or on the heap]
+To allocate memory on the heap [and use the variable beyond its scope], use the "new" operator [that returns the address of the allocated memory], and this will call the default constructor
+Memory allocated on the heap must be cleaned manually by the developer [otherwise the C++ program will cause memory leaks]
+
+"Memory Leak" is when a local variable stored on the stack [the pointer] receives the address of a new dynamically-allocated variable on the heap, and gets destroyed at the end of the scope,
+so the address of the memory on the heap will be lost and the space allocated for the variable on the heap is no longer accessible to be cleaned [the pointer allocated on the stack
+should be used to clean {deallocate} the variable allocated on the heap before it gets destroyed]
+
+To deallocate heap memory, use the "delete" statement followed by the pointer that points to the variable on the heap [this will call the destructor of the variable, and the pointer
+is now a "dangling pointer" [that points to unknown data], and attempting to access it will result in undefined behaviors [most commonly, crashes]
+For every "new" operation, should be a "delete" operation; to dynamically allocate arrays "int* pa = new int[20]", use "delete[] pa" to deallocate arrays
+
+Arrays are blocks of "contiguous" memory [no gaps between elements] with specified length and indexed elements, used for faster access to memory; but can be dynamic arrays
+[allocated on the heap] when the developer dont know what is the length of the array [like strings] or if the array size will vary over time [like strings], and must be deleted to release memory
+
+String implementation in C was done by using arrays of const char, where each element is a character of the string with an extra "null character" element to detect the end of the string
+String literals are C-style strings [const char *str = "Hello"; the same as const char str[] = {'H', 'e', 'l', 'l', 'o', '\0'};]
+C++ have a standard library for strings [std::string] that uses a dynamic array and a member variable to store the number of elements to initialize the array
+C++ also have a standard library for vectors [std::vector] that is similar to the std::string, but instead of using characters, vectors can store data of any single type
+    strings and vectors have subscript notation [using the square brackets to read/write elements by its index, starting from 0] and the "size()" member function that retuns the number of elements
+    vectors [also dynamically allocated] have the "push_back(n)" function to store a new "n" value at the end of the structure
+
+
+// ====================================================================================================
+       >> Introduction to Modern C++
+
+On Classical C++, the NULL statement was used to represent the number 0, but C++11 replaces it will nullptr [a pointer that points to zero], avoiding bugs among several compilers
+While NULL is an integer type [and have different interpretation between compilers], the new standard nullptr can be converted to any pointer type, but cannot be converted to an integer
