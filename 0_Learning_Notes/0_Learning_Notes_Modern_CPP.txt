@@ -112,3 +112,64 @@ C++ also have a standard library for vectors [std::vector] that is similar to th
 
 On Classical C++, the NULL statement was used to represent the number 0, but C++11 replaces it will nullptr [a pointer that points to zero], avoiding bugs among several compilers
 While NULL is an integer type [and have different interpretation between compilers], the new standard nullptr can be converted to any pointer type, but cannot be converted to an integer
+C++ does not have a standard graphics library!
+
+   >>> NASA space-proof code - The 10 rules to avoid crashes
+
+"The Power of Ten" is a set of 10 rules to create safe environment for code
+ 1  - Simple Control Flow: don't use re-direct flow-of-control statements [goto, setjmp, longjmp], and don't use function recursion [the function calling itself]
+ 2  - Limit All Loops to a fixed statically-typed upper-bound [avoiding infinite-loops, even when the loop is large enough, create a defined number of iterations, represented by an integer]
+ 3  - Never use the Heap memory and dynamically-alocation statements [malloc, free], avoiding memory leaks, use-after-free and heap overflows, using deterministic memory usage
+ 4  - Limit Function Size: according to SOLID principles, a function should do just one thing, always capable to be tested as a single unit [unit-tests]
+ 5  - Data hiding: restrict access to data that is on the lowest scope of the application, maintaining data integrity
+ 6  - Always check return values for non-void functions
+ 7  - Limit the Preprocessor by using flags and conditional compilation [used on multi-platform softwares]
+ 8  - Restrict pointers use
+ 9  - Never use function pointers
+ 10 - Be Pedantic when compiling the code
+
+
+   >>> Section 02
+
+       >> Cellular Automata / Cellular Automaton
+
+The "way of thinking" when it comes to computation and software development Takes into account the "Conway's Game of Life"
+(devised by John Conway in 1970 and popularized by Martin Gardner in "Scientific American" magazine)
+
+
+          > 1D-CA (Cellular Automaton) principles
+
+A "cellular automaton" (CA) is a grid of cells (like an array), and each cell is defined as an entity or state (like binary state) and a neighborhood (nearest cells)
+How the cell state changes over time is going to be determined by the neighborhood previous states (nearest cells)
+The simplest Cellular automaton is an array of cells, each cell with binary states, and its neighborhood being the 3 adjacent cells (the cell itself and the closer cells),
+and the simplest cell state at a current time will be a function based on the neighbors cell states at a previous time (the function is called "rule-set" [like the random "rule 30"])
+The output of a cellular automaton is an image with all the "generations" (each generation is a rul-eset compute time) stacked together (the next generation below the previous one)
+
+Wolfram rule-set Classifications
+- Uniformity
+- Oscillation (or repetition)
+- Random
+- Complexity
+
+
+          > 2D-CA (Cellular Automaton) example "7.2" - The Game of Life
+
+While 1D-CAs produces a vertical (or horizontal) scrolling image (by stacking all the generations on top of each other, each generation is also a 1D output),
+a 2D-CA ir a grid of cells (not an array, like 1D cells) produces a 2D output, meaning that a 2D-CA can generate images over time (and a frame-rate can be used to output a video)
+While 1D-CAs behaviors are defined by a rule-set, 2D-CAs and 3D-CAs are defined by "generality" (a more simpler type of "rule" that controls Death [1 to 0], Birth [0 to 1] and Remain-State)
+
+
+       >> Conway's Game of Life
+
+A "Cellular Automata" can be used to model natural processes [like biology and physics], and it's "turing-complete", [it means that it can solve any computational problem,
+like cryptography and neural networks], "emergent system" [the whole is greater than the sum of the parts] and "self-organizing system"
+The game of life is played by a computer, following a "rule-set" on 1D or a "generality" on 2D, and the grid advances from next generations
+
+
+       >> ANSI Escape Codes
+
+ANSI defined a set of commands for controlling terminals and change the way output is displayed on the terminal
+Example: following the ASCII table, the "escape" key has the hexadecimal equivalent of "0x1B", used at the beggining of an ANSI terminal command
+    - Move the cursor to row N, column M and display a character X:  0x1B[N;MX
+    - Clear the screen and return the cursor to home [top-left]:  0x1B[2J
+

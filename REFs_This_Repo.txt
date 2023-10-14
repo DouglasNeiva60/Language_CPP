@@ -25,6 +25,10 @@
 
    >>> [References]
 
+       >> Youtube Channels
+
+https://www.youtube.com/@LowLevelLearning/videos
+
        >> C++ References
 
 https://cplusplus.com/
