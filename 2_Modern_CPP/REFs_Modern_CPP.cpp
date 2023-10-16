@@ -4,7 +4,47 @@
 // >>>  Source file (.cpp) - C++ References  ==========================================================
 /*
 
-   >>> Introduction
+   >>> General tips
+
+C++98 introduced variable declaration and initialization inside a for-loop statement [previously not possible in C, where the iterator variable
+should be declared and initialized before the for-loop, and remains on the memory after the for-loop, due to its declaration outside of the for-loop scope]
+
+C++17 allows declaration and initialization of variable on an if-statement and switch-case statement, similar to a for-loop [meaning that the variable to be checked on a condition
+can now be created inside of an if-statement, and will exist on the memory only on the if-statement scope, and also can be used on the remaining else-statement]
+
+C++17 also provides a [[fallthrough]] attribute to be used on switch-case-statements, to explicitly indicate that the "break" statement was intentionally omitted
+
+
+   >>> Namespaces
+
+Namespaces are used to group together all logically-related symbols [typically done within libraries: the C++ Standard Library
+defines the "std" namespace]. Large programs often includes several libraries, leading to name conflicts [e.g. 2 different libraries could define a class with the same name]
+A solution for several libraries could be adding a library-specific prefix to the names, but C++ addresses all the names using namespaces
+Namespaces can be created by using the "namespace" keyword, and all its symbols [functions, types and variables] will have the namespace's name automatically prefixed
+[the same way the scope-resolution-operator "::" is used to find members of a class, it will be used to find symbols of a namespace]
+Namespaces also have hierarchy [it's possible to create namespaces inside namespaces], and namespace symbols will hide any symbols with the same name from outter scopes
+
+   >>> Templates
+
+On C++, is often needed to write code that is functionally the same, but operates on different types of data
+C++ Templates [known as "generic programming"] are C++ code that works with any type of data [writing the functionality with variable-type independency]
+Templates can be either a Template Class or a Template Function, but not both at the same time
+
+	   >> Template Instantiation
+
+When a template is used with data of a particular type [template <parameter>], the compiler will generate the code needed for that type [meaning that the compiler will insert
+the source code for the plugged-in class definition into the translation unit [the source-code file seen by the compiler], and then compile as part of the program]
+e.g. "vector<int>" [the template container "vector" with the parameter "int"] will cause the compiler to define a class [create a new instance] that is a vector of ints
+Templates only works when the compiler is able to see the full definition of the template class in the "translation unit"
+
+
+   >>> Keywords
+
+auto   - The "auto" keyword was originally used in C to specify that a local variable should be created on the stack memory,
+         but in C++ it means that the compiler should deduce the variable-type based on the variable's initial value, and ignores variable qualifiers [like "const"]
+         It means that the "auto" keyword avoids implicit conversions, and the compiler will use the exact type of the value to be the variable-type
+         The "auto" keyword is useful on situations that it's impossible to know what variable-type is returned
+
 
 
    >>> Numeric Types and Literals
