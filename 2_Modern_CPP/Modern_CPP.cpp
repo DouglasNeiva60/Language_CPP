@@ -28,7 +28,9 @@ void M_RangedForLoop();
 void M_NewIfStatement();
 void M_Templates();
 void M_NameSpaces();
-void M_NameSpaces_OutOfScope();
+void M_NameSpaces_OutOfScope_01();
+void M_NameSpaces_OutOfScope_02();
+void M_FunctionPointers();
 
 
 
@@ -41,7 +43,7 @@ int main()
 // ====================================================================================================
 // Section 01 - Runs only once, before the loop                                                     1 V
 
-	M_NameSpaces();
+	M_FunctionPointers();
 
 
 // Section 01 - END                                                                                 1 A
@@ -360,7 +362,8 @@ void M_Templates()
 											// On C++17, the compiler now can deduce the variable type, without needing the template-parameter [Constructor Template Argument Deduction - CTAD]
 }
 
-double NewDouble = 3.141592f;
+double NewDouble = 3.141592f;   // Since this variable is being declared outside of any namespace scope, it belongs to the "global namespace" [no name],
+								// and can be called by using the scope-resolution operator "::" with no name on prefix [e.g. ::NewDouble
 
 namespace CustomNameSpace   // Creating a new namespace
 {
@@ -392,7 +395,7 @@ void CustomNameSpace::NewFunction()   // Definition of a member function [symbol
 {
 	cout << "Custom function from the CustomNameSpace!" << endl;
 
-	cout << NewDouble << endl;     // Prints the 'CustomNameSpace' local variable
+	cout << NewDouble << endl;     // Prints the 'CustomNameSpace' local variable, due to namespace hierarchy
 	cout << ::NewDouble << endl;   // Prints the global variable with the same name, declared outside of the 'CustomNameSpace' scope
 }
 
@@ -415,14 +418,42 @@ void M_NameSpaces()
 
 	NewChar = 'X';   // The declaration of this variable from the namespace should be above this line of code!
 
-	M_NameSpaces_OutOfScope();
+	M_NameSpaces_OutOfScope_01();
+	M_NameSpaces_OutOfScope_02();
+
 }
 
-void M_NameSpaces_OutOfScope()
+void M_NameSpaces_OutOfScope_01()
 {
 	cout << endl << "Out of the scope from the 'M_NameSpaces()' function! The 'CustomNameSpace' doesn't work anymore..." << endl;
+
+	cout << "But it's possible to use the scope-resolution operator from 'CustomNameSpace' symbols! Example: " << CustomNameSpace::NewDouble << endl;
 
 	// NewClass TestObject_02;   // This expression doesn't recognize the class of the "CustomNameSpace", since it's out of scope [previous function]
 
 	// NewFunction();   // ERROR: identifier not found [the namespace was declared locally on the 'M_NameSpaces()' function
+}
+
+void M_NameSpaces_OutOfScope_02()
+{
+	cout << "Before the 'using' keyword: " << NewDouble << endl;   // It refers to the 'NewDouble' varibale declared outside of any namespace scope [global namespace]
+
+	using CustomNameSpace::NewDouble;   // Makes the variable within its namespace available as if it are declared on the global namespace
+
+	cout << "After the 'using' keyword: " << NewDouble << endl;   // Now it refers to the 'NewDouble' varibale declared within the 'CustomNameSpace' scope, due to the 'using' keyword
+
+}
+
+void M_FunctionPointers()
+{
+	void AddressableFunction(int Input);   // Declaring a function within other function's scope
+	auto ptr_FunctionAddress = &AddressableFunction;   // Creating a new pointer [with the 'auto' keyword] and assigning the address of the previously created function
+
+	(*ptr_FunctionAddress)(54);   // Calling the addressed function bu dereferencing the pointer and passing the input arguments
+
+}
+
+void AddressableFunction(int Input)   // A function that gets called by a pointer
+{
+	cout << "The input is: " << Input << endl;
 }

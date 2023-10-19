@@ -19,10 +19,16 @@ C++17 also provides a [[fallthrough]] attribute to be used on switch-case-statem
 
 Namespaces are used to group together all logically-related symbols [typically done within libraries: the C++ Standard Library
 defines the "std" namespace]. Large programs often includes several libraries, leading to name conflicts [e.g. 2 different libraries could define a class with the same name]
-A solution for several libraries could be adding a library-specific prefix to the names, but C++ addresses all the names using namespaces
+A solution for several libraries could be adding a library-specific prefix to the names, but C++ addresses all the names using namespaces, and a best practice
+when it comes to library creation is to define a namespace for all the library's symbols
 Namespaces can be created by using the "namespace" keyword, and all its symbols [functions, types and variables] will have the namespace's name automatically prefixed
-[the same way the scope-resolution-operator "::" is used to find members of a class, it will be used to find symbols of a namespace]
+[the same way the scope-resolution-operator "::" is used to find members of a class, it will be used to find symbols of a namespace declared inside namespace's curly-braces]
 Namespaces also have hierarchy [it's possible to create namespaces inside namespaces], and namespace symbols will hide any symbols with the same name from outter scopes
+To use a namespace's object outside of its scope, write the fully-qualified name of the symbol with the scope=resolution operator "::"
+
+Since large projects have multiple libraries, namespaces also comes with the "using" keyword, to make a symbol of a namespace available as if they are on global space
+[e.g.  ::X{22}, Test::X{33};  "return X" will result in 22, but with "using Test::X"; "return X" will result in 33 ]. The "using" keyword takes effect only within its scope
+The "using" keyword is not a good practice, since it brings everything from a namespace into the global namespace, bypassing the namespace's functionality
 
    >>> Templates
 
@@ -88,6 +94,11 @@ string 2D_Array_Names[2][4] = {
     };                                              // To iterate over an array, use two loops, one iterating over each row, and one inside to iterate over each column of that row
 
 
+   >>> Function pointers
+
+Every executable code is stored on the memory, and its possible to create a pointer that points to a function [the address of the executable code's starting point]
+A pointer-to-function variable is a 'callable object' that beahves like a variable but can be called like a function by dereferencing the pointer
+A pointer-to-function variable is also a 'first-class-object', that can be passed as an argument to another function or can be returned from another function
 
 
 
