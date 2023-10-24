@@ -31,6 +31,9 @@ void M_NameSpaces();
 void M_NameSpaces_OutOfScope_01();
 void M_NameSpaces_OutOfScope_02();
 void M_FunctionPointers();
+void M_BasicStringOperations();
+void M_SearchingStrings();
+void M_AddingStringElements();
 
 
 
@@ -43,7 +46,7 @@ int main()
 // ====================================================================================================
 // Section 01 - Runs only once, before the loop                                                     1 V
 
-	M_FunctionPointers();
+	M_AddingStringElements();
 
 
 // Section 01 - END                                                                                 1 A
@@ -456,4 +459,96 @@ void M_FunctionPointers()
 void AddressableFunction(int Input)   // A function that gets called by a pointer
 {
 	cout << "The input is: " << Input << endl;
+}
+
+void M_BasicStringOperations()
+{
+	
+	string s1 = "Douglas"s;
+	string s2{ "Neiva"s };
+
+	string s3 = "Result"s;
+
+	// String operations: assignment, appending, concatenation and comparison
+
+	s3 = s1 + (" ") + s2;
+	cout << s3 << endl;
+
+	if (s1 == s2)
+	{
+		cout << "The strings are equal." << endl;
+	}
+	else
+	{
+		cout << "The strings are different." << endl;
+	}
+
+	if (s1 > s2)
+	{
+		cout << "S1 is greater than S2." << endl;
+	}
+	else
+	{
+		cout << "S2 is greater than S1." << endl;
+	}
+
+	const char* ptr_Cstring = s3.c_str();   // The "c_str()"member function of the std::string returns a C-style string
+
+	cout << ptr_Cstring << endl;
+
+	string s4 = s3.substr(8,5);
+	s4[1] = 'o';
+
+	cout << "The Last Name is: " << s4 << endl;
+
+	string s5(s4, 1, 3);
+
+	cout << s5 << endl;
+	
+}
+
+void M_SearchingStrings()
+{
+	string FullName{ "Douglas do Carmo Neiva"s };
+
+	size_t strPos1 = FullName.find('N');
+
+	size_t strPos2 = FullName.find("Car");
+
+	size_t strPos3 = FullName.find("dor");   // Should be checked from being std::npos [like a pointer from being nullptr]
+
+	cout << "The sizes are: " << strPos1 << ", " << strPos2 << ", " << strPos3 << endl;
+
+	if (strPos3 != string::npos)
+	{
+		cout << "The index was found." << endl;
+	}
+	else
+	{
+		cout << "The third index is impossible to find." << endl;
+	}
+
+	size_t strPos4 = FullName.rfind('o');
+
+	cout << strPos4 << endl;
+}
+
+void M_AddingStringElements() 
+{
+	string Hello{ "Hello"s };
+
+	Hello.append(" World"s);
+
+	cout << Hello << endl;
+
+	Hello.append("wow!!!", 3, 2);   // Creating a substring on the 'append()' argument list
+
+	cout << Hello << endl;
+
+	string Wonderful{ " Wonderful"s };
+
+	Hello.insert(5, Wonderful);
+
+	cout << Hello << endl;
+
 }

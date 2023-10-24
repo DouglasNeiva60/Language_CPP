@@ -82,6 +82,10 @@ On C++14, the "S" suffix can be added after closing the double quotes by "using 
 
    >>> Custom Data Types
 
+
+size_t   The datatype 'size_t' is unsigned integral type. It represents the size of any object in bytes and is returned by the 'sizeof' operator.
+         It is used for array indexing and counting. It can never be negative
+
 int 1D_Array[] = {3, 5, 7, 9};   // 1D Array can be initialized [and the size will be automatically calculated] or can be defined at a fixed size "int 1D_Array[4];"
 
 int 2D_Array[2][4];   // Two-dimensional Array of 2 rows [outer-array] and 4 columns [inner-array],
@@ -100,6 +104,26 @@ Every executable code is stored on the memory, and its possible to create a poin
 A pointer-to-function variable is a 'callable object' that beahves like a variable but can be called like a function by dereferencing the pointer
 A pointer-to-function variable is also a 'first-class-object', that can be passed as an argument to another function or can be returned from another function
 
+
+   >>> C++ Standard Libraries
+
+	   >> String
+
+The C++ String container is a big interface with more than 100 member functions. The std::string member functions 
+
+c_str()   returns a copy of the string data as a C-style string [which is an array of characters "const char", terminated by a null character], avoiding the need of creating C-style strings
+on the code [just convert noraml C++ strings when needed]
+
+substr()   returns a substring, starting at a given index [first index] of the original string and ending at a given index [second index] of the original string
+
+find()   member function finds the first occurence of its arguments in the string [case-sensitive, and can be a char, a std::string or a C-style string] and returns the index [size_t] of the first match
+If there's no match, it returns "string::npos" [it represents an impossible index], and the return value must always be checked
+
+rfind()   'reverse find', similar to the 'find()' member function, but returns the index of the last occurrence [the searching starts from the end of the string]
+
+append()   adds elements at the end of the string
+
+insert()   adds elements at a specified index
 
 
 // ====================================================================================================
