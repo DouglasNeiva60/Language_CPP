@@ -34,6 +34,9 @@ void M_FunctionPointers();
 void M_BasicStringOperations();
 void M_SearchingStrings();
 void M_AddingStringElements();
+void M_RemovingStringElements();
+void M_StringNumberConversion();
+
 
 
 
@@ -46,7 +49,7 @@ int main()
 // ====================================================================================================
 // Section 01 - Runs only once, before the loop                                                     1 V
 
-	M_AddingStringElements();
+	M_StringNumberConversion();
 
 
 // Section 01 - END                                                                                 1 A
@@ -550,5 +553,80 @@ void M_AddingStringElements()
 	Hello.insert(5, Wonderful);
 
 	cout << Hello << endl;
+
+}
+
+void M_RemovingStringElements()
+{
+	string MyFullName{ "Douglas do Carmo Neiva"s };
+
+	MyFullName.erase(7, 9);
+
+	cout << MyFullName << endl;
+
+	auto LastNamePosition = MyFullName.find("Neiva"s);
+
+	if (LastNamePosition != string::npos)
+	{
+		cout << "The Last_Name_Position is: " << LastNamePosition << endl;
+
+		MyFullName.erase(LastNamePosition);
+
+		cout << "The first name is: " << MyFullName << endl;
+	}
+	else
+	{
+		cout << "The Last_Name_Position'wasn't found." << endl;
+	}
+	
+	MyFullName.replace((begin(MyFullName)), (begin(MyFullName)+3), "Garbage "s);
+
+	cout << MyFullName << endl;
+
+	MyFullName.assign("Douglas do Carmo Neiva"s);
+
+	cout << MyFullName << endl;
+}
+
+void M_StringNumberConversion()
+{
+	string Num_Pi = (to_string(3.141592));
+
+	cout << Num_Pi << endl;
+
+	Num_Pi += 88;
+
+	cout << Num_Pi << endl;
+
+	// The 'stoi()' function has a second argument [out parameter] that returns the same string's size if there is no error
+
+	string ToInt = "2.4836470"s;   // Maximum 'int' value
+
+	int Num_GR = 5;   // Int, not float
+
+	size_t NumberOfCharacters;
+	
+	Num_GR = (stoi(ToInt, &NumberOfCharacters, 10));   // The string should have the number represented as a 'float' value [with at least 1 decimal value] on a base 10 [third argument]
+
+	// If the conversion is partially successful, the second argument gives the index of the first non-numberic character
+
+	if (NumberOfCharacters == (ToInt.size()))
+	{
+		cout << "'String to Int' has given errors." << endl;   // If the string [to be converted to an int] is non-numerical, it will 'throw an exception' and the software will crash
+
+		cout << "The error is on the index: " << NumberOfCharacters << endl;
+	}
+	else
+	{
+		cout << "'String to Int' works, no errors." << endl;
+
+		cout << Num_GR << endl;
+	}
+
+	int HexToInt = (stoi("0xAF", &NumberOfCharacters, 16));   // 'stoi()' function can convert an Hex value [formatted as a string] to a decimal number ['int' type]
+
+	cout << HexToInt << endl;
+
+	cout << ToInt << " with 'stod()' returns " << (stod(ToInt)) << endl;   // Only 5 decimal numbers
 
 }

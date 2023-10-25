@@ -125,6 +125,18 @@ append()   adds elements at the end of the string
 
 insert()   adds elements at a specified index
 
+erase()   removes characters from the string by a given index to a given length to be deleted
+
+replace()   will remove characters at a a given index by a given length to a given string
+
+assign()   replace all the string to a new one
+
+To convert between strings and numbers, C provided the functions 'atoi()', 'atod()' to convert C-style strings to numbers
+C++11 provides the function 'to_string()' that retuns an std::string literal [the function overloads supports 'int' and 'float' types]
+and provides the function 'stoi()' that returns an integer from a given string [the string must contain only numbers, with no whitespaces]
+The 'stod' works for floating points, and returns a 'double' variable type
+
+
 
 // ====================================================================================================
 */
