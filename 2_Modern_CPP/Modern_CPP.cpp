@@ -36,7 +36,8 @@ void M_SearchingStrings();
 void M_AddingStringElements();
 void M_RemovingStringElements();
 void M_StringNumberConversion();
-
+void M_MiscStringOperations();
+void M_CharacterFunctions();
 
 
 
@@ -49,7 +50,7 @@ int main()
 // ====================================================================================================
 // Section 01 - Runs only once, before the loop                                                     1 V
 
-	M_StringNumberConversion();
+	M_CharacterFunctions();
 
 
 // Section 01 - END                                                                                 1 A
@@ -628,5 +629,88 @@ void M_StringNumberConversion()
 	cout << HexToInt << endl;
 
 	cout << ToInt << " with 'stod()' returns " << (stod(ToInt)) << endl;   // Only 5 decimal numbers
+
+}
+
+void M_MiscStringOperations()
+{
+	string MyData{ "HashTable"s };
+
+	string OtherData{ "MappedValues"s };
+
+	const char *ptr_ToMyData = (MyData.data());   // The 'data()' member function returns a pointer to the first element of a C-style string [array of const char]
+
+	cout << "Value: " << MyData << ".   Address: " << &ptr_ToMyData 
+		<< ".   Size: " << MyData.size() << ".   Value on address: " << *ptr_ToMyData << "." << endl;
+
+	for (int i_iterator = 0; i_iterator < (MyData.size()); i_iterator++)
+	{
+		cout << ptr_ToMyData[i_iterator];
+	}
+
+	cout << endl;
+
+	swap(MyData, OtherData);   // Swaps the values between 2 variables, and this function has overloads for all built-in C++ variable types
+
+	cout << "MyData: " << MyData << ".   OtherData: " << OtherData << endl;
+
+}
+
+void M_CharacterFunctions()
+{
+
+	string MyFullInfo = "Douglas do Carmo Neiva, +55 (31) 9 9567-8623";
+
+	cout << "Decomposing the string..." << endl << endl;
+
+	// Ranged for-loop
+	for (char Character : MyFullInfo)
+	{
+
+		switch (Character)
+		{
+		case 'A':
+			cout << "A" << endl;
+			break;
+		case 'E':
+			cout << "E" << endl;
+			break;
+		case 'I':
+			cout << "I" << endl;
+			break;
+		case 'O':
+			cout << "O" << endl;
+			break;
+		case 'U':
+			cout << "U" << endl;
+			break;
+		default:
+			cout << " ";
+		}
+
+		if (isdigit(Character))
+		{
+			cout << "Digit; ";
+		}
+		if (islower(Character))
+		{
+			cout << "Lower-case; ";
+		}
+		if (isupper(Character))
+		{
+			cout << "Upper-case; ";
+		}
+		if (isspace(Character))
+		{
+			cout << "Space; ";
+		}
+		if (ispunct(Character))
+		{
+			cout << "Punctuation; ";
+		}
+
+	}
+
+	cout << endl << "String decomposed!" << endl;
 
 }

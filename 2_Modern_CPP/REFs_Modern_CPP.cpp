@@ -14,6 +14,16 @@ can now be created inside of an if-statement, and will exist on the memory only 
 
 C++17 also provides a [[fallthrough]] attribute to be used on switch-case-statements, to explicitly indicate that the "break" statement was intentionally omitted
 
+Function arguments:   // TEST ALL !!! -------------------------------------------------------------------------------
+
+void AnyFunction(int i_Integer)   the function argument is a new variable, declared and initialized as a copy of the argument's value
+
+void AnyFunction(int &i_Integer)
+
+void AnyFunction(const int &i_Integer)
+
+void AnyFunction(int *i_Integer)
+
 
    >>> Namespaces
 
@@ -105,11 +115,38 @@ A pointer-to-function variable is a 'callable object' that beahves like a variab
 A pointer-to-function variable is also a 'first-class-object', that can be passed as an argument to another function or can be returned from another function
 
 
-   >>> C++ Standard Libraries
+   >>> C++ Standard Libraries - std::
+
+	   >> Vector   [ member functions also available on std::string ]
+
+std::vector has a 'data()' member function that returns a pointer to the container's internal memory buffer, useful for working with APIs written in C
+
+swap()   swaps the data between two vector elements [ this function is very fast when compared to a 'manual swap', without memory operations or copying data ]
+
+	   >> Character   [ C++ is 'case-sensitive' ]
+
+The C++ standard library has many character fucntions inherited from C. Some of the most useful are:
+
+isdigit(char)   returns true if 'char' is a digit  [ 0-9 ]
+
+islower(char)   returns true if 'char' is lower-case  [ a-z ]
+
+isupper(char)   returns true if 'char' is upper-case  [ A-Z ]
+
+isspace(char)   returns true if 'char' is a whitespace character  [ space, tab, etc ]
+
+ispunct(char)   returns true if 'char' is a punctuation character  [ ? ! , . etc ]
+
+tolower(char)   returns the lower-case equivalent of the argument
+
+toupper(char)   returns the upper-case equivalent of the argument   [ to compare case-insensitive strings, use 'toupper' of every character inside a ranged for-loop ]
 
 	   >> String
 
-The C++ String container is a big interface with more than 100 member functions. The std::string member functions 
+
+The C++ String container is a big interface with more than 100 member functions. Each string has a 'header'
+[ composed by an integer with the character count, and a pointer to the character data ]
+The std::string member functions are:
 
 c_str()   returns a copy of the string data as a C-style string [which is an array of characters "const char", terminated by a null character], avoiding the need of creating C-style strings
 on the code [just convert noraml C++ strings when needed]
