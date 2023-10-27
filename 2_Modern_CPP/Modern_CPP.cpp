@@ -38,6 +38,7 @@ void M_RemovingStringElements();
 void M_StringNumberConversion();
 void M_MiscStringOperations();
 void M_CharacterFunctions();
+void M_CompareStrings();
 
 
 
@@ -50,7 +51,7 @@ int main()
 // ====================================================================================================
 // Section 01 - Runs only once, before the loop                                                     1 V
 
-	M_CharacterFunctions();
+	M_CompareStrings();
 
 
 // Section 01 - END                                                                                 1 A
@@ -713,4 +714,62 @@ void M_CharacterFunctions()
 
 	cout << endl << "String decomposed!" << endl;
 
+}
+
+void M_CompareStrings()
+{
+	// Case-insensitive string comparison
+
+	string sCompare01{ "Douglas"s };
+	string sCompare02{ "dOuGlAs"s };
+	// string sCompare02{ "Douglas"s };
+
+	bool EqualityCheck = false;
+
+	if ((sCompare01.size()) != (sCompare02.size()))
+	{
+		cout << "The 2 strings are different (different sizes)." << endl;
+
+	}
+	else
+	{
+		cout << "The 2 strings have equal sizes, comparing..." << endl;
+
+		for (int i = 0; i < (sCompare01.size()); i++)
+		{
+			char cComp01 = (toupper(sCompare01[i]));
+			char cComp02 = (toupper(sCompare02[i]));
+
+			cout << "Char01[" << i << "]: " << cComp01 << ".  " << "Char02[" << i << "]: " << cComp02 << ".  " << endl;
+
+			if (cComp01 == cComp02)
+			{
+				EqualityCheck = true;
+			}
+			else
+			{
+				EqualityCheck = false;
+			}
+			if (!EqualityCheck)
+			{
+				break;
+			}
+		}
+	}
+
+	if (EqualityCheck)
+	{
+		cout << endl << "The strings are fully equal!  [ case-insensitive ]" << endl;
+	}
+	else
+	{
+		cout << endl << "The strings are different!  [ difference on the line above ]" << endl;
+	}
+
+	cout << "String 01: " << sCompare01 << ".  String 02: " << sCompare02 << ". " << endl;
+
+	cout << endl << "Using the standard 'is_equal ==' operator: " << endl;
+
+	cout << "String01 is" << (sCompare01 == sCompare02 ? "" : " not") << " equal to String02." << endl;   // Simple 'if' statement, with the '?' operator [to represent the 'if' scope] 
+																								          // and the ':' operator to separate the 'true' and the 'false' conditions
 }

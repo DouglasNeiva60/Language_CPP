@@ -16,13 +16,17 @@ C++17 also provides a [[fallthrough]] attribute to be used on switch-case-statem
 
 Function arguments:   // TEST ALL !!! -------------------------------------------------------------------------------
 
-void AnyFunction(int i_Integer)   the function argument is a new variable, declared and initialized as a copy of the argument's value
+void AnyFunction(int i_Integer)   Pass by Value: the function argument will be a new variable, declared and initialized as a copy of the argument's value
+                                  Creates a new copy of the variable passed as an argument  [ slowest ], using 2 different variables on the memory
 
-void AnyFunction(int &i_Integer)
+void AnyFunction(int &i_Integer)   Pass by Reference: also called 'out-parameter', the variable passed by reference will have its value changed by the function
+                                   Creates a new copy of the address of the variable passed as an argument  [ fastest ], using the same variable on the memory
 
-void AnyFunction(const int &i_Integer)
+void AnyFunction(const int &i_Integer)   Pass by Reference: also called 'in-parameter', the variable passed by reference won't have its value changed by the function since it's const
+                                         Creates a new copy of the address of the variable passed as an argument  [ fastest ], using the same variable on the memory
 
-void AnyFunction(int *i_Integer)
+void AnyFunction(int *i_Integer)   Pass by pointer: should be used only when 'nullptr' is a valid value, otherwise use 'pass-by-reference' since references can't be NULL
+                                   Re-assigns the pointer passed as an argument  [ fast ]; pointers can be re-assigned while references cannot; pointers can act as iterators over the memory
 
 
    >>> Namespaces
