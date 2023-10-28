@@ -94,6 +94,7 @@ The traditional string literal is an array of const char, terminated by a null c
 On C++14, the "S" suffix can be added after closing the double quotes by "using namespace std::literals" C++14, supporting all std::string operations [like addition]
 
 
+
    >>> Custom Data Types
 
 
@@ -122,6 +123,9 @@ A pointer-to-function variable is also a 'first-class-object', that can be passe
    >>> C++ Standard Libraries - std::
 
 	   >> Vector   [ member functions also available on std::string ]
+
+Vector is a sequential container to store elements and not index based. Array stores a fixed-size sequential collection of elements of the same type and it is index based.
+Vector is dynamic in nature so, size increases with insertion of elements. As array is fixed size, once initialized can't be resized.
 
 std::vector has a 'data()' member function that returns a pointer to the container's internal memory buffer, useful for working with APIs written in C
 
@@ -176,6 +180,51 @@ To convert between strings and numbers, C provided the functions 'atoi()', 'atod
 C++11 provides the function 'to_string()' that retuns an std::string literal [the function overloads supports 'int' and 'float' types]
 and provides the function 'stoi()' that returns an integer from a given string [the string must contain only numbers, with no whitespaces]
 The 'stod' works for floating points, and returns a 'double' variable type
+
+
+   >>> Files and Streams
+
+In C++, a file is represented by a sequence of bytes, identified by a filename  [ and the developer doesn't need to know where the data is stores or how it is stored]
+The 'File Stream' C++ library is very similar to the 'iostream' library  [ file interactions are represented by 'fstream' objects, similar to 'iostream' objects for inputs / outputs ]
+'fstream' objects always access files "sequentially"  [ and 'fstreams' do not understand file formats ]
+	- a sequence of bytes
+	- in order
+	- of unknown length
+	- with no structure
+C++ 'fstream' Object 4 Operations:
+	- Open: connects the 'fstream' object to the file, and the file becomes available to use by the C++ program
+	- Read: data is copied from the file into the program's memory
+	- Write: data is copied from the program's memory to the file
+	- Close: disconnects the 'fstream' object from the file, and the file will no longer be available to use by the C++ program
+
+For each 'fstream' object operation [task], the 'fstream' object will call a function on the operating system's API 'Application Program Interface', and the C++ program will stop
+and start to wait for the operation to be fully performed. When the operating system has completed the task, the API call will return and then the program will resume its execution
+
+	   >> Opening and Closing a file
+
+As there are many different files on a computer, we need to associate a 'fstream' object with the file being used
+For every file handled by the 'fstream' object, the file must be opened before the C++ program starts to use it, and must be closed when the C++ program no longer needs it anymore
+This 'best-practice' ensures that any outstanding data is saved to the file, and avoids the possibility of a "too many open files" error  [ even if the C++ program automatically closes all open files ]
+It's also a 'best-practice' to close files as soon as the C++ program don't need it to avoid file-locking  [ when 2 parallel tasks tries to open a file that was already opened ]
+As data passes between the C++ program and the file, the data is temporarily stored on the memory buffer, making large data transfers more efficient but less faster
+
+To open a file, use the 'ifstream' class and declare a new variable, initializing it with the name of the file  [ e.g.  ifstream Input_File{ "NewTextFile.txt"s }; ]
+The 'Input_File' variable will be used as a "communication channel" to receive data from the file  [ sinc it was declared as an 'ifstream' object, read-only ]
+The 'variable state' [ is ready to use? ] should always be checked before manipulating the file's data  [ e.g.  if (Input_File) {...},  will return 'true' if it's ready ]
+On earlier versions of C++, 'fstream' objects could only take C-style strings for the file name, now replaced by a 'std::string' object acting as a filename
+The 'ifstream' object could be used the same way as the 'cin' keyword from the 'iostream' standard library  [ e.g.  while(Input_File >> sNewString) { cout << sNewString << ", "; } ]
+    [ this approach will read one word at a time, removing all whitespaces from the input, difficult to handle errors if the file structure doesn't match the C++ program's expectations ]
+After handling data from an 'ifstream' object, the object's variable has a '.close()' member function that should be used when the C++ program no longer neeeds the file to be available
+
+To manipulate files within the solution, the file needs to be added to the Vistual Studio C++ project
+
+	   >> Stream types
+
+iostream:   'cin' keyword for input [istream class], 'cout' keyword for output [ostream class] - only one console on a machine
+fstream:     'file stream for reading', input file [ifstream class], 'file stream for writing', output file [ofstream class] - multiple files on a machine
+
+*When 'ofstream' is being used, the write operation [ that sends data to the file ] could overwrite all the previous data to the new sent data, deleting all the previous data
+
 
 
 

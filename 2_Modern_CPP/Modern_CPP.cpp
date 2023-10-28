@@ -7,7 +7,9 @@
 #include "Modern_CPP.h"          // 1 - Header files
 
 #include <iostream>              // 2 - Libraries
+#include <fstream>
 #include <string>
+#include <vector>
 
 using namespace std;             // 3 - Global Namespaces [the main global namespace has no name]
 using namespace std::literals;
@@ -39,6 +41,10 @@ void M_StringNumberConversion();
 void M_MiscStringOperations();
 void M_CharacterFunctions();
 void M_CompareStrings();
+void M_SimpleAddMultiply();
+void M_FileStreamRead();
+void M_FileStreamOverWrite();
+void M_StreamBuffering();
 
 
 
@@ -47,11 +53,12 @@ void M_CompareStrings();
 int main()
 // int M_Practice_XX_main()
 {
-	cout << endl << "Welcome to Modern_CPP.cpp! " << endl << endl;
+	cout << endl << "Welcome to Modern_CPP.cpp!  Created by Douglas Neiva " << endl << endl;
 // ====================================================================================================
 // Section 01 - Runs only once, before the loop                                                     1 V
 
-	M_CompareStrings();
+	M_StreamBuffering();
+
 
 
 // Section 01 - END                                                                                 1 A
@@ -772,4 +779,133 @@ void M_CompareStrings()
 
 	cout << "String01 is" << (sCompare01 == sCompare02 ? "" : " not") << " equal to String02." << endl;   // Simple 'if' statement, with the '?' operator [to represent the 'if' scope] 
 																								          // and the ':' operator to separate the 'true' and the 'false' conditions
+}
+
+void M_SimpleAddMultiply()
+{
+	cout << "Adding and multiplying 2 'floating-point' numbers..." << endl << endl;
+
+	double fFirstNumber{ 0.0f };
+	double fSecondtNumber{ 0.0f };
+
+	cout << "Input of Number 1:  ";
+
+	cin >> fFirstNumber;
+
+	cout << endl << "Input of Number 2:  ";
+
+	cin >> fSecondtNumber;
+
+	cout << endl << endl;
+
+	cout << fFirstNumber << " + " << fSecondtNumber << " = " << (fFirstNumber + fSecondtNumber) << endl;
+	cout << fFirstNumber << " * " << fSecondtNumber << " = " << (fFirstNumber * fSecondtNumber) << endl;
+}
+
+void M_FileStreamRead()
+{
+	string sFileName{ "F:\\Udemy\\TESTY.txt"s };   // Name of the file to be initialized as an 'ifstream' object
+
+	ifstream fInputFile{ sFileName };   // Opens the file for reading
+										// 'FileStream' C++ code only accepts 'Modern C++' initializing with {}   [ the 'assignment' operator will cause errors ]
+
+	string sFileBuffer{ ""s };   // Creating a new 'string' variable, to be used as a memory buffer
+
+	cout << "The '" << sFileName << "' file was declared as an 'ifstream' object!   [ read operations ]" << endl;
+
+	// fInputFile.close();   // The C++ program needs to call the 'close()' member function twice in order to fail the 'is available' condition
+	// fInputFile.close();   // If the 'close()' member function is called once, the file will no longer be readable, but it will still be available, passing the 'is available' condition
+
+	if (fInputFile)   // Checks if the file is ready to use, returns false if cannto be used
+	{
+		cout << "The '" << sFileName << "' file is available to use by the C++ program!   Reading... " << endl << endl;
+
+		while (fInputFile >> sFileBuffer)   // Reads the file word-by-word, returning each word [ sepparated by whitespaces ] as an individual value 
+											// Using the 'right-shift' operator '>>' to write data from the file to the string  [ receiving an input and writing it as an output ]
+		{
+			cout << sFileBuffer << " ";   // Inserts the whitespace at the end of all values  [ since 'fstream' objects reads only one value at once, sepparated by whitespaces ] 
+										  // Using the 'left-shift' operator '<<' to read data from the string to the terminal  [ receiving an output and reading it as an input ]
+
+		}
+
+		cout << endl << endl << "The content of the file was read successfully!  [ as shown above ]" << endl;
+
+		fInputFile.close();   // Closes the previously-opened file, releasing the binding between the 'fInputFile' 'ifstream' object from the 'sFileName' file
+		fInputFile.close();
+
+		if (fInputFile)
+		{
+			cout << "The '" << sFileName << "' file is still available to use by the C++ program." << endl;
+		}
+		else
+		{
+			cout << "The '" << sFileName << "' file is no longer available to use by the C++ program." << endl;
+		}
+	}
+	else
+	{
+		cout << "The '" << sFileName << "' file is not available to use by the C++ program!" << endl;
+	}
+
+	cout << endl << "Reading again...   [ line-by-line, using the 'getline()' member function ]" << endl;
+
+	fInputFile.open(sFileName);   // Opening the same file again on the same 'ifstream' object
+
+	if (fInputFile)
+	{
+		while (getline(fInputFile, sFileBuffer))   // The 'getline()' member function of the 'fstream' library reads a complete line of the file [ first argument ] and 
+		{										   // assigns its content to the string-buffer [ second argument ], returning false at the end of the file
+
+			cout << sFileBuffer << endl;   // By using the 'getline()' member function [best-practice], all the whitespaces and puntuation will remain on the string 
+										   // and onlye 'newline' characters will be used as value separators, returning true when it founds a new line with data
+		}
+
+		fInputFile.close();
+		fInputFile.close();
+	}
+
+}
+
+void M_FileStreamOverWrite()
+{
+	string sFileName{ "F:\\Udemy\\TESTY.txt"s };
+
+	ofstream fOutputFile{ sFileName };   // Opens the file and create a 'communication channel' to write data into the filename
+
+	cout << "The '" << sFileName << "' file was declared as an 'ofstream' object!   [ write operations ]" << endl;
+
+	if (fOutputFile)   // Checking the stream state
+	{
+		fOutputFile << endl << "Overwriting existing data" << endl << "New data... " << endl << endl;
+
+		const vector<string> vWords = { "First", "Second" };   // A vector with strings [ 3 elements ] costs 256 bits [ 32 bytes ] on the memory per element
+
+		const string aWords[2] = { "Third", "Fourth" };   // An array of strings [ 3 elements ] costs 320 bits [ 40 bytes ] on the memory per element
+
+		cout << "Vector with 2 string elements... Its size is: " << ((sizeof(vWords)) * 1) << " bits allocated on the memory." << endl;
+		cout << "Array  with 2 string elements... Its size is: " << ((sizeof(aWords)) * 1) << " bits allocated on the memory." << endl;
+
+		cout << endl;
+
+		for (string Word : vWords)
+		{
+			fOutputFile << Word << ", ";   // The 'ofstream' object can be used as the same way as 'cout' to send data to the file [ as was done for sending to the terminal ]
+		}
+		fOutputFile << endl;
+
+		for (string Word : aWords)
+		{
+			fOutputFile << Word << ", ";
+		}
+		fOutputFile << endl;
+				
+		fOutputFile.close();
+		fOutputFile.close();
+	}
+
+}
+
+void M_StreamBuffering()
+{
+	// Lecture 35/233
 }
