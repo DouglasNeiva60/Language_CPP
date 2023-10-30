@@ -804,7 +804,7 @@ void M_SimpleAddMultiply()
 
 void M_FileStreamRead()
 {
-	string sFileName{ "F:\\Udemy\\TESTY.txt"s };   // Name of the file to be initialized as an 'ifstream' object
+	string sFileName{ "F:\\Udemy\\Developer\\02_C++\\LOG.txt"s };   // Name of the file to be initialized as an 'ifstream' object
 
 	ifstream fInputFile{ sFileName };   // Opens the file for reading
 										// 'FileStream' C++ code only accepts 'Modern C++' initializing with {}   [ the 'assignment' operator will cause errors ]
@@ -868,7 +868,7 @@ void M_FileStreamRead()
 
 void M_FileStreamOverWrite()
 {
-	string sFileName{ "F:\\Udemy\\TESTY.txt"s };
+	string sFileName{ "F:\\Udemy\\Developer\\02_C++\\LOG.txt"s };
 
 	ofstream fOutputFile{ sFileName };   // Opens the file and create a 'communication channel' to write data into the filename
 
@@ -907,5 +907,18 @@ void M_FileStreamOverWrite()
 
 void M_StreamBuffering()
 {
-	// Lecture 35/233
+	// Do the large for-loop shown on the lecture 35 !
+
+	int iMyInt{ 32 };
+
+	string sFileName{ "F:\\Udemy\\Developer\\02_C++\\LOG.txt"s };
+
+	ofstream fOutputFile{ sFileName };   // Opens the file and create a 'communication channel' to write data into the filename
+
+	cout << "The '" << sFileName << "' file was declared as an 'ofstream' object!   [ write operations ]" << endl << endl;
+
+	cout << iMyInt << flush;   // 'Flushes' the 'iMyInt' data into the terminal  [ won't add a 'newline character' at the end ]
+
+	cout << iMyInt << endl;   // Similar results, will register the value immediately on a LOG.txt file for large iterators
+
 }

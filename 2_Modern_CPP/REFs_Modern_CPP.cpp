@@ -225,7 +225,19 @@ fstream:     'file stream for reading', input file [ifstream class], 'file strea
 
 *When 'ofstream' is being used, the write operation [ that sends data to the file ] could overwrite all the previous data to the new sent data, deleting all the previous data
 
+	   >> Streams and Buffering
 
+C++ streams uses 'buffering' to minimize calls to the operating system, holding data into a memory buffer during 'ifstream' write operations
+'Flushing' the output buffer is when the size of the buffer reaches its maximum size acceptable by the operating system,
+and the stream sends the data from the full-memory-size buffer to the operating system, removing it from the memory buffer
+This method sends the maximum amount of data at a minimum amount of operating system calls  [ and there is no direct way to flush input streams ]
+
+For 'ofstream' [ and general output streams, like 'cout' ] the stream buffer is flushed at the end of every line for terminals [ 'cout' is always flushed before the program reads from 'cin' ],
+and 'ofstream' is only flushed when the buffer is full [ the same way as 'ifstream', minimizing calls to the operating system ]
+
+std::flush  allows the C++ program to control when the stream's buffer is flushed, and all the data in the buffer is immediately sent to its destination  [ e.g.  cout << iMyInt << flush; ]
+*This approach significantly reduces the program's perfomance, and should only be used if the data really needs to be immediately up-to-date  [ e.g.  log files on debugging tests to find crashes ]
+*The 'endl' keyword has similar results when compared to 'flsuh'  [ because the stream buffer is flushed at the end of every line ]
 
 
 // ====================================================================================================
