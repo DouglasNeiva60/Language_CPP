@@ -239,6 +239,19 @@ std::flush  allows the C++ program to control when the stream's buffer is flushe
 *This approach significantly reduces the program's perfomance, and should only be used if the data really needs to be immediately up-to-date  [ e.g.  log files on debugging tests to find crashes ]
 *The 'endl' keyword has similar results when compared to 'flsuh'  [ because the stream buffer is flushed at the end of every line ]
 
+	   >> Unbuffered Input - Output
+
+There are some applications that stream buffering is not suitable  [ e.g.  network applications, here data must be transmitted in 'packets' of a fixed size, and data may need to be transmitted
+at specific times, completely overwriting the buffer with new data, causing 'packet losses' ]
+C++ supports lower level operations on streams  [ bypassing the stream's buffer without formatting data ], mainly used when the C++ software needs more control over how the data is transmitted
+[ useful with networking applications and hardware communication, like sound cards ]
+
+Streams have a member function for reading or writing data, one character at a time  [ and both takes a 'char' argument ]:
+	- get()   fetches the next character from an input stream
+	- put()   sends its argument to an output stream
+
+
+
 
 // ====================================================================================================
 */

@@ -45,6 +45,8 @@ void M_SimpleAddMultiply();
 void M_FileStreamRead();
 void M_FileStreamOverWrite();
 void M_StreamBuffering();
+void M_UnbufferedStream();
+
 
 
 
@@ -57,7 +59,7 @@ int main()
 // ====================================================================================================
 // Section 01 - Runs only once, before the loop                                                     1 V
 
-	M_StreamBuffering();
+	M_UnbufferedStream();
 
 
 
@@ -920,5 +922,20 @@ void M_StreamBuffering()
 	cout << iMyInt << flush;   // 'Flushes' the 'iMyInt' data into the terminal  [ won't add a 'newline character' at the end ]
 
 	cout << iMyInt << endl;   // Similar results, will register the value immediately on a LOG.txt file for large iterators
+
+}
+
+void M_UnbufferedStream()
+{
+	cout << "Enter some text..." << endl << endl;
+
+	char cUnbufferedData{ 'X' };
+
+	while (cin.get(cUnbufferedData))   // Using the 'get()' member function of the input stream 
+									   // The 'get()' will return TRUE until it reads 'end-of-input' character
+									   // Remember that the 'data packet' will be valid when the input stream reads the 'new-line' character  [ line-oriented input ]
+	{
+		cout.put(cUnbufferedData);   // Using the 'put()' member function of the output stream
+	}   // The 'Ctrl+Z' (Windows 'end-of-input' character)  will end the 'while-loop' by returning FALSE
 
 }
