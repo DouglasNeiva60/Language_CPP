@@ -45,7 +45,11 @@ void M_SimpleAddMultiply();
 void M_FileStreamRead();
 void M_FileStreamOverWrite();
 void M_StreamBuffering();
-void M_UnbufferedStream();
+void M_UnbufferedStream01();
+void M_UnbufferedStream02();
+void M_FileModes01();
+void M_FileModes02();
+void M_StreamMembersStates();
 
 
 
@@ -59,8 +63,7 @@ int main()
 // ====================================================================================================
 // Section 01 - Runs only once, before the loop                                                     1 V
 
-	M_UnbufferedStream();
-
+	M_StreamMembersStates();
 
 
 // Section 01 - END                                                                                 1 A
@@ -925,7 +928,7 @@ void M_StreamBuffering()
 
 }
 
-void M_UnbufferedStream()
+void M_UnbufferedStream01()
 {
 	cout << "Enter some text..." << endl << endl;
 
@@ -934,8 +937,189 @@ void M_UnbufferedStream()
 	while (cin.get(cUnbufferedData))   // Using the 'get()' member function of the input stream 
 									   // The 'get()' will return TRUE until it reads 'end-of-input' character
 									   // Remember that the 'data packet' will be valid when the input stream reads the 'new-line' character  [ line-oriented input ]
+									   // So the 'std::cin' only reads the data when the 'new-line' character is sent to the input stream
 	{
 		cout.put(cUnbufferedData);   // Using the 'put()' member function of the output stream
 	}   // The 'Ctrl+Z' (Windows 'end-of-input' character)  will end the 'while-loop' by returning FALSE
+}
+
+void M_UnbufferedStream02()
+{
+	// Creating a new buffer variable to be used with 'read()' and 'write()' member functions
+
+	const int iFileSize{ 10 };   // The size of the memory buffer
+	char acFileBuffer[iFileSize];   // Creating a new memory buffer
+
+	string sFileName{ "F:\\Udemy\\Developer\\02_C++\\LOG.txt"s };
+	ifstream fInputFile_01{ sFileName };    // Opens the file and create a 'communication channel' to read data from the filename
+
+	// The output stream could be opened on the same time as the input stream!, but, by default, all the data previously stored on the file will be deleted!!!
+	// To avoid this issue, open the 'ofstream' with the 'std::app' as the second argument!
+
+	ofstream fOutputFile_01{ sFileName, fstream::app };   // Opens the file and create a 'communication channel' to write data into the filename
+
+	if ((fInputFile_01) && (fOutputFile_01))
+	// if (fInputFile_01)
+	{
+		fInputFile_01.read(acFileBuffer, iFileSize);
+
+		cout << "Reading from:  " << sFileName << endl;
+		cout << "Buffer data:   " << acFileBuffer << endl;   // Every time a 'read()' member function is used on a memory buffer,
+		cout << "Buffer size:   " << iFileSize << endl;      // the correct buffer data only will be returned by the 'write()' member function
+
+		cout << "File data:     ";
+		cout.write(acFileBuffer, iFileSize);
+		cout << endl;
+
+		cout << "File size:     ";
+		cout << fInputFile_01.gcount() << endl << endl;
+	}
+	else
+	{
+		cout << "ERROR!  ";
+
+		if (!fInputFile_01)
+		{
+			cout << "The given file was not opened as an input file!" << endl;
+		}
+		if (!fOutputFile_01)
+		{
+			cout << "The given file was not opened as an output file!" << endl;
+		}
+	}
+
+	fOutputFile_01.close();
+	fOutputFile_01.close();
+	fInputFile_01.close();
+	fInputFile_01.close();
+
+	cout << "I/O file stream closed!" << endl;
+
+}
+
+void M_FileModes01()
+{
+	string sFileName{ "F:\\Udemy\\Developer\\02_C++\\LOG.txt"s };
+
+	
+	ofstream fOutputStream_Def{ sFileName };
+
+	if (fOutputStream_Def)
+	{
+		cout << "The file was opened! Using 'by-default' config...   [ 'truncate' file-mode ] " << endl;
+	}
+	else
+	{
+		cout << "The file could not be opened!" << endl;
+	}
+
+	fOutputStream_Def.close();
+	fOutputStream_Def.close();
+	
+
+	ofstream fOutputStream_App{ sFileName, fstream::app };
+
+	if (fOutputStream_App)
+	{
+		cout << "The file was opened! Using the optional second argument...   [ 'append' file-mode ] " << endl;
+
+		fOutputStream_App << endl << "NEW DATA" << endl << endl;
+
+		for (int Counter = 0; Counter < 999; Counter++)
+		{
+			fOutputStream_App << "Counting...   " << Counter << endl;
+		}
+
+	}
+	else
+	{
+		cout << "The file could not be opened!" << endl;
+	}
+
+	fOutputStream_App.close();
+	fOutputStream_App.close();
+
+}
+
+void M_FileModes02()
+{
+	string sFilePath{ "F:\\Udemy\\Developer\\02_C++\\LOG.txt"s };
+
+	fstream fFileIO{ sFilePath, fstream::in | fstream::out | fstream::app };   // Using the same 'fstream' object for Input and Output, preserving the previously-stored data
+
+	if (fFileIO)
+	{
+		cout << "The I/O file was opened successfully!" << endl;
+	}
+	else
+	{
+		cout << "The I/O file wasn't opened..." << endl;
+	}
+
+	fFileIO.close();
+	fFileIO.close();
+
+}
+
+void M_StreamMembersStates()
+{
+	string sFilePath{ "F:\\Udemy\\Developer\\02_C++\\LOG.txt"s };
+
+	// Binding a file to an 'fstream' object
+
+	ofstream fFile_01;   // The 'fstream' object can be created without being initialized [ this object was not bound to any file yet ]
+
+	ofstream fFile_02{ sFilePath, fstream::out };   // In this case, the 'open()' member function is implicitly being called, receiving the arguments from the initializer
+
+	fFile_01.open(sFilePath);   // In this case, the 'open()' member function is explicitly being called
+
+	if (fFile_01.is_open())
+	{
+		cout << "The 'fFile_01' is open! " << endl;
+	}
+	else
+	{
+		cout << "The 'fFile_01' is closed! " << endl;
+	}
+
+
+	fFile_01.close();
+	fFile_01.close();
+	fFile_02.close();
+	fFile_02.close();
+
+	if (fFile_01.is_open())
+	{
+		cout << "The 'fFile_01' is open! " << endl;
+	}
+	else
+	{
+		cout << "The 'fFile_01' is closed! " << endl;
+	}
+
+	int iInput = 0;
+
+	cout << "Please enter a valid number:  " << endl << endl;
+
+	cin >> iInput;
+
+	cout << endl;
+
+	if (cin.good())   // Reads an 'int' value
+	{
+		cout << "You entered a valid number!" << endl;
+	}
+	else if (cin.fail())   // Reads an 'non-int' value
+	{
+		cout << "You entered an invalid number!" << endl;
+	}
+	else if (cin.bad())   // Software error
+	{
+		cout << "The software crashed!" << endl;
+	}
+	else   // Error handling
+	{
+		cout << "ERROR" << endl;
+	}
 
 }

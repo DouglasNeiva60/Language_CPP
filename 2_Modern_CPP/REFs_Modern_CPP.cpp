@@ -218,6 +218,10 @@ After handling data from an 'ifstream' object, the object's variable has a '.clo
 
 To manipulate files within the solution, the file needs to be added to the Vistual Studio C++ project
 
+	   >> Creating a file
+
+The 'ofstream' object has the ability to create new files!  If the specified file-name on the file-path does not exists, the C++ program will create that specified file
+
 	   >> Stream types
 
 iostream:   'cin' keyword for input [istream class], 'cout' keyword for output [ostream class] - only one console on a machine
@@ -241,7 +245,7 @@ std::flush  allows the C++ program to control when the stream's buffer is flushe
 
 	   >> Unbuffered Input - Output
 
-There are some applications that stream buffering is not suitable  [ e.g.  network applications, here data must be transmitted in 'packets' of a fixed size, and data may need to be transmitted
+There are some applications that stream buffering is not suitable  [ e.g.  network applications, where data must be transmitted in 'packets' of a fixed size, and data may need to be transmitted
 at specific times, completely overwriting the buffer with new data, causing 'packet losses' ]
 C++ supports lower level operations on streams  [ bypassing the stream's buffer without formatting data ], mainly used when the C++ software needs more control over how the data is transmitted
 [ useful with networking applications and hardware communication, like sound cards ]
@@ -250,6 +254,51 @@ Streams have a member function for reading or writing data, one character at a t
 	- get()   fetches the next character from an input stream
 	- put()   sends its argument to an output stream
 
+Streams also have a member function for reading or writing data, using 'blocks of characters' [ array of characters ] instead of 'char-by-char' :
+	- read()     to use this member function, the buffer must be large enough to store all the received data from the input
+	- write()    to use this member function, the buffer must contain all the data desired to be sent to the output
+	- gcount()   returns the number of characters that the memory buffer has received from an input stream [ can be used to detect partial or incomplete data transfers ]
+*For both 'read()' and 'write()' member functions [ that doesn't use the std::stream buffer ], a new custom buffer has to be provided by the C++ programmer
+*Both 'read()' and 'write()' member functions takes 2 arguments: the address of the buffer, and the number of characters in the buffer
+
+	   >> FileModes
+
+C++ gives a number of options [ called 'modes' ] for opening a file [ and the 'filemode' can be passed as an opntional second argument when opening a file with 'fstream' ]
+By default, files are opened in 'text mode'  [ and all the values will be written as ASCII '1-byte' characters ]
+By default, output files are opened in 'truncate mode'  [ any data that was previously in the file will be overwritten, and new data will be written from the start of the file ]
+	Some other file modes:
+	- in      opens the file for input
+	          can be used with 'fstream' and 'ifstream' objects only
+	- out     opens the file for output, and also in truncate mode [ even if the 'trunc' is not specified ]
+	          can be used with 'fstream' and 'ofstream' objects only
+	- trunc   opens the file in truncate mode
+	          can be used only on output mode, and cannot be combined with 'app'
+	- app     specify that the output mode will be on 'append' bote, preserving previously-stored data
+	          can be used only on output mode, and cannot be combined with 'trunc'
+	- ate     opens the file for output similar to append [ without erasing previously stored data ], but the output also can be written anywhere in the file
+
+To open an 'ofstream' in 'append' mode, pass the 'fstream::app' as the optinal second argument when opening a 'ofstream' file [ when writing, the previously stored data will be preserved,
+and the newly written data will be added after the current data, at the end of the file, useful for LOG files! ]
+
+The files can also be read/write on other data formats [ binary, hex, etc ] but they are complicated to be handled and very error-prone [ but sometimes is needed
+for working with specific file formats, like media files for audio hardware ]
+
+Multiple FileModes can be combined by writing the Bitwise Operator '|'  [ binary OR ] between the multiple second arguments
+
+	   >> Stream Member functions and States
+
+Member functions:
+
+	- is_open()   checks if the file is open
+	- clear()     resets the stream to a valid state  [ good ]
+	- eof()       returns true after reaching the end of file
+
+C++ streams have member functions to check the state of the stream
+Stream States:
+
+	- good()   returns true if the input was read successfully
+	- fail()   returns true if there was a recoverable error  [ e.g.  data in the wrong format ]
+	- bad()    returns true if there was an unrecoverable error  [ e.g.  media failure ]
 
 
 
