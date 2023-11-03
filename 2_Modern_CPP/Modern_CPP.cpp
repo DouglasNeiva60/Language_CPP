@@ -12,6 +12,8 @@
 #include <string>
 #include <vector>
 #include <sstream>
+#include <iterator>
+
 
 using namespace std;             // 3 - Global Namespaces [the main global namespace has no name]
 using namespace std::literals;
@@ -55,6 +57,8 @@ void M_StreamMembersStates();
 void M_StreamManipulators();
 void M_StringStreams();   // Calling a custom template function, that requires definition above this callee function
 void M_StreamRandomAccess();
+void M_StreamIterator();
+
 
 
 
@@ -68,7 +72,7 @@ int main()
 // ====================================================================================================
 // Section 01 - Runs only once, before the loop                                                     1 V
 
-	M_StreamRandomAccess();
+	M_StreamIterator();
 
 
 // Section 01 - END                                                                                 1 A
@@ -1243,5 +1247,25 @@ void M_StreamRandomAccess()
 	}
 
 	ssOutputStream.seekp(MarkerPosition);   // Retrieving the previous Marker Position of the output stream
+
+}
+
+void M_StreamIterator()
+{
+	string sNewData{ "OldValue"s };
+
+	cout << "The 'OldData' is:  " << sNewData << endl;
+
+	ostream_iterator<int> OsI_Index(cout, "_");   // Creates the output stream iterator, sending the 'new-line character' after each iterator assignment
+
+	*OsI_Index = 88;   // Will display the decimal ASCII-equivalent-value of the char
+
+	*OsI_Index = 'X';   // Will display the decimal ASCII-equivalent-value of the char [ 'X' = ASCII 88 ]
+
+	for (int Counter = 0; Counter < 10; Counter++)
+	{
+		*OsI_Index = Counter;   // Assigns the number [from 0 to 9] to the 'ostream_iterator'
+		OsI_Index++;   // Does nothing, but makes the syntax clear and explicit, as if it were a common iterator
+	}
 
 }

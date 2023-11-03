@@ -395,6 +395,23 @@ The best way to modify a file with random access is by:
 Seek and Tell operations can be used to modify a file in-place, but is more complicated and will loss/corrupt original data if the C++ developer doesn't know the data-structure
 Otherwise, it may be necessary if there is not enough memory to copy the file's data into a 'stringstream' object and manipulate it
 
+	   >> Stream Iterators
+
+Iterators are commonly used with containers [ arrays and vectors ] for random-access [ jump anywhere ], taking the same speed to access any element of the container [ no matter what is it position ]
+The C++ Standard Library provides iterators which work on streams, defined on the <iterator> library, and since they are parametric types, they should be instantiated with the type of the data
+[ e.g.  istream_iterator   reads an input stream;   ostream_iterator   writes an output stream; ]
+
+Stream iterators have a very limited interface, and should be bounded to an input/output stream to be ready to use
+
+- assigning to an 'ostream_iterator' will put an object on the stream  [ only works for output streams, since it's a 'write' operation ]
+- dereferencing an 'istream_iterator' will get the object at the iterator position on the stream  [ only works for input streams, since it's a 'read' operation ]
+- incrementing an 'istream_iterator' will move the stream's position marker to the next object
+
+* 'ostream_iterator' also has dereferencing '* operator' and incrementing/decrementing '++/-- operators' [ looking similar to common iterator's syntax ]
+* to bind an 'ostream_iterator' to an 'ostream' [ output stream ], the iterator-type should be specified as a template-parameter [ e.g.  ostream_iterator<int> OsI_Index(cout); ],
+  and every time a value is assigned to the 'ostream_iterator' object, the value will be pushed onto the output stream [ the 'ostream_iterator' will call the 'left-shift' operator ]
+* the 'ostream_iterator' could receive a optional second argument which is the delimiter-character [ must be a C-style string ] that will be sent after each iterator assignment
+
 
 // ====================================================================================================
 */
