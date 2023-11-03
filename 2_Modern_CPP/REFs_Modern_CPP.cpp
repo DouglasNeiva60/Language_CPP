@@ -335,5 +335,35 @@ To restore floating-point defaults, the 'defaultfloat' keyword manipulator shoul
 The default floating-point precision [ the number of decimal places to be displayed ] is 6 decimal places, but can be changed by the 'setprecision()' manipulator
 
 
+   >>> String Streams
+
+The basic C++ stream is represented by std::ios [ <iostream> ], that contains:
+
+- istream         (cin) input stream for Terminal [ only 1 terminal per machine ]
+- ostream         (cout) output stream for Terminal [ only 1 terminal per machine ]
+
+- fstream         general file-stream object
+- ifstream        file stream object for reading
+- ofstream        file stream object for writing
+
+- stringstream    general string-stream object
+- istringstream   string stream object for reading
+- ostringstream   string stream object for writing
+
+'fstream' objects can bind one file at its initialization, an then bind another file using the same 'fstream' object variable
+'stringstream' objects are defined in <sstream> library, and the 'stringstream' class has an 'std::string' data member [ it has the same member functions as the other stream classes ]
+
+The 'ostringstream' object has an empty std::string object, and the C++ software can store data in this string, using the same operations as for other output streams,
+and the 'str()' member function will return a copy the stream's string  [ the 'ostringstream' object could be used to implement a custom 'To_String()' function! ]
+'ostringstream' objects are useful when interfacing to systems that expect formatted strings [ e.g.  GUIs, third-party softwares, etc ]
+
+The 'istringstream' object uses a copy of an existing string, useful for processing inputs [ checking for incomplete or corrupted data, checking the correct data format and handling errors ]
+The correct way to work with 'istringstream' objects is to assign the raw input into an std::string object, validate the data formatting, and then bind the validated 'string' object
+into an 'istringstream' object to be used for valid input-processing C++ code [ this method separates the raw 'string' data from the valid 'istringstream' data ]
+'istringstream' objects can be used with the 'getline()' member function to process input more easily than with the 'right-shift' '>>' operator
+
+
+
+
 // ====================================================================================================
 */

@@ -11,6 +11,7 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include <sstream>
 
 using namespace std;             // 3 - Global Namespaces [the main global namespace has no name]
 using namespace std::literals;
@@ -52,8 +53,7 @@ void M_FileModes01();
 void M_FileModes02();
 void M_StreamMembersStates();
 void M_StreamManipulators();
-
-
+void M_StringStreams();   // Calling a custom template function, that requires definition above this callee function
 
 
 
@@ -66,7 +66,7 @@ int main()
 // ====================================================================================================
 // Section 01 - Runs only once, before the loop                                                     1 V
 
-	M_StreamManipulators();
+	M_StringStreams();
 
 
 // Section 01 - END                                                                                 1 A
@@ -1172,5 +1172,34 @@ void M_StreamManipulators()
 	cout << fP << endl;
 
 	cout << setprecision(6) << defaultfloat << endl;   // Resetting both 'scientific' and 'fixed' floating-point 'sticky' manipulators
+
+}
+
+template <typename InputToString>                    // Template function!
+string M_ToString(const InputToString& InputValue)   // Template functions requires both declaration and definition above the callee function,
+{                                                    // meaning that all its C++ code must be written on the header file
+	ostringstream ssOutputStringStream{ "" };
+	ssOutputStringStream << setprecision(7) << InputValue;
+	return (ssOutputStringStream.str());
+}
+
+void M_StringStreams()
+{
+	ostringstream ssOutputStream;
+
+	ssOutputStream << "New string on the 'ostringstream' object!";
+
+	cout << ssOutputStream.str() << endl;
+
+	float NewFloat{ 2.718281f };
+
+	cout << "The custom 'M_ToString' function returns the float-to-int value: " << M_ToString<int>(NewFloat) << endl;   // Calling the custom template function by using the wrong template-parameter,
+																												 // causing loss of data of the decimal places from the 'floating-point' type
+	cout << "The custom 'M_ToString' function returns the float value: " << M_ToString<float>(NewFloat) << endl;   // Calling the custom template function, 
+																												   // passing the type 'float' as the template-parameter
+	int NewInt{ 762 };
+
+	cout << "The custom 'M_ToString' function returns the int value: " << M_ToString<int>(NewInt) << endl;   // Calling the custom template function,
+																											 // passing the type 'int' as the template-parameter
 
 }
