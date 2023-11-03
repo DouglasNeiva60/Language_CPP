@@ -22,7 +22,7 @@ void AnyFunction(int i_Integer)   Pass by Value: the function argument will be a
 void AnyFunction(int &i_Integer)   Pass by Reference: also called 'out-parameter', the variable passed by reference will have its value changed by the function
                                    Creates a new copy of the address of the variable passed as an argument  [ fastest ], using the same variable on the memory
 
-void AnyFunction(const int &i_Integer)   Pass by Reference: also called 'in-parameter', the variable passed by reference won't have its value changed by the function since it's const
+void AnyFunction(const int &i_Integer)   Pass by Constant Reference: also called 'in-parameter', the variable passed by reference won't have its value changed by the function since it's const
                                          Creates a new copy of the address of the variable passed as an argument  [ fastest ], using the same variable on the memory
 
 void AnyFunction(int *i_Integer)   Pass by pointer: should be used only when 'nullptr' is a valid value, otherwise use 'pass-by-reference' since references can't be NULL
@@ -362,7 +362,38 @@ The correct way to work with 'istringstream' objects is to assign the raw input 
 into an 'istringstream' object to be used for valid input-processing C++ code [ this method separates the raw 'string' data from the valid 'istringstream' data ]
 'istringstream' objects can be used with the 'getline()' member function to process input more easily than with the 'right-shift' '>>' operator
 
+	   >> Random Access to Streams
 
+Normally, when the C++ software access the stream, the access is done sequentially [ from beginning to end ], but it's possible to access streams randomly [ jumping into a desired position ]
+C++ streams [ the 'stream' class ] have a data member storing a 'position marker' that keeps track of where the next read / write operation will be performed
+Normally, the 'stream' object controls the marker's position [ placed after the last read for 'read' operations, and placed at the end of the data for 'write' operations ]
+However, the C++ software needs to take control of the marker's position to read/write data anywhere in the stream by altering the marker's position [ used by 'fstream' and 'stringstream' objects ]
+
+C++ Streams provides 'seek' [ change ] and 'tell' [ return ] member functions, to manipulate the position of the marker before performing read/write operations:
+'seek' and 'tell' operations are only defined for the appropriate 'stream' objects [ 'fstream' and 'stringstream' ]
+[ 'get' operations are defined only for input streams ]
+[ 'put' operations are defined only for output streams ]
+
+- seekg   (get) sets the current position in an input stream
+- seekp   (put) sets the current position in an output stream
+- tellg   (get) returns the current position in an input stream
+- tellp   (put) returns the current position in an output stream
+
+* If an 'fstream' was opened in 'app' mode, 'seekp' has no effect [ the output will always be written at the end of the file ]
+* 'tell' operations returns a 'pos_type' variable that represents a position in the stream, and it can be converted to 'int',
+ but the conversion could fail if the stream is on an invalid state, returning '-1' value [ this condition should be checked for error-handling ]
+* 'seek' operations can take a 'pos_type' argument, moving the marker to an absolute position [ but they can also move the marker to a relative base-position ]
+* 'std::ios_base' provides three 'base-positions':  beg [ the beginning of the stream ], end [ the end of the stream ], cur [ the current marker position ]
+  [ e.g.  seekp(-1, std::ios_base::end);  moves the position marker to 10 characters {or 10 bytes} before the end of the file ]
+* A good C++ programming practice is to save the marker's current position before changing it, to be retrieved later on the code
+
+The best way to modify a file with random access is by:
+- reading it into a istringstream
+- get the bound string [ to the 'istringstream' object ] and make the changes to the data
+- when ready, overwrite the original file by writing the modified string on the file
+
+Seek and Tell operations can be used to modify a file in-place, but is more complicated and will loss/corrupt original data if the C++ developer doesn't know the data-structure
+Otherwise, it may be necessary if there is not enough memory to copy the file's data into a 'stringstream' object and manipulate it
 
 
 // ====================================================================================================

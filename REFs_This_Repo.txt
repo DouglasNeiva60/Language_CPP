@@ -36,6 +36,7 @@ https://www.youtube.com/watch?v=18c3MTX0PK0&list=PLlrATfBNZ98dudnM48yfGUldqGD0S4
 https://cplusplus.com/
 https://en.cppreference.com/w/
 https://www.ascii-code.com/
+https://www.open-std.org/jtc1/sc22/wg21/docs/standards
 
 http://ithare.com/infographics-operation-costs-in-cpu-clock-cycles/
 https://en.wikibooks.org/wiki/Optimizing_C%2B%2B#

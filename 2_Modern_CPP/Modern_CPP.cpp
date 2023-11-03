@@ -54,6 +54,8 @@ void M_FileModes02();
 void M_StreamMembersStates();
 void M_StreamManipulators();
 void M_StringStreams();   // Calling a custom template function, that requires definition above this callee function
+void M_StreamRandomAccess();
+
 
 
 
@@ -66,7 +68,7 @@ int main()
 // ====================================================================================================
 // Section 01 - Runs only once, before the loop                                                     1 V
 
-	M_StringStreams();
+	M_StreamRandomAccess();
 
 
 // Section 01 - END                                                                                 1 A
@@ -1201,5 +1203,45 @@ void M_StringStreams()
 
 	cout << "The custom 'M_ToString' function returns the int value: " << M_ToString<int>(NewInt) << endl;   // Calling the custom template function,
 																											 // passing the type 'int' as the template-parameter
+
+}
+
+void M_StreamRandomAccess()
+{
+	string sData{ "It is time to say:  "s };   // Specifies the string data
+
+	ostringstream ssOutputStream;   // Opens the output string-stream
+
+	ssOutputStream << sData;   // Writes data to the output string-stream [ as same as the 'cout' output stream for terminal ]
+
+	auto MarkerPosition = ssOutputStream.tellp();   // Saving the current Marker Position of the output stream, to be retrieved later
+
+	cout << sData.size() << " characters [bytes] written into the 'ostringstream' object." << endl;
+	cout << "The stream marker is at the byte-position [character] " << MarkerPosition << " on the 'ostringstream' object." << endl;
+
+	ssOutputStream << "Hello!";   // Moves the position marker 6 bytes forward
+	cout << "The stream marker is now at the byte-position [character] " << (ssOutputStream.tellp()) << " on the 'ostringstream' object." << endl;
+
+	cout << (ssOutputStream.str()) << endl;
+
+	if (MarkerPosition != -1)
+	{
+		cout << "Going back into the position to be retrieved, changing the stream..." << endl;
+
+		ssOutputStream.seekp(MarkerPosition);
+
+		ssOutputStream << "Goodbye!";   // Writing on the marker position will overwrite the characters, not append them! The C++ developer should be aware of the size of the data!
+
+		cout << "The output stream now have the value below..." << endl;
+
+		cout << ssOutputStream.str();
+
+	}
+	else
+	{
+		cout << "The 'ostringstream' object is on an invalid state, and its marker returned the value of -1." << endl;
+	}
+
+	ssOutputStream.seekp(MarkerPosition);   // Retrieving the previous Marker Position of the output stream
 
 }

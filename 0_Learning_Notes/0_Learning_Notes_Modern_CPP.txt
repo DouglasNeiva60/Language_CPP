@@ -5,12 +5,13 @@
 
 
 // ====================================================================================================
-   >>> Section 01
+   >>> Introduction
 
 Classical C++ [ C++98 ] works with arrays, pointers and inheritance [ C with classes ]
 C++ foundation: arrays, strings, vectors, iterators, templates
 
 Modern C++ comes into standardized versions:
+ISO/IEC 14882:1998 - C++98
 ISO/IEC 14882:2011 - C++11
 ISO/IEC 14882:2014 - C++14
 ISO/IEC 14882:2017 - C++17
@@ -38,6 +39,52 @@ Concepts
 Modules
 Coroutines
 Ranges
+
+
+   >>> Resource Management on C++ software
+
+C++ software often use special Classes to deal with machine's resources, like:  files, database connections, GUI windows, memory, threads, etc
+All the resources used by C++ class's objects should be managed by the C++ developer, according to the resource nature:
+
+    - To create a resource, the C++ developer needs to do it efficiently and manage its lifetime
+    - To use a resource, the C++ developer needs to allocate, open or acquire
+    - To close a resource after using it, the C++ developer needs to release or close
+    - For every resource used, the C++ developer needs to think about if it's efficient to make a copy [value semantics]
+    - On every resource situation, the C++ developer needs to think about error handling
+
+C++ has 4 main concepts from Object-Oriented-Programming: Abstraction, Encapsulation, Inheritance and Polymorphism
+
+The Standard Library Classes [ 'string' and 'vector' for allocated memory, 'fstream' for files, and objects used in multi-threading ] follows the 'Encapsulation' rule to manage Class's resources
+[ the details of mananing the resource are written inside the class, and the C++ developer always use the public member functions [ Class's interface ] instead of dealing with the resource directly ]
+
+C++ classes which manage a resource follows a common structure [ known as 'RAII Programming Idiom' = Resource Acquisition Is Initialization ]:
+
+    - the resource is stores as a private data member of the class
+    - the class's constructor 'acquires'/'opens' the resource
+    - the class's interface [ public member functions ] controls the access to the resource [ encapsulation ]
+    - the class's destructor 'releases'/'closes' the resource
+*The RAII means that the class's object creation will acquire a copy of the resource and manage it, releasing the resource when the class's object is destroyed
+*RAII has some advantages: obtain access to the resource, use the resource and release the resource is straightforward and deterministic [ same input will result on same output ],
+ meaning that the object could either be successfully created or invalid for use, and only one object can only own a given resource at a time [ a given resource cannot be used by multiple objects ],
+ but one object can close a given resource and then can be reassigned to another resource
+*When an object is copied or assigned to, the target object [ the result of the operation ] acquires its own version of the resource
+
+       >> Class's Resource Management
+
+                 > fstream
+
+The 'fstream' class 'encapsulates' the details of how to manage a file, and to use a file on C++ software, the developer only needs to use the 'fstream' class's interface [ public member functions ]
+    - give the name of the file on the 'fstream' object's constructor [ class's object initialization ]
+    - use the overloaded 'left-shift <<' and the 'right-shift >>' operators for inputs / outputs
+    - close the file when it's no longer needed
+*By using the 'fstream' class and its interface with a 'fstream' object, the C++ developer doesn't need to know how to 'read from a file' or 'write to a file' directly
+*By using a class's object, its lifetime will act like a normal variable, being deleted when it goes out of scope [ and class's objects will call its destructor member-function when deleted,
+ releasing the resource when it goes out of scope or when an exception is thrown ]
+
+
+
+
+
 
 
 // ====================================================================================================
