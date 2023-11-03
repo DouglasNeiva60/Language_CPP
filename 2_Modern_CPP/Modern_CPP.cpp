@@ -7,6 +7,7 @@
 #include "Modern_CPP.h"          // 1 - Header files
 
 #include <iostream>              // 2 - Libraries
+#include <iomanip>
 #include <fstream>
 #include <string>
 #include <vector>
@@ -50,6 +51,8 @@ void M_UnbufferedStream02();
 void M_FileModes01();
 void M_FileModes02();
 void M_StreamMembersStates();
+void M_StreamManipulators();
+
 
 
 
@@ -63,7 +66,7 @@ int main()
 // ====================================================================================================
 // Section 01 - Runs only once, before the loop                                                     1 V
 
-	M_StreamMembersStates();
+	M_StreamManipulators();
 
 
 // Section 01 - END                                                                                 1 A
@@ -1098,28 +1101,76 @@ void M_StreamMembersStates()
 	}
 
 	int iInput = 0;
+	bool bIsValidInput = false;
 
-	cout << "Please enter a valid number:  " << endl << endl;
+	while (!bIsValidInput)
+	{
+		cout << "Please enter a valid number:  " << endl << endl;
 
-	cin >> iInput;
+		cin >> iInput;
+		cout << endl;
+
+		if (cin.good())   // Reads an 'int' value
+		{
+			cout << "You entered a valid number!" << endl;
+			bIsValidInput = true;
+		}
+		else if (cin.fail())   // Reads an 'non-int' value
+		{
+			cout << "You entered an invalid number!" << endl;
+		}
+		else if (cin.bad())   // Software error
+		{
+			cout << "The software has crashed!" << endl;
+		}
+		else   // Error handling
+		{
+			cout << "ERROR" << endl;
+		}
+
+		cout << "The input data remains with the value of:  " << iInput << endl;
+
+		cin.clear();             // The input stream member functions 'clear()' and 'ignore()' should always be used together  [ 'clear()' first, 'ignore()' second ]
+		cin.ignore(999, '\n');   // Ignores all the remaining data on the input stream, similar to 'flush()' of output streams, stopping on the 'new-line' character
+	}
+
+}
+
+void M_StreamManipulators()
+{
+	bool bTrue = true;
+	bool bFalse = false;
+
+	cout << bTrue << endl;   // Prints the 'bTrue' variable value 'as-it-is', printing the '1' value
+	cout << boolalpha << bTrue << endl;   // Prints the 'true()' string, and not the '1' value
 
 	cout << endl;
+	cout << left << setw(10) << "Penguins" << setw(10) << 9462 << setw(10) << "units" << endl;   // The 'left' 'sticky' manipulator could be used only once 
+	cout << setw(10) << "Bears" << setw(10) << 83 << setw(10) << "units" << endl;                // and the whole stream will remain in this manipulator's state,
+	cout << setw(10) << "Fishes" << setw(10) << 5 << setw(10) << "units" << endl;                // needing another opposite manipulator to restore the stream's original state
 
-	if (cin.good())   // Reads an 'int' value
-	{
-		cout << "You entered a valid number!" << endl;
-	}
-	else if (cin.fail())   // Reads an 'non-int' value
-	{
-		cout << "You entered an invalid number!" << endl;
-	}
-	else if (cin.bad())   // Software error
-	{
-		cout << "The software crashed!" << endl;
-	}
-	else   // Error handling
-	{
-		cout << "ERROR" << endl;
-	}
+	cout << endl;
+	cout << right << setfill('-') << "Full" << "Name:" << endl;   // Using the 'right' [ to revert the 'left' ] and the 'setfill()' sticky output stream's manipulators
+	cout << setw(15) << "Douglas" << setw(15) << "do" << setw(15) << "Carmo" << setw(15) << "Neiva" << endl;
+	cout << setw(15) << "Unreal" << setw(15) << "Engine" << setw(15) << "Senior" << setw(15) << "Developer" << endl;
+	cout << setw(15) << "C++" << setw(15) << "Senior" << setw(15) << "Software" << setw(15) << "Engineer" << endl;
+
+	cout << right << setfill(' ') << endl;   // Reverting back the sticky manipulators to its original states
+
+	float fF{ 1.618034f };   // Fibonacci 'golden ratio'
+	float fE{ 2.718281f };   // Natural logarythm
+	float fP{ 3.141592f };   // Value of 'pi'
+
+	cout << endl << "Scientific notation for Fibonacci, 'e' and 'pi'..." << endl;
+	cout << scientific << (fF*1000) << endl;
+	cout << (fE/1000) << endl;
+	cout << fP << endl;
+
+	cout << endl << "Fixed notation for Fibonacci, 'e' and 'pi'..." << endl;
+	cout << fixed << setprecision(9) << (fF * 1000) << endl;
+	cout << (fE / 1000) << endl;
+	cout << fP << endl;
+
+	cout << setprecision(6) << defaultfloat << endl;   // Resetting both 'scientific' and 'fixed' floating-point 'sticky' manipulators
 
 }

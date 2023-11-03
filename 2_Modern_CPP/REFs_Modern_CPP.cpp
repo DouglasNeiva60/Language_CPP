@@ -290,8 +290,12 @@ Multiple FileModes can be combined by writing the Bitwise Operator '|'  [ binary
 Member functions:
 
 	- is_open()   checks if the file is open
-	- clear()     resets the stream to a valid state  [ good ]
+	- clear()     resets the stream to a valid state
 	- eof()       returns true after reaching the end of file
+	- ignore()    similar to 'flush()' of output streams, but instead of sending, the remaining data will be deleted [ ignored ]
+	              it takes 2 arguments: the maximum number of characters to remove, the 'delimiter character' [ stops removing characters ]
+
+*The 2 member functions 'clear()' and 'ignore()' must always be used together!
 
 C++ streams have member functions to check the state of the stream
 Stream States:
@@ -300,6 +304,35 @@ Stream States:
 	- fail()   returns true if there was a recoverable error  [ e.g.  data in the wrong format ]
 	- bad()    returns true if there was an unrecoverable error  [ e.g.  media failure ]
 
+*Every time a stream is used, the stream could contain remaining data from the previous operation if the state is 'fail()' or 'bad()'  [ leaving some unprocessed characters
+in the buffer ], and the solution is to flush the stream memory buffer before utilizing it again  [ to prevent utilizing the previous data, commonly used with 'cin' ]
+Since input streams does not support 'flush', C++ provides the 'ignore()' member function that removes the characters from the buffer
+
+	   >> Stream manipulators and formatting
+
+The C++ program can push a 'manipulator' onto a stream to affect the stream's behavior [ std::flush and std::endl are types of 'manipulators' ]
+The C++ standard library provides a number of manipulators on <iostream> and <iomanip> libraries  [ <iomanip> holds the manipulators which take arguments ]
+
+Sometimes, the C++ program needs to present data formatted as a table, with fixed-size output fields, and the 'setw()' manipulator [ adds 'space-characters' ] will pad the output field to
+make it the width of its argument  [ 'setw()' takes the argument 'width of the following data output field', affecting only the next data item on the stream, and is defined on <iomanip> ]
+Since 'setw()' manipulator is, by default, a 'right-justified' manipulator, the 'left' manipulator should be used before the 'setw()' manipulator to create a left-justified output
+
+The 'left' keyword is also known as a 'sticky' manipulator [ the change on the stream is permanent until it's reverted back to the original format ], changing the stream permanently
+The 'setw()' manipulator is 'non-sticky', meaning that it will affect only the next output operation on the stream, and won't make permanent changes on the stream's behavior
+[ and, in fact, the 'setw()' manipulator is the only 'non-sticky' manipulator from <iomanip> ]
+
+The 'setfill()' manipulator [ sticky! ] from <iomanip> sets the padding character to its argument [ similar to 'setw()', but adds a custom character instead of a 'white-space' character ]
+
+		  > Floating-point output formats
+
+In scientific notation, digits are displayed with the decimal point immediately after the first significant digit [ known as 'mantissa' ], followed by an 'exponent' which gives
+the magnitude of the number as a power of ten  [ e.g.  3.141592e+005 is equal to 3.141592*10^+8;  1.618034e-002 is equal to 1.618034*10^-2;  2.718281e+000 is equal to 2.718281 ]
+
+The 'scientific' keyword manipulator [ sticky! ] forces the stream to use scientific notation, showing seven significant figures including the integer number
+The 'fixed' keyword manipulator [ sticky! ] will cause floating-point numbers to be displayed as fixed-point [ all integer digits and 6 decimal places, and very small numbers will be truncated ]
+
+To restore floating-point defaults, the 'defaultfloat' keyword manipulator should be used to reset the 'stream's behavior for floating-point numbers
+The default floating-point precision [ the number of decimal places to be displayed ] is 6 decimal places, but can be changed by the 'setprecision()' manipulator
 
 
 // ====================================================================================================
