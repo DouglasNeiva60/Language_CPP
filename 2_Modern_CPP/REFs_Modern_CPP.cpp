@@ -431,8 +431,8 @@ of the standard file-format, using the struct as a 'formatting-memory-buffer'
 The 'read()' and 'write()' functions takes 2 arguments:
 - 1: the address of the struct, represented by a 'pointer-to-char' variable [ the address of the struct should be converted to a 'pointer-to-char' type, using 'reinterpret_cast<char *>()' ]
 - 2: the number of bytes of the data to be read/write [ using the 'sizeof()' function ]
-* [ e.g.  Os_fNewFile.read (reinterpret_cast<char *>(&bDataStruct), sizeof(bDataStruct)); ]
-* [ e.g.  Os_fNewFile.write(reinterpret_cast<char *>(&bDataStruct), sizeof(bDataStruct)); ]
+* [ e.g.  Os_fNewFile.read (reinterpret_cast<char *>(&bDataStructObject), sizeof(bDataStruct)); ]
+* [ e.g.  Os_fNewFile.write(reinterpret_cast<char *>(&bDataStructObject), sizeof(bDataStruct)); ]
 
 	   >> Memory aligment and Padding
 
@@ -444,7 +444,7 @@ If the binary data-struct is not word-aligned, compilers will usually add extra 
 only 1 byte, the compiler will add 3 'padding-bytes' to fill-up the memory block with the 'char' variable, and store the next variable on the next 'multiple-of-4' memory-block  ]
 
 If there are file-formats expecting data to have different 'word-aligment' offsets [ like 2 bytes on 16-bit machines ], most compilers provides a non-standard directive to set the alignment,
-and this directive should be used before and after creating the binary data-struct, so the compiler will understand that the binary data-struct have a 'word-aligment' of the number of desired bytes
+and this directive should be used before and after creating the binary data-struct, so the compiler will understand that the binary data-struct have a 'word-alignment' of the number of desired bytes
 [ e.g.  #pragma pack(push, 2)   ... Create the data-struct to be used with binary files ...   #pragma pack(pop) ]
 
 

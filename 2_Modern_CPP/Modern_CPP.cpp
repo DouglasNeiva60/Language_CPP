@@ -59,6 +59,7 @@ void M_StringStreams();   // Calling a custom template function, that requires d
 void M_StreamRandomAccess();
 void M_StreamIterator();
 void M_BinaryFiles();
+void M_BinaryFileBitmap();
 
 
 
@@ -72,7 +73,7 @@ int main()
 // ====================================================================================================
 // Section 01 - Runs only once, before the loop                                                     1 V
 
-	M_BinaryFiles();
+	M_BinaryFileBitmap();
 
 
 // Section 01 - END                                                                                 1 A
@@ -1311,14 +1312,83 @@ void M_StreamIterator()
 
 }
 
+// #pragma pack (push, 2)
+struct bDataStruct   // Creating a new 'struct' custom type 'bDataStruct'
+{
+	// 1 byte
+	char cHeader;   // The first element should be a 'char' variable, to be used by the 'pointer-to-char' variable [ the first argument of the 'read()' and 'write()' functions ]
+	// 4 bytes
+	int32_t iX;     // 'int32_t' will make sure that the 'int' variable will have a fixed size of 32 bits, no matter what is the CPU and OS bit-size of the end-user machine
+	// 4 bytes
+	int32_t iY;     // This approach makes sure that the C++ software will achieve the same results on all systems
+};   // 10 bytes on 16-bit machines, 12 bytes on 32-bit machines, 24 bytes on 64-bit machines
+// #pragma pack (pop)
+
 void M_BinaryFiles()
 {
-	struct bDataStruct
+	bDataStruct WriteBinaryData{ 'C', 32, 64 };   // Creating a new variable of type 'struct' 'bDataStruct' to be used for writing [ every block uses Hex-encoding ]
+												  // This will write to the file [ 43 CC CC CC 20 00 00 00 40 00 00 00 ] for 4-byte padding [ default ]
+												  // This will write to the file [ 43 CC 20 00 00 00 40 00 00 00 ] for 2-byte padding
+												  // '0x43' is the ASCII code for 'C' symbol;  '0xCC' is the padding-byte [ 'Ì' symbol ];
+												  // '0x20' is the HTML number '32';  '0x40' is the HTML number '64'
+												  // https://www.ascii-code.com/
+
+	ofstream fOutputBinaryFile{ "F:\\Udemy\\Developer\\02_C++\\BinFile.bin", fstream::binary };   // Opens the given file, creating one if the file doesn't exist
+
+	if (fOutputBinaryFile.is_open())
 	{
-		char cHeader;   // The first element should be a 'char' variable, to be used by the 'pointer-to-char' variable [ the first argument of the 'read()' and 'write()' functions ]
-		int32_t iX;     // 'int32_t' will make sure that the 'int' variable will have a fixed size of 32 bits, no matter what is the CPU and OS bit-size of the end-user machine
-		int32_t iY;     // This approach makes sure that the C++ software will achieve the same results on all systems
-	};
+		fOutputBinaryFile.write(reinterpret_cast<char*>(&WriteBinaryData), sizeof(bDataStruct));   // This expression: reads the size of the type [ in this case, the custom struct 'bDataStruct' ]
+																								 //  creates a new 'pointer-to-char' for the object [ of type 'bDataStruct' ], and writes the data
+	}
+	else
+	{
+		cout << "Couldn't open the given file for writing." << endl;
+	}
+
+	fOutputBinaryFile.close();
+	fOutputBinaryFile.close();
+
+	bDataStruct ReadBinaryData{ 'H', 11, 22 };   // Creating a new variable of type 'struct' 'bDataStruct' to be used for reading
+
+	ifstream fInputFile{ "F:\\Udemy\\Developer\\02_C++\\BinFile.bin", fstream::binary };   // Opnening the same file for reading
+
+	if (fInputFile.is_open())
+	{
+		fInputFile.read(reinterpret_cast<char*>(&ReadBinaryData), sizeof(bDataStruct));
+
+		cout << "The size in bytes of the data structure is:  " << sizeof(bDataStruct) << endl;
+
+		cout << "The number of bytes received was:  " << fInputFile.gcount() << endl;
+
+		cout << "The received data is:  " << ReadBinaryData.cHeader << ", " << ReadBinaryData.iX << ", " << ReadBinaryData.iY << ". " << endl;
+	}
+	else
+	{
+		cout << "Couldn't open the given file for reading." << endl;
+	}
+
+	fInputFile.close();
+	fInputFile.close();
+}
+
+
+// #pragma pack (push, 2)
+struct Bitmap_FileHeader   // The Bitmap header was designed in 16-bit format [ 2-byte 'word-alignment' ]
+{
+	char Header[2]{ 'B','M' };
+	int32_t file_size;
+	int32_t reserved{ 0 };
+	int32_t data_offset;
+};
+// #pragma pack (pop)
+
+void M_BinaryFileBitmap()
+{
+	// Practicing with binary files [ corrupted data will invalidate the file, and invalid files cannot be opened ]
+	// Bitmap is a simple image file-format
+
+	// The bitmap format has three parts: File Header, Info Header and Image Data
+
 
 
 
