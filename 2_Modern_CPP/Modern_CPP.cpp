@@ -58,7 +58,7 @@ void M_StreamManipulators();
 void M_StringStreams();   // Calling a custom template function, that requires definition above this callee function
 void M_StreamRandomAccess();
 void M_StreamIterator();
-
+void M_BinaryFiles();
 
 
 
@@ -72,7 +72,7 @@ int main()
 // ====================================================================================================
 // Section 01 - Runs only once, before the loop                                                     1 V
 
-	M_StreamIterator();
+	M_BinaryFiles();
 
 
 // Section 01 - END                                                                                 1 A
@@ -1256,16 +1256,70 @@ void M_StreamIterator()
 
 	cout << "The 'OldData' is:  " << sNewData << endl;
 
-	ostream_iterator<int> OsI_Index(cout, "_");   // Creates the output stream iterator, sending the 'new-line character' after each iterator assignment
+	ostream_iterator<int> OsI_Index(cout, "_");   // Creates the output stream iterator, sending the 'new-line character' after each iterator assignment, and binding 'cout' to it
+												  // Since iterators are template-types [parametric], the variable type should be provided on the template-parameter [ in this case, 'int' ]
 
-	*OsI_Index = 88;   // Will display the decimal ASCII-equivalent-value of the char
+	*OsI_Index = 88;   // Will display the 'int' number 88
 
-	*OsI_Index = 'X';   // Will display the decimal ASCII-equivalent-value of the char [ 'X' = ASCII 88 ]
+	cout << endl;
+
+	*OsI_Index = 3.141592;   // Will display the 'int' number 3 [ since the iterator type was declared as an 'int' type ]
+
+	cout << endl;
+
+	*OsI_Index = 'X';   // Will display the decimal ASCII-equivalent-value of the char [ 'X' = ASCII 88 ], since the iterator type was declared as an 'int' type
+
+	cout << endl;
 
 	for (int Counter = 0; Counter < 10; Counter++)
 	{
-		*OsI_Index = Counter;   // Assigns the number [from 0 to 9] to the 'ostream_iterator'
-		OsI_Index++;   // Does nothing, but makes the syntax clear and explicit, as if it were a common iterator
+		*OsI_Index = Counter;   // Dereferences the output stream iterator [ does nothing, but will look like a 'pointer' iterator ] and assigns the number [from 0 to 9] to the 'ostream_iterator'
+		OsI_Index++;            // Increments the output stream iterator [ does nothing, but makes the syntax clear and explicit, as if it were a common iterator ]
 	}
+
+	cout << endl;
+
+	istream_iterator<int> IsI_Index(cin);   // Creating the input stream iterator, of type 'int', and binding the 'cin' input stream to it 
+											// When a new input stream iterator is created, the bound input stream will read information [ in this case, will wait for the user's input ]
+
+	string sUserInput{ ""s };
+	sUserInput = *IsI_Index;   // Every time an input stream iterator is dereferenced, the data will be read from the input stream bound to it
+	
+	cout << sUserInput << endl;   // Since the 'sUserInput' is a 'string' type, and the input stream iterator is an 'int' type,
+								  // the user's input [ must be an 'int' value ] will be converted into an ASCII character and be displayed to the 'cout' output stream
+
+	istream_iterator<int> IsI_Empty;   // Creating an 'empty-iterator' of type 'int', to be used for end-of-input detection
+
+	vector<int> vIntVector;
+
+	IsI_Index++;   // Incrementing the 'input stream iterator' will move to the next data
+				   // If the line above gets commented [ not incrementing ], the first element read from user's input will remain on the memory buffer
+
+	while (IsI_Index != IsI_Empty)   // Using the 'empty-iterator' to detect 'end-of-input'
+	{
+		vIntVector.push_back(*IsI_Index);   // Adding the input to the vector
+		IsI_Index++;
+	}
+
+	cout << endl;
+
+	for (int iElement : vIntVector)   // Printing each element of the vector, filled-up by user's input
+	{
+		*OsI_Index = iElement;
+		OsI_Index++;
+	}
+
+}
+
+void M_BinaryFiles()
+{
+	struct bDataStruct
+	{
+		char cHeader;   // The first element should be a 'char' variable, to be used by the 'pointer-to-char' variable [ the first argument of the 'read()' and 'write()' functions ]
+		int32_t iX;     // 'int32_t' will make sure that the 'int' variable will have a fixed size of 32 bits, no matter what is the CPU and OS bit-size of the end-user machine
+		int32_t iY;     // This approach makes sure that the C++ software will achieve the same results on all systems
+	};
+
+
 
 }

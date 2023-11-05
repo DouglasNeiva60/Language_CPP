@@ -77,14 +77,14 @@ Binary notation [C++14] must have the "0b" prefix on the Bin. value [base 2]
 
 
     The size of types depends on the bit-size of the machine [32 bits or 64 bits]
-char      - 8 bits
-int       - 16 bits
-long      - 32 bits
+char      - 8 bits [ 1 byte ]
+int       - 16 bits [ 2 bytes ]
+long      - 32 bits [ 4 bytes ]
 long long - new in C++11
-string    - 320 bits
-float       - 32 bits, 6 digits of precision
-double      - 64 bits, 15 digits of precision
-long double - 64 bits, 20 digits of precision
+string    - 320 bits [ 40 bytes ]
+float       - 32 bits, 6 digits of precision [ 4 bytes ]
+double      - 64 bits, 15 digits of precision [ 8 bytes ]
+long double - 64 bits, 20 digits of precision [ 8 bytes ]
 
     C++11 introduced fixed-width integers on the <cstdint> library
 Signed:  int8_t, int16_t, int32_t, int64_t
@@ -397,7 +397,7 @@ Otherwise, it may be necessary if there is not enough memory to copy the file's 
 
 	   >> Stream Iterators
 
-Iterators are commonly used with containers [ arrays and vectors ] for random-access [ jump anywhere ], taking the same speed to access any element of the container [ no matter what is it position ]
+Iterators are commonly used with containers [ arrays and vectors ] for random-access [ jumps anywhere ], taking the same speed to access any element of the container [ no matter what is it position ]
 The C++ Standard Library provides iterators which work on streams, defined on the <iterator> library, and since they are parametric types, they should be instantiated with the type of the data
 [ e.g.  istream_iterator   reads an input stream;   ostream_iterator   writes an output stream; ]
 
@@ -411,6 +411,42 @@ Stream iterators have a very limited interface, and should be bounded to an inpu
 * to bind an 'ostream_iterator' to an 'ostream' [ output stream ], the iterator-type should be specified as a template-parameter [ e.g.  ostream_iterator<int> OsI_Index(cout); ],
   and every time a value is assigned to the 'ostream_iterator' object, the value will be pushed onto the output stream [ the 'ostream_iterator' will call the 'left-shift' operator ]
 * the 'ostream_iterator' could receive a optional second argument which is the delimiter-character [ must be a C-style string ] that will be sent after each iterator assignment
+
+To read multiple inputs, the input stream iterator should be used within a 'for-loop', and the C++ software needs to know when to stop reading the input
+In this case, the iterator will be empty where there is no more input to read, detecting the end of input by comparing the iterator against an 'empty iterator'
+[ the 'empty iterator' is created without binding an input stream to it, and using the same 'template-parameter' as the desired iterator to be compared against ]
+
+
+   >>> Binary Files
+
+A binary file is more closer to the hardware than other file-types, and binary code is 'literal' [ the data must be exactly what the data is supposed to be ]
+To open a binary file, the output stream should be used on binary mode [ fstream::binary ], but the 'shift-operators << and >>' won't work with binary files
+[ text data is corrupted on output, and white-spaces are discarded on input ], instead the C++ software must always use 'write()' and 'read()' member functions with binary files
+
+Data stores on a binary file is all '0 and 1', meaning that there is no abstraction [ and there is nothing that indicates what the data means ]
+The data in a binary file should be application-specific, designed in a way that it won't be corrupted by the C++ software, and often binary files uses a standard file-format for storing data
+that is meaningful for other applications [ .jpg .bmp .zip and custom file-types ], and the best way to work with binary files is to create a struct whose data members correspond to the fields
+of the standard file-format, using the struct as a 'formatting-memory-buffer'
+
+The 'read()' and 'write()' functions takes 2 arguments:
+- 1: the address of the struct, represented by a 'pointer-to-char' variable [ the address of the struct should be converted to a 'pointer-to-char' type, using 'reinterpret_cast<char *>()' ]
+- 2: the number of bytes of the data to be read/write [ using the 'sizeof()' function ]
+* [ e.g.  Os_fNewFile.read (reinterpret_cast<char *>(&bDataStruct), sizeof(bDataStruct)); ]
+* [ e.g.  Os_fNewFile.write(reinterpret_cast<char *>(&bDataStruct), sizeof(bDataStruct)); ]
+
+	   >> Memory aligment and Padding
+
+Modern hardware is faster, optimized for accessing data which is 'word-aligned', meaning that the address of each object is a multiple of: 4 bytes on 32-bit system, 8 bytes on 64-bit system
+[ if a bool variable takes one single bit to be stored on a normal memory, it will take 4 bytes to be stored on 32-bit modern hardware on address 0x1000, and the next bool variable
+will take more 4 bytes to be stored on the next address address 0x1004, next to the previous variable; this method is applied for 64-bit modern hardware, using 8-byte memory-blocks addresses ]
+
+If the binary data-struct is not word-aligned, compilers will usually add extra bytes [ padding bytes ], placing the struct members at the right 'word-offsets' [ since a 'char' variable uses
+only 1 byte, the compiler will add 3 'padding-bytes' to fill-up the memory block with the 'char' variable, and store the next variable on the next 'multiple-of-4' memory-block  ]
+
+If there are file-formats expecting data to have different 'word-aligment' offsets [ like 2 bytes on 16-bit machines ], most compilers provides a non-standard directive to set the alignment,
+and this directive should be used before and after creating the binary data-struct, so the compiler will understand that the binary data-struct have a 'word-aligment' of the number of desired bytes
+[ e.g.  #pragma pack(push, 2)   ... Create the data-struct to be used with binary files ...   #pragma pack(pop) ]
+
 
 
 // ====================================================================================================
