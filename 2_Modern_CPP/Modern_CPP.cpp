@@ -59,7 +59,7 @@ void M_StringStreams();   // Calling a custom template function, that requires d
 void M_StreamRandomAccess();
 void M_StreamIterator();
 void M_BinaryFiles();
-void M_BinaryFileBitmap();
+void M_BinaryFileBitmap();   // Uses several structs [ compound types ], written right above the function
 
 
 
@@ -1371,25 +1371,75 @@ void M_BinaryFiles()
 	fInputFile.close();
 }
 
+// Binary file: Bitmap
+// Practicing with binary files [ corrupted data will invalidate the file, and invalid files cannot be opened ]
+
+	// Bitmap is a simple image file-format, made-up of 'pixels', and each pixel consist of 3 bytes [ R,G,B, from 0 to 255 ] represented by a 'pixel' struct
+	// The position of a pixel depends on its cartesian coordinates, scanned left-to-right, top-to-bottom [ the offset coordinate is ((Y * width) + X) ]
+	// On the C++ code, the first pixel will be at the bottom-left of the image [ it means that the index of the 'vector of pixels' element will be the pixel's offset ((Y * width) + X) ]
+	// The bitmap format has three parts: File Header, Info Header and Image Data
+	// The Bitmap File Header was designed in 16-bit format [ 2-byte 'word-alignment' ], since it was created on MS-DOS operating system [ running on 16-bit Intel processors ]
+	// The default Bitmap Headers are not Object-Oriented [ meaning that there is no encapsulation with protected or private members, and no 'class's interface' member functions ]
+	// The default Bitmap Image Data is Object-Oriented, custom-designed by the C++ developer to store Image Data [ class 'Bitmap_ImageData' ]
 
 // #pragma pack (push, 2)
-struct Bitmap_FileHeader   // The Bitmap header was designed in 16-bit format [ 2-byte 'word-alignment' ]
+struct Bitmap_FileHeader
 {
-	char Header[2]{ 'B','M' };
-	int32_t file_size;
-	int32_t reserved{ 0 };
-	int32_t data_offset;
+	char Header[2]{ 'B','M' };   // These 2 characters are designed to say what is the file-type
+	                             // Fixed-width integers, to behave the same on every machine [ 16, 32 or 64 bits ]
+	int32_t file_size;           // Contains the size of the file
+	int32_t reserved{ 0 };       // Don't used by the C++ software
+	int32_t data_offset;         // Offset data to say 'how far, from the beginning of the file, where the image data starts'
 };
 // #pragma pack (pop)
 
+struct Bitmap_InfoHeader
+{
+	// All the values are default values, excepting the 'width' and 'height' variables
+	int32_t header_size{ 40 };
+	int32_t width;    // Designed to be changed
+	int32_t height;   // Designed to be changed
+	int16_t planes{ 1 };
+	int16_t bits_per_pixel{ 24 };
+	int32_t compression{ 0 };
+	int32_t data_size{ 0 };
+	int32_t horizontal_resolution{ 2400 };
+	int32_t vertical_resolution{ 2400 };
+	int32_t colours{ 0 };
+	int32_t important_colours{ 0 };
+};
+
+struct Bitmap_Pixel   // The standard Bitmap order is: Blue, Green, Red
+{
+	uint8_t red;
+	uint8_t green;
+	uint8_t blue;
+};
+
+class Bitmap_ImageData
+{
+public:
+
+	Bitmap_ImageData();    // Default constructor function
+	~Bitmap_ImageData();   // Default destructor function
+
+protected:
+
+private:
+
+	int iWidth{ 800 };
+	int iHeight{ 600 };
+	std::string sFileName;
+	std::vector <Bitmap_Pixel> vPixels;
+};
+
 void M_BinaryFileBitmap()
 {
-	// Practicing with binary files [ corrupted data will invalidate the file, and invalid files cannot be opened ]
-	// Bitmap is a simple image file-format
-
-	// The bitmap format has three parts: File Header, Info Header and Image Data
-
-
+	// The image to be drawn will be 'C++' written on a Bitmap file, using 4 variables:
+	// 'x_unit' = the thickness on the X axis
+	// 'y_unit' = the thickness on the Y axis
+	// 'x_mid' = the center of the image at the X axis
+	// 'y_mid' = the center of the image at the Y axis
 
 
 }
