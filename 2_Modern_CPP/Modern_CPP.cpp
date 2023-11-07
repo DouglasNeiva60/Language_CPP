@@ -13,6 +13,7 @@
 #include <vector>
 #include <sstream>
 #include <iterator>
+#include <cstdint>
 
 
 using namespace std;             // 3 - Global Namespaces [the main global namespace has no name]
@@ -1375,14 +1376,14 @@ void M_BinaryFiles()
 // Practicing with binary files [ corrupted data will invalidate the file, and invalid files cannot be opened ]
 
 	// Bitmap is a simple image file-format, made-up of 'pixels', and each pixel consist of 3 bytes [ R,G,B, from 0 to 255 ] represented by a 'pixel' struct
-	// The position of a pixel depends on its cartesian coordinates, scanned left-to-right, top-to-bottom [ the offset coordinate is ((Y * width) + X) ]
+	// The position of a pixel depends on its cartesian coordinates, written left-to-right, bottom-to-top [ the offset coordinate is ((Y * width) + X) ]
 	// On the C++ code, the first pixel will be at the bottom-left of the image [ it means that the index of the 'vector of pixels' element will be the pixel's offset ((Y * width) + X) ]
 	// The bitmap format has three parts: File Header, Info Header and Image Data
 	// The Bitmap File Header was designed in 16-bit format [ 2-byte 'word-alignment' ], since it was created on MS-DOS operating system [ running on 16-bit Intel processors ]
 	// The default Bitmap Headers are not Object-Oriented [ meaning that there is no encapsulation with protected or private members, and no 'class's interface' member functions ]
 	// The default Bitmap Image Data is Object-Oriented, custom-designed by the C++ developer to store Image Data [ class 'Bitmap_ImageData' ]
 
-// #pragma pack (push, 2)
+#pragma pack (push, 2)
 struct Bitmap_FileHeader
 {
 	char Header[2]{ 'B','M' };   // These 2 characters are designed to say what is the file-type
@@ -1391,7 +1392,7 @@ struct Bitmap_FileHeader
 	int32_t reserved{ 0 };       // Don't used by the C++ software
 	int32_t data_offset;         // Offset data to say 'how far, from the beginning of the file, where the image data starts'
 };
-// #pragma pack (pop)
+#pragma pack (pop)
 
 struct Bitmap_InfoHeader
 {
@@ -1409,11 +1410,11 @@ struct Bitmap_InfoHeader
 	int32_t important_colours{ 0 };
 };
 
-struct Bitmap_Pixel   // The standard Bitmap order is: Blue, Green, Red
+struct Bitmap_Pixel   // The standard Bitmap order is: Blue, Green, Red (developed by Microsoft)
 {
-	uint8_t red;
-	uint8_t green;
 	uint8_t blue;
+	uint8_t green;
+	uint8_t red;
 };
 
 class Bitmap_ImageData
@@ -1423,15 +1424,78 @@ public:
 	Bitmap_ImageData();    // Default constructor function
 	~Bitmap_ImageData();   // Default destructor function
 
+	void SetFileName(const string &sNewFileName);
+
+	void CreateFile();
+
+	void WritePixels();
+
 protected:
 
 private:
 
 	int iWidth{ 800 };
 	int iHeight{ 600 };
-	std::string sFileName;
-	std::vector <Bitmap_Pixel> vPixels;
+	std::string sFileName{""s};
+	std::vector <Bitmap_Pixel> vPixels;   // A vector variable to store image data
+
+	ofstream NewBitmapFile;
+	Bitmap_FileHeader NewFileHeader;
+	Bitmap_InfoHeader NewInfoHeader;
 };
+
+Bitmap_ImageData::Bitmap_ImageData()   // Default constructor function
+{
+
+}
+
+Bitmap_ImageData::~Bitmap_ImageData()   // Default destructor function
+{
+	NewBitmapFile.close();
+	NewBitmapFile.close();
+}
+
+void Bitmap_ImageData::SetFileName(const string &sNewFileName)
+{
+	if (sNewFileName != "")
+	{
+		sFileName = sNewFileName;
+	}
+	else
+	{
+		cout << "Please specify a valid file-name!" << endl;
+	}
+}
+
+void Bitmap_ImageData::CreateFile()
+{
+	if (sFileName != "")
+	{
+		NewBitmapFile.open(sFileName, fstream::out);
+		
+		NewBitmapFile.write(reinterpret_cast<char*>(&NewFileHeader), sizeof(Bitmap_FileHeader));
+
+		NewBitmapFile.write(reinterpret_cast<char*>(&NewInfoHeader), sizeof(Bitmap_InfoHeader));
+
+		NewBitmapFile.write(reinterpret_cast<char*>(&vPixels), ((vPixels.size()) * sizeof(Bitmap_Pixel)));
+	}
+	else
+	{
+		cout << "Please specify the name of the file!" << endl;
+	}
+}
+
+void Bitmap_ImageData::WritePixels()
+{
+	if (sFileName != "")
+	{
+
+	}
+	else
+	{
+		cout << "Please specify the name of the file!" << endl;
+	}
+}
 
 void M_BinaryFileBitmap()
 {
@@ -1441,5 +1505,6 @@ void M_BinaryFileBitmap()
 	// 'x_mid' = the center of the image at the X axis
 	// 'y_mid' = the center of the image at the Y axis
 
+	Bitmap_ImageData NewBitmap;
 
 }
