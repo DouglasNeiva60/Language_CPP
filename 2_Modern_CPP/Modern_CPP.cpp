@@ -1426,9 +1426,15 @@ public:
 
 	void SetFileName(const string &sNewFileName);
 
+	bool CheckFileName();
+
 	void CreateFile();
 
-	void WritePixels();
+	void SetPixel(int X_NewPixel, int Y_NewPixel, Bitmap_Pixel Color_NewPixel);
+
+	void SetRow(int Y_NewRow, Bitmap_Pixel Color_NewRow);
+
+	void SetAll(Bitmap_Pixel Color_New);
 
 protected:
 
@@ -1437,20 +1443,22 @@ private:
 	int iWidth{ 800 };
 	int iHeight{ 600 };
 	std::string sFileName{""s};
-	std::vector <Bitmap_Pixel> vPixels;   // A vector variable to store image data
 
 	ofstream NewBitmapFile;
 	Bitmap_FileHeader NewFileHeader;
 	Bitmap_InfoHeader NewInfoHeader;
+	std::vector <Bitmap_Pixel> NewFilePixels;   // A vector variable to store image data
+
 };
 
 Bitmap_ImageData::Bitmap_ImageData()   // Default constructor function
 {
-
+	cout << endl << " Bitmap says:  A new Bitmap file was created!" << endl;
 }
 
 Bitmap_ImageData::~Bitmap_ImageData()   // Default destructor function
 {
+	cout << " Bitmap says:  The Bitmap file was deleted!" << endl;
 	NewBitmapFile.close();
 	NewBitmapFile.close();
 }
@@ -1463,37 +1471,93 @@ void Bitmap_ImageData::SetFileName(const string &sNewFileName)
 	}
 	else
 	{
-		cout << "Please specify a valid file-name!" << endl;
+		cout << " Bitmap says:  Please specify a valid file-name!" << endl;
 	}
+}
+
+bool Bitmap_ImageData::CheckFileName()
+{
+	if (sFileName != "")
+	{
+		cout << " Bitmap says:  The file has a valid name..." << endl;
+		return true;
+	}
+	else
+	{
+		cout << " Bitmap says:  Please specify the name of the file!  [ using the 'SetFileName()' member function ]" << endl;
+	}
+	return false;
 }
 
 void Bitmap_ImageData::CreateFile()
 {
-	if (sFileName != "")
+	if (CheckFileName())
 	{
-		NewBitmapFile.open(sFileName, fstream::out);
-		
-		NewBitmapFile.write(reinterpret_cast<char*>(&NewFileHeader), sizeof(Bitmap_FileHeader));
+		cout << "Bitmap says:  'CreateFile()' member function called..." << endl;
 
-		NewBitmapFile.write(reinterpret_cast<char*>(&NewInfoHeader), sizeof(Bitmap_InfoHeader));
+		// Sets the standard values for the Bitmap file about to be created [ FileHeader and InfoHeader ]
 
-		NewBitmapFile.write(reinterpret_cast<char*>(&vPixels), ((vPixels.size()) * sizeof(Bitmap_Pixel)));
-	}
-	else
-	{
-		cout << "Please specify the name of the file!" << endl;
+		NewFileHeader.file_size = ((sizeof(Bitmap_FileHeader)) + (sizeof(Bitmap_InfoHeader)) + ((iWidth * iHeight) * (sizeof(Bitmap_Pixel))));
+
+		NewFileHeader.data_offset = ((sizeof(Bitmap_FileHeader)) + (sizeof(Bitmap_InfoHeader)));
+
+		NewInfoHeader.width = iWidth;
+
+		NewInfoHeader.height = iHeight;
+
+		// Creates the Bitmap file using the standard values set previously
+
+		NewBitmapFile.open(sFileName, fstream::out | fstream::binary );
+
+		if (NewBitmapFile.is_open())
+		{
+			cout << " Bitmap says:  writing data into the file..." << endl;
+
+			// Writes the data into the file
+
+			NewBitmapFile.write(reinterpret_cast<char*>(&NewFileHeader), sizeof(Bitmap_FileHeader));
+
+			NewBitmapFile.write(reinterpret_cast<char*>(&NewInfoHeader), sizeof(Bitmap_InfoHeader));
+
+			NewBitmapFile.write(reinterpret_cast<char*>(NewFilePixels.data()), ((NewFilePixels.size()) * sizeof(Bitmap_Pixel)));   // Notice the 'data()' member function
+			// The std::vector '.data()' member cuntion returns a direct pointer to the memory array used internally by the vector to store its owned elements.
+		}
+		else
+		{
+			cout << " Bitmap says:  Could not open the file" << endl;
+		}				
 	}
 }
 
-void Bitmap_ImageData::WritePixels()
+void Bitmap_ImageData::SetPixel(int iX_NewPixel, int iY_NewPixel, Bitmap_Pixel Color_NewPixel)
 {
-	if (sFileName != "")
+	if (CheckFileName())
 	{
+		int iPixelIndex = ((iY_NewPixel * iWidth) + iX_NewPixel);
 
+		NewFilePixels[iPixelIndex] = Color_NewPixel;
 	}
-	else
+}
+
+void Bitmap_ImageData::SetRow(int Y_NewRow, Bitmap_Pixel Color_NewRow)
+{
+	if (CheckFileName())
 	{
-		cout << "Please specify the name of the file!" << endl;
+		for (int iCounter = 0; (iCounter < iWidth); iCounter++)
+		{
+			SetPixel(iCounter, Y_NewRow, Color_NewRow);
+		}
+	}
+}
+
+void Bitmap_ImageData::SetAll(Bitmap_Pixel Color_New)
+{
+	if (CheckFileName())
+	{
+		for (int iCounter = 0; (iCounter < iHeight); iCounter++)
+		{
+			SetRow(iCounter, Color_New);
+		}
 	}
 }
 
@@ -1506,5 +1570,16 @@ void M_BinaryFileBitmap()
 	// 'y_mid' = the center of the image at the Y axis
 
 	Bitmap_ImageData NewBitmap;
+
+	NewBitmap.SetFileName("F:\\Udemy\\Developer\\02_C++\\CppGeneratedImage.bmp"s);
+
+	Bitmap_Pixel NewPixelColor{255,0,0};
+
+	for (int iCounter = 100; iCounter < 200; iCounter++)
+	{
+		NewBitmap.SetRow(iCounter, NewPixelColor);
+	}
+
+	cout << "Written data into the Bitmap File, check the file on the machine..." << endl;
 
 }
