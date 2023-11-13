@@ -61,7 +61,7 @@ void M_StreamRandomAccess();
 void M_StreamIterator();
 void M_BinaryFiles();
 void M_BinaryFileBitmap();   // Uses several structs [ compound types ], written right above the function
-
+void M_MemberFunctions();
 
 
 
@@ -74,7 +74,7 @@ int main()
 // ====================================================================================================
 // Section 01 - Runs only once, before the loop                                                     1 V
 
-	M_BinaryFileBitmap();
+	M_MemberFunctions();
 
 
 // Section 01 - END                                                                                 1 A
@@ -1670,5 +1670,96 @@ void M_BinaryFileBitmap()
 	NewBitmap.UpdateFile();
 
 	cout << "Written data into the Bitmap File, check the file on the machine..." << endl;
+
+}
+
+class Ethernet
+{
+public:
+
+	void Connect() { cout << " Ethernet:  Connected to the network!" << endl; }
+
+	void Login(const string& UserID, const string& UserPW) {
+		cout << " Ethernet Login:  Username provided:  " << UserID << endl;
+		cout << " Ethernet Login:  Password provided:  " << UserPW << endl;
+	}
+
+
+protected:
+
+private:
+
+};
+
+class Refrigerator
+{
+public:
+
+	void PrintStatus() {
+		cout << "The refrigerator temperature is:  " << Temperature << endl;
+		cout << "The refrigerator is cooling?  ";
+		if (IsCooling)
+		{
+			cout << "Yes" << endl;
+		}
+		else
+		{
+			cout << "No" << endl;
+		}
+	}
+
+	// 1 - The default constructor member function, defined inside the class's body [ same as Refrigerator::Refrigerator() ]
+	Refrigerator()
+	{
+		Connection.Connect();
+		Connection.Login("Douglas", "Neiva");
+	}
+
+	// 2 - A 'function overload' of the 'default constructor' member function, setting the temperature [ ambiguous with the 4th overload ]
+	Refrigerator(int SetTemp) : Temperature(SetTemp) {
+		Connection.Connect();
+		Connection.Login("Douglas", "Neiva");
+	}
+
+	// 3 - A 'function overload' of the 'default constructor' member function, setting New UserID and UserPW
+	Refrigerator(const string& NewUserID, const string& NewUserPW) {
+		Connection.Connect();
+		Connection.Login(NewUserID, NewUserPW);
+	}
+
+	// 4 - A 'function overload' of the 'default constructor' member function, setting both the temperature and New UserID and UserPW
+	Refrigerator(int SetTemp, const string& NewUserID = "Default_User"s, const string& NewUserPW = "Default_Password"s, bool SetPower = false) : Temperature(SetTemp), IsCooling(SetPower) {
+		Connection.Connect();
+		Connection.Login(NewUserID, NewUserPW);
+	}
+
+    // Constructor function overloads are constructor member function that initializes the data members with default arguments but accepting custom arguments
+    // This member functions can be used when a new object is created, overwriting the default arguments by new custom arguments when a new object is created
+	// All the non-initialized custom arguments should be the first arguments; and all the initialized default arguments should be the last arguments
+	// [ C++ doesn't accept a non-initialized custom argument after an initialized default argument ]
+
+protected:
+
+
+private:
+	int Temperature;
+	bool IsCooling;
+	Ethernet Connection;
+};
+
+void M_MemberFunctions()
+{
+	cout << endl << "Fridge 01 says: " << endl;
+	Refrigerator NewFridge_01;
+	NewFridge_01.PrintStatus();
+
+	cout << endl << "Fridge 02 says: " << endl;
+	Refrigerator NewFridge_02("MyUser"s, "MyPassword"s);
+	NewFridge_02.PrintStatus();
+
+	cout << endl << "Fridge 03 says: " << endl;
+	Refrigerator NewFridge_03(-25, "Unreal"s, "Engine"s);
+	NewFridge_03.PrintStatus();
+
 
 }
