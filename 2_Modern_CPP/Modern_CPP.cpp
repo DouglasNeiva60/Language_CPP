@@ -1747,6 +1747,34 @@ private:
 	Ethernet Connection;
 };
 
+// This programming technique is called DRY [ don't repeat yourself ] - Using constructor's delegates avoids writing the same C++ code on every overloaded version
+class Delegator
+{
+public:
+
+	Delegator() : Delegator(true, 7, 1.618034f) {};   // Default constructor [ with default arguments ] calling the 'delegate constructor'
+
+	Delegator(const bool& Set_MV_01) : Delegator(Set_MV_01, 7, 1.618034f) {};   // Delegating [ Calling the 'delegate constructor' ]
+
+	Delegator(const bool& Set_MV_01, const int& Set_MV_02) : Delegator(Set_MV_01, Set_MV_02, 1.618034f) {};   // Calling the 'delegate constructor'
+
+	Delegator(const bool& Set_MV_01, const int& Set_MV_02, const double& Set_MV_03) : bMV_01(Set_MV_01), iMV_02(Set_MV_02), fMV_03(Set_MV_03) {   // Delegate constructor
+		cout << "This member function delegate always gets called by the other constructors!  Setting all the class's variables..." << endl;
+		cout << "bMV_01 value:  " << bMV_01 << endl;
+		cout << "iMV_02 value:  " << iMV_02 << endl;
+		cout << "fMV_03 value:  " << fMV_03 << endl;
+	}
+
+protected:
+
+private:
+
+	bool   bMV_01 = false;
+	int    iMV_02 = 5;
+	double fMV_03 = 3.141592f;
+};
+
+
 void M_MemberFunctions()
 {
 	cout << endl << "Fridge 01 says: " << endl;
@@ -1761,5 +1789,13 @@ void M_MemberFunctions()
 	Refrigerator NewFridge_03(-25, "Unreal"s, "Engine"s);
 	NewFridge_03.PrintStatus();
 
+	cout << endl << "Delegator 01 says: " << endl;
+	Delegator NewDelegateFunction_01;
+	cout << endl << "Delegator 02 says: " << endl;
+	Delegator NewDelegateFunction_02(true);
+	cout << endl << "Delegator 03 says: " << endl;
+	Delegator NewDelegateFunction_03(false,9);
+	cout << endl << "Delegator 04 says: " << endl;
+	Delegator NewDelegateFunction_04(true,14,2.718281);
 
 }

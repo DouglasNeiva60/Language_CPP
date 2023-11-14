@@ -455,7 +455,7 @@ and this directive should be used before and after creating the binary data-stru
 
 The 'Constructor()' member function of a C++ class gets called every time a new class's object is created, and it's used to setup the object [ e.g.  initialize object's data members ]
 Data members [ class's variables ] are default-initialized if not set in the constructor [ undefined initial values ]
-On C++11, the data members can be initialized on the class itself
+On C++11, the data members can be initialized on the class itself  [ C++11 also allows "constructors calling constructors", a programming technique called 'delegating constructor' ]
 
 
 // ====================================================================================================
