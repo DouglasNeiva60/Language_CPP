@@ -63,6 +63,8 @@ void M_BinaryFiles();
 void M_BinaryFileBitmap();   // Uses several structs [ compound types ], written right above the function
 void M_MemberFunctions();
 void M_CopyConstructor();
+void M_RAIIstring();
+
 
 
 
@@ -75,7 +77,8 @@ int main()
 // ====================================================================================================
 // Section 01 - Runs only once, before the loop                                                     1 V
 
-	M_CopyConstructor();
+	M_RAIIstring();
+
 
 
 // Section 01 - END                                                                                 1 A
@@ -1757,7 +1760,7 @@ class Delegator
 {
 public:
 
-	Delegator() : Delegator(true, 7, 1.618034f) {};   // Default constructor [ with default arguments ] calling the 'delegate constructor'
+	Delegator() : Delegator(true, 7, 1.618034f) {};   // Default constructor [ with default arguments ] that will delegate to the 'delegate constructor'
 
 	Delegator(const bool& Set_MV_01) : Delegator(Set_MV_01, 7, 1.618034f) {};   // Delegating [ Calling the 'delegate constructor' ]
 
@@ -1809,7 +1812,7 @@ void M_MemberFunctions()
 	cout << endl << "Delegator 03 says: " << endl;
 	Delegator NewDelegateFunction_03(false,9);
 	cout << endl << "Delegator 04 says: " << endl;
-	Delegator NewDelegateFunction_04(true,14,2.718281);
+	Delegator NewDelegateFunction_04(true,14,2.718281f);
 
 }
 
@@ -1823,8 +1826,28 @@ public:
 	};
 
 	// Copy Constructor [ explicit C++ code ]
-	CopyConstructor(const CopyConstructor& New) : bMV_01(false), iMV_02(9), fMV_03(3.141592) {
+	CopyConstructor(const CopyConstructor& New) : bMV_01(false), iMV_02(9), fMV_03(3.141592f) {   // Custom C++ functionality can override the 'copy data members' default behavior
 		cout << "Calling the Copy Constructor" << endl;
+	};
+
+	// Assignment Operator [ explicit C++ code ]
+	CopyConstructor& operator=(const CopyConstructor& New) {
+		cout << "Calling the Assignment Operator" << endl;
+
+		bMV_01 += New.bMV_01;   // The 'AssignmentOperator()' could also be used to perform custom C++ functionality
+		iMV_02 -= New.iMV_02;
+		fMV_03 += New.fMV_03;
+
+		return *this;
+	};
+
+	// Default Destructor [ explicit C++ code ]
+	~CopyConstructor() {
+		cout << "Calling the Default Destructor" << endl;
+
+		bMV_01 = false;
+		iMV_02 = 99;
+		fMV_03 = 0.0f;
 	};
 
 	void GetValues() {
@@ -1858,9 +1881,66 @@ void M_CopyConstructor()
 	cout << endl << "Copy Constructor - Object_01  says: " << endl;
 	CopyConstructor Object_01;              // Creating a new object by using the 'Default Constructor' [ won't call the explicit C++ code 'CopyConstructor()' ]
 	Object_01.GetValues();                  // The data members will have its values initialized from the class's default values
+
 	cout << endl << "Copy Constructor - Object_02  says: " << endl;
 	CopyConstructor Object_02(Object_01);   // Creating a new object by using the 'Copy Constructor' [ won't call the explicit C++ code 'DefaultConstructor()' ]
 	Object_02.GetValues();                  // The data members will have its values initialized from the explicit C++ code 'CopyConstructor()'
 
+	cout << endl << "Copy Constructor - Object_03  says: " << endl;
+	CopyConstructor Object_03 = Object_01;   // Creating a new object by using the 'AssignmentOperator=', but calls the 'CopyConstructor()' [ won't call the explicit C++ code 'AssignmentOperator()' ]
+	Object_03.GetValues();                   // The data members will have its values initialized from the explicit C++ code 'CopyConstructor()'
+
+	cout << endl << "Copy Constructor - Object_04  says: " << endl;
+	CopyConstructor Object_04;   // Creates an empty object [ with the class's default values ] and calls the 'DefaultConstructor()'
+	Object_04 = Object_01;       // Copies the Object_01 to the Object_04 by using the 'AssignmentOperator=' and calling the 'AssignmentOperator()'
+	Object_04.GetValues();       // The data members will have its values set the same values from the Object_01
+
+	cout << endl << "Objects now reaching 'out-of-scope'... " << endl;
+
+}
+
+class CustomString
+{
+public:
+
+	CustomString() : CustomString("X"s) {};   // Delegating Constructor()
+	CustomString(const std::string& Data);    // Constructor() delegate
+	~CustomString();   // ~Destructor()
+
+protected:
+
+private:
+
+	char* StringData;   // In this case, the pointer will be overwritten by a new address on the synthesized 'CopyConstructor()', causing memory-leaks
+	int   StringSize;
+};
+
+CustomString::CustomString(const std::string& Data)   // Constructor()
+{
+	cout << "Creating a new 'CustomString' object..." << endl;
+
+	StringSize = (Data.size());
+	StringData = new char[StringSize];   // Allocates [ acquires ] the resource [ the memory buffer on the heap ]
+
+	for (int Counter = 0; Counter < StringSize; Counter++)   // Populate the data
+	{
+		StringData[Counter] = Data[Counter];
+	}
+
+	cout << "'CustomString' object says:  Size - " << StringSize << " elements,  Content - " << StringData << "." << endl;
+}
+
+CustomString::~CustomString()   // ~Destructor()
+{
+	cout << "Deleting the 'CustomString' object..." << endl;
+
+	delete [] StringData;   // Releases the resource [ the memory buffer on the heap ]
+}
+
+void M_RAIIstring()
+{
+	CustomString MyString_01;
+	CustomString MyString_02("Y"s);
+	CustomString MyString_03("DOUGLAS"s);
 
 }

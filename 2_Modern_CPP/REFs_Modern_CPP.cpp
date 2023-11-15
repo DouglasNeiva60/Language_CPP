@@ -468,6 +468,65 @@ when the new object is created ], but the copy constructor should be explicitly 
 that involves acquiring a new resource and initializing it from the copied object's resource ], creating additional C++ code rather than simply copying all the data members [ like allocating memory,
 establishing database connections, etc. ], avoiding different objects managing the same resource
 
+	   >> Assignment Operator
+
+The 'Assignment Operator =' is also a class's member function [ operator= ] that automatically gets called when assigning existing object of the same class, synthesized by the compiler
+[ e.g.  if 'Y' and 'Z' are objects from the same class, the 'Y=Z;' statement will behave the same as the 'Y.operator=(Z)' statement, and the data members of Y will have the same values of Z ]
+The 'Assignment Operator =' [ taking its argument on the C++ implicit code by const reference  ] also returns the modified object by reference [ not const reference! ],
+that can be used with a third object [ e.g.  'X=Y=Z' ], processing all chain-operators from right-to-left of the multiple-assignment statement
+[ similar to left-shift chain-operators on streams:  cout << X << Y << Z << endl; ] 
+
+The 'Assignment Operator =' class's member function takes an extra hidden argument [ the 'this' hidden pointer-to-object variable ] when it gets called
+The correct signature [ explicit C++ code ] of the assignment operator of a given object from a given class is:  Class& Class::operator=(const Class&)
+[ takes a class's object and returns a class's object ], and the modified object could be accessed by dereferencing the 'this' pointer-to-object after the assignment operator
+Classes also have the keyword 'this' that returns a hidden pointer-to-object [ the address of the object from a given class ] pointing to the object itself
+
+Since the 'Assignment Operator' is synthesized by the compiler, custom functionality has to be written into the class's body [ similar to the 'Copy Constructor' member function ],
+usually applied when the given Class manages resources [ the new object need to have its own version of the resource, that involves acquiring a new resource and initializing it
+from the copied object's resource, like allocating memory, establishing database connections, etc. ]. Since the assigned class already has an object of the resource [ which needs
+to be released properly ], copying-it to another object will cause resource leaks [ e.g.  the allocated memory could be lost without being released before the 'assignment operator' ],
+so the explicit C++ code for the 'assignment operator' should release the resource before copying-it to the object
+
+	   >> Synthesized Member Functions
+
+If class's special member functions [ like 'constructor()', 'destructor()' 'copy constructor()', 'assignment operator()' and others ] are not defined [ explicitly written ]
+by the C++ developer, they will be 'synthesized' by the compiler [ Modern C++ also introduced new special member functions, like 'move semantics', and they will be synthesized
+only if certain other special member functions are not defined ]
+
+
+   >>> Copying
+
+Using a Class with the RAII idiom [ Resource Acquisition Is Initialization ] to manage a resource means that:
+	- the Class will allocate the needed memory for the object on the Constructor();
+	- the Class will release  the needed memory for the object on the ~Destructor().
+
+The Class is responsible for manage the allocated resource for its objects during its lifetime, and must make sure that:
+	- the resource is correctly acquired before being used [ on the 'Constructor()' ]
+	- the resource is correctly released when it's no longer needed [ on the '~Destructor()' ]
+	- any copying of the resource is handled correctly [ on the 'CopyConstructor()' and on the 'AssignmentOperator()' ]
+	- any transfer of the resource to another object [ should be of the same class ] is handled correctly [ on MoveSemantics() by Modern C++ ]
+
+E.g.  A Custom String Class can have 2 data members:
+	- char *DataContent   // A  'pointer-to-char' variable to store the characters into an 'array of characters'
+	- int  *DataSize      // An 'int' variable to represent the number of elements in the 'array of characters'
+*In the Custom String Class, the 'resource' is the memory allocated for the class's object
+
+
+
+
+
+
+
+
+
+
+
+
+	   >> Shallow Copying
+
+
+
+	   >> Deep Copying
 
 
 
