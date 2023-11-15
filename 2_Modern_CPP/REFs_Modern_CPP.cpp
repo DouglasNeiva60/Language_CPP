@@ -443,7 +443,7 @@ will take more 4 bytes to be stored on the next address address 0x1004, next to 
 If the binary data-struct is not word-aligned, compilers will usually add extra bytes [ padding bytes ], placing the struct members at the right 'word-offsets' [ since a 'char' variable uses
 only 1 byte, the compiler will add 3 'padding-bytes' to fill-up the memory block with the 'char' variable, and store the next variable on the next 'multiple-of-4' memory-block  ]
 
-If there are file-formats expecting data to have different 'word-aligment' offsets [ like 2 bytes on 16-bit machines ], most compilers provides a non-standard directive to set the alignment,
+If there are file-formats expecting data to have different 'word-alignment' offsets [ like 2 bytes on 16-bit machines ], most compilers provides a non-standard directive to set the alignment,
 and this directive should be used before and after creating the binary data-struct, so the compiler will understand that the binary data-struct have a 'word-alignment' of the number of desired bytes
 [ e.g.  #pragma pack(push, 2)   ... Create the data-struct to be used with binary files ...   #pragma pack(pop) ]
 
@@ -456,6 +456,20 @@ and this directive should be used before and after creating the binary data-stru
 The 'Constructor()' member function of a C++ class gets called every time a new class's object is created, and it's used to setup the object [ e.g.  initialize object's data members ]
 Data members [ class's variables ] are default-initialized if not set in the constructor [ undefined initial values ]
 On C++11, the data members can be initialized on the class itself  [ C++11 also allows "constructors calling constructors", a programming technique called 'delegating constructor' ]
+
+	   >> Copy Constructor
+
+The 'Copy Constructor' is a special member function that takes only one argument: an object of the same class [ implicitly calls 'const Class& Object' ]
+The 'Copy Constructor' uses the existing object [ passed as an argument by reference implicitly ] to initialize a new object with the same values of the object passed as an argument
+The 'Copy Constructor' is automatically invoked when a new object is initialized from an existing object of the same class
+
+If the 'Copy Constructor' is not explicitly written by the C++ developer, the compiler will 'synthesize' it by copying all the data members [ but the default constructor won't be called
+when the new object is created ], but the copy constructor should be explicitly written when the given Class manages resources [ the new object need to have its own version of the resource,
+that involves acquiring a new resource and initializing it from the copied object's resource ], creating additional C++ code rather than simply copying all the data members [ like allocating memory,
+establishing database connections, etc. ], avoiding different objects managing the same resource
+
+
+
 
 
 // ====================================================================================================

@@ -62,6 +62,7 @@ void M_StreamIterator();
 void M_BinaryFiles();
 void M_BinaryFileBitmap();   // Uses several structs [ compound types ], written right above the function
 void M_MemberFunctions();
+void M_CopyConstructor();
 
 
 
@@ -74,7 +75,7 @@ int main()
 // ====================================================================================================
 // Section 01 - Runs only once, before the loop                                                     1 V
 
-	M_MemberFunctions();
+	M_CopyConstructor();
 
 
 // Section 01 - END                                                                                 1 A
@@ -1747,7 +1748,11 @@ private:
 	Ethernet Connection;
 };
 
-// This programming technique is called DRY [ don't repeat yourself ] - Using constructor's delegates avoids writing the same C++ code on every overloaded version
+// This programming technique is called DRY [ Don't Repeat Yourself ] - Using constructor's delegates avoids writing the same C++ code on every overloaded version
+// Instead of writing 4 different constructors using the same C++ code, it can be refactored by using DRY technique and writing all the repeated code into a member function
+// C++11 allows 'constructors calling constructors', where multiple constructor functions with multiple input signatures calls a 'delegate constructor function' with all the possible inputs
+// [ so when a new object is created, the called constructor using the given input signature will 'delegate' to the 'delegate constructor function' with the complete input signature ]
+
 class Delegator
 {
 public:
@@ -1765,15 +1770,23 @@ public:
 		cout << "fMV_03 value:  " << fMV_03 << endl;
 	}
 
+	void GetValues() {
+		cout << "bMV_01 value:  " << bMV_01 << endl;
+		cout << "iMV_02 value:  " << iMV_02 << endl;
+		cout << "fMV_03 value:  " << fMV_03 << endl;
+	};
+
 protected:
 
 private:
+
+	// This class will have a 'Compiler-Generated' synthesized 'Copy Constructor' by implicitly calling the C++ code that initializes all the data members:
+	// Delegator(const Delegator& New) : bMV_01(New.bMV_01), iMV_02(New.iMV_02), fMV_03(New.fMV_03) {}
 
 	bool   bMV_01 = false;
 	int    iMV_02 = 5;
 	double fMV_03 = 3.141592f;
 };
-
 
 void M_MemberFunctions()
 {
@@ -1797,5 +1810,57 @@ void M_MemberFunctions()
 	Delegator NewDelegateFunction_03(false,9);
 	cout << endl << "Delegator 04 says: " << endl;
 	Delegator NewDelegateFunction_04(true,14,2.718281);
+
+}
+
+class CopyConstructor
+{
+public:
+
+	// Default Constructor [ explicit C++ code ]
+	CopyConstructor() {
+		cout << "Calling the Default Constructor" << endl;
+	};
+
+	// Copy Constructor [ explicit C++ code ]
+	CopyConstructor(const CopyConstructor& New) : bMV_01(false), iMV_02(9), fMV_03(3.141592) {
+		cout << "Calling the Copy Constructor" << endl;
+	};
+
+	void GetValues() {
+		cout << "bMV_01 value:  " << bMV_01 << endl;
+		cout << "iMV_02 value:  " << iMV_02 << endl;
+		cout << "fMV_03 value:  " << fMV_03 << endl;
+	};
+
+protected:
+
+private:
+
+	bool   bMV_01 = true;
+	int    iMV_02 = 2;
+	double fMV_03 = 1.618034f;
+};
+
+void M_CopyConstructor()
+{
+	cout << endl << "Delegator says: " << endl;
+	Delegator NewDelegateFunction(true, 15, 2.718281);   // Creating a new object and calling the class's constructor
+
+	cout << endl << "Copy Constructor 01 says: " << endl;
+	Delegator NewCopyConstructor01(NewDelegateFunction);   // Creating a new object and calling the Copy Constructor [ initializes using the same values as the existing object ]
+	NewCopyConstructor01.GetValues();
+
+	cout << endl << "Copy Constructor 02 says: " << endl;
+	Delegator NewCopyConstructor02 = NewDelegateFunction;   // Creating a new object and also calling the Copy Constructor [ initializes using the same values as the existing object ]
+	NewCopyConstructor02.GetValues();
+
+	cout << endl << "Copy Constructor - Object_01  says: " << endl;
+	CopyConstructor Object_01;              // Creating a new object by using the 'Default Constructor' [ won't call the explicit C++ code 'CopyConstructor()' ]
+	Object_01.GetValues();                  // The data members will have its values initialized from the class's default values
+	cout << endl << "Copy Constructor - Object_02  says: " << endl;
+	CopyConstructor Object_02(Object_01);   // Creating a new object by using the 'Copy Constructor' [ won't call the explicit C++ code 'DefaultConstructor()' ]
+	Object_02.GetValues();                  // The data members will have its values initialized from the explicit C++ code 'CopyConstructor()'
+
 
 }
