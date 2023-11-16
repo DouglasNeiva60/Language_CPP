@@ -524,9 +524,16 @@ E.g.  A Custom String Class can have 2 data members:
 
 	   >> Shallow Copying
 
+'Shallow Copying' is basically copying data member values [ or simply 'copy values' ] from one object to another using the 'assignment operator'
 
 
 	   >> Deep Copying
+
+When a pointer [ that contains the address of a memory block on the heap ] gets assigned to point to another address, the previous address will be lost [ and the memory
+allocated on the heap will be lost and won't be able to be released/deleted, causing memory leaks ].  To solve this problem, the C++ software needs to perform a 'Deep Copy',
+creating a new resource [ in this case, creating a new dynamically-allocated variable on the heap-memory ] instead of just copying the address from one pointer to another [ shallow copy ]
+Creating a 'Deep Copy' using the 'CopyConstructor()' avoids blindly copying variable values, which could cause software errors [ like resource leaks or 2 objects handling the same resource ]
+
 
 
 

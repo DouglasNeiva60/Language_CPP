@@ -89,7 +89,7 @@ int main()
 // ====================================================================================================
 // Section 02 - Loop                                                                                2 V
 
-
+		
 
 // Section 02 - END                                                                                 2 A
 // ====================================================================================================
@@ -1907,12 +1907,26 @@ public:
 	CustomString(const std::string& Data);    // Constructor() delegate
 	~CustomString();   // ~Destructor()
 
+	CustomString(const CustomString& NewCopy) {
+		cout << "'CopyConstructor()' call from 'CustomString' class, 'Deep Copying'..." << endl;
+
+		StringSize = (NewCopy.StringSize);
+		StringData = new char[StringSize];   // Allocates [ acquires ] the resource [ the memory buffer on the heap ], avoids blindly copying the pointer address
+
+		for (int Counter = 0; Counter < StringSize; Counter++)   // Populate the data
+		{
+			StringData[Counter] = NewCopy.StringData[Counter];
+		}
+
+		cout << "'CustomString' copy-object says:  Size - " << StringSize << " elements,  Content - " << StringData << "." << endl;
+	};
+
 protected:
 
 private:
 
 	char* StringData;   // In this case, the pointer will be overwritten by a new address on the synthesized 'CopyConstructor()', causing memory-leaks
-	int   StringSize;
+	int   StringSize;   // and the same is true for the synthesized 'AssignmentOperator()'
 };
 
 CustomString::CustomString(const std::string& Data)   // Constructor()
@@ -1942,5 +1956,7 @@ void M_RAIIstring()
 	CustomString MyString_01;
 	CustomString MyString_02("Y"s);
 	CustomString MyString_03("DOUGLAS"s);
+
+	CustomString MyString_04(MyString_02);
 
 }
