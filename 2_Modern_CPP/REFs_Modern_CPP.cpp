@@ -451,6 +451,16 @@ and this directive should be used before and after creating the binary data-stru
 
    >>> Special Member funtions
 
+If a C++ Class needs to implement one of the special member functions below:
+	- Copy Constructor
+	- Assignment Operator
+	- Destructor
+Then it probably needs to implement the other 2 as well [ in C++, this is called 'The Rule of Three', where all the 3 special member functions has to be defined for a given class ]
+[ e.g.  Classes with pointers has to acquire resources on the Constructor and release on the Destructor; and 'Deep Copy' and 'Deep Assignment' should be provided for this Class ]
+For this case [ classes with resource-management ], all the synthesized special member functions will cause errors or unexpected behaviors on the C++ software
+*The Constructor() and the Destructor() are not included in 'The Rule of Three', since they are noth synthesized and should be provided by the C++ developer
+to make the class fully functional [ e.g.  initializing data members with default values or empty states, managing resources by acquiring and releasing, etc  ]
+
 	   >> Constructors in Modern C++
 
 The 'Constructor()' member function of a C++ class gets called every time a new class's object is created, and it's used to setup the object [ e.g.  initialize object's data members ]
@@ -511,21 +521,12 @@ E.g.  A Custom String Class can have 2 data members:
 	- int  *DataSize      // An 'int' variable to represent the number of elements in the 'array of characters'
 *In the Custom String Class, the 'resource' is the memory allocated for the class's object
 
-
-
-
-
-
-
-
-
-
-
-
 	   >> Shallow Copying
 
-'Shallow Copying' is basically copying data member values [ or simply 'copy values' ] from one object to another using the 'assignment operator'
-
+'Shallow Copying' is blindly copying data member values [ basically 'copy values' ] from one object to another using the synthesized 'copy constructor' and the 'assignment operator' functions
+Since 'Shallow Copying' just copy values to data members [ from one object to another, both from the same class ], it can cause errors when it comes to pointers [ the address of the second
+pointer variable will be copied to the first pointer, and the memory allocated that the first pointer was pointing-to will be lost ], and does not provide RAII idiom for specific use-cases
+[ in this case, 'Shallow Copying' should be replaced by 'Deep Copying', providing the RAII idiom for the class's special member functions ]
 
 	   >> Deep Copying
 
@@ -534,7 +535,10 @@ allocated on the heap will be lost and won't be able to be released/deleted, cau
 creating a new resource [ in this case, creating a new dynamically-allocated variable on the heap-memory ] instead of just copying the address from one pointer to another [ shallow copy ]
 Creating a 'Deep Copy' using the 'CopyConstructor()' avoids blindly copying variable values, which could cause software errors [ like resource leaks or 2 objects handling the same resource ]
 
+	   >> Deep Assignment
 
+While 'Deep Copying' is applied to a 'CopyConstructor()', the 'Deep Assignment' is applied to the 'AssignmentOperator()' [ releasing the previous resource before acquiring a new one ], 
+and should have 'self-assignment' prevention [ to avoid an object modifying itself using the 'AssignmentOperator()' ]
 
 
 

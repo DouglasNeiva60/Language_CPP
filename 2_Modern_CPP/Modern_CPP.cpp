@@ -1904,10 +1904,10 @@ class CustomString
 public:
 
 	CustomString() : CustomString("X"s) {};   // Delegating Constructor()
-	CustomString(const std::string& Data);    // Constructor() delegate
-	~CustomString();   // ~Destructor()
+	CustomString(const std::string& Data);    // Constructor() delegate, allocates the memory on the heap
+	~CustomString();   // ~Destructor(), releases the memory allocated on the heap
 
-	CustomString(const CustomString& NewCopy) {
+	CustomString(const CustomString& NewCopy) {   // Copy Constructor
 		cout << "'CopyConstructor()' call from 'CustomString' class, 'Deep Copying'..." << endl;
 
 		StringSize = (NewCopy.StringSize);
@@ -1918,7 +1918,35 @@ public:
 			StringData[Counter] = NewCopy.StringData[Counter];
 		}
 
-		cout << "'CustomString' copy-object says:  Size - " << StringSize << " elements,  Content - " << StringData << "." << endl;
+		cout << "'CustomString' copy-object says:  Size - " << StringSize << " elements,  Content - ";
+		PrintContent();
+	};
+
+	CustomString&  operator=(const CustomString& NewAssignment) {   // [NewAssignment] is a class's object
+		cout << "'AssignmentOperator()' call from 'CustomString' class, 'Deep Assigning'..." << endl;
+		
+		if ((&NewAssignment) == (this))   // Checking self-assignment using the object's address
+		{                                 // [ this ] is a pointer [ and its value is an address ]
+			cout << "Self assignment!" << endl;
+		}
+		else
+		{
+			StringSize = 0;
+			delete[] StringData;
+
+			StringSize = NewAssignment.StringSize;
+			StringData = new char[StringSize];
+
+			for (int Counter = 0; Counter < StringSize; Counter++)
+			{
+				StringData[Counter] = NewAssignment.StringData[Counter];
+			}
+		}
+
+		cout << "'CustomString' assigned-object says:  Size - " << StringSize << " elements,  Content - ";
+		PrintContent();
+
+		return *this;   // [ *this ] is the class's object that the pointer is pointing-to
 	};
 
 protected:
@@ -1927,28 +1955,38 @@ private:
 
 	char* StringData;   // In this case, the pointer will be overwritten by a new address on the synthesized 'CopyConstructor()', causing memory-leaks
 	int   StringSize;   // and the same is true for the synthesized 'AssignmentOperator()'
+
+	void PrintContent() {
+		for (int Counter = 0; Counter < StringSize; Counter++)   // Populate the data
+		{
+			cout << StringData[Counter];
+		}
+		cout << "." << endl;
+	};
 };
 
-CustomString::CustomString(const std::string& Data)   // Constructor()
+CustomString::CustomString(const std::string& Data)   // Constructor() delegate
 {
 	cout << "Creating a new 'CustomString' object..." << endl;
 
 	StringSize = (Data.size());
-	StringData = new char[StringSize];   // Allocates [ acquires ] the resource [ the memory buffer on the heap ]
+	StringData = new char[StringSize];   // Allocates [ acquires ] the resource [ the memory buffer on the heap for the array ]
 
 	for (int Counter = 0; Counter < StringSize; Counter++)   // Populate the data
 	{
 		StringData[Counter] = Data[Counter];
 	}
 
-	cout << "'CustomString' object says:  Size - " << StringSize << " elements,  Content - " << StringData << "." << endl;
+	cout << "'CustomString' object says:  Size - " << StringSize << " elements,  Content - ";
+	PrintContent();
 }
 
 CustomString::~CustomString()   // ~Destructor()
 {
 	cout << "Deleting the 'CustomString' object..." << endl;
 
-	delete [] StringData;   // Releases the resource [ the memory buffer on the heap ]
+	delete [] StringData;   // Releases the resource [ the memory buffer on the heap allocated for the array ]
+	StringSize = 0;
 }
 
 void M_RAIIstring()
@@ -1956,7 +1994,11 @@ void M_RAIIstring()
 	CustomString MyString_01;
 	CustomString MyString_02("Y"s);
 	CustomString MyString_03("DOUGLAS"s);
+	cout << endl;
 
-	CustomString MyString_04(MyString_02);
+	CustomString MyString_04(MyString_03);
+	cout << endl;
 
+	MyString_02 = MyString_03;   // Calls the 'AssignmentOperator()' default branch
+	MyString_03 = MyString_03;   // Calls the 'self-assignment' branch [ does nothing ]
 }
