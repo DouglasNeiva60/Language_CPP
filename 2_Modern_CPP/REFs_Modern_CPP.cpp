@@ -540,6 +540,20 @@ Creating a 'Deep Copy' using the 'CopyConstructor()' avoids blindly copying vari
 While 'Deep Copying' is applied to a 'CopyConstructor()', the 'Deep Assignment' is applied to the 'AssignmentOperator()' [ releasing the previous resource before acquiring a new one ], 
 and should have 'self-assignment' prevention [ to avoid an object modifying itself using the 'AssignmentOperator()' ]
 
+	   >> Copy Elision
+
+'Copy Elision' is a form of 'optimization' done by the compiler, where the compiler is allowed to skip over a call to the copy constructor in cases where a variable is initialized
+using another variable, but the another variable is unused by the C++ software [ copying temporary variables during function calls ], and 'Copy Elision' is always applied on modern compilers
+[ most compilers supply an option to disable it using  '-fno-elide-constructors' ], and for Visual C++ it requires disabling all optimizations
+'Copy Elision' is applied even if the 'CopyConstructor()' [ to be elided ] was explicitly written with custom functionality, and could change the behavior of the C++ software
+
+
+
+
+
+
+
+
 
 
 // ====================================================================================================
