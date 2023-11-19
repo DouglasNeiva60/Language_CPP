@@ -64,6 +64,9 @@ void M_BinaryFileBitmap();   // Uses several structs [ compound types ], written
 void M_MemberFunctions();
 void M_CopyConstructor();
 void M_RAIIstring();
+void M_ConversionOperator();
+void M_DefaultDelete();
+void M_OperatorsOverloads();
 
 
 
@@ -77,7 +80,8 @@ int main()
 // ====================================================================================================
 // Section 01 - Runs only once, before the loop                                                     1 V
 
-	M_RAIIstring();
+	M_OperatorsOverloads();
+
 
 
 
@@ -2001,4 +2005,181 @@ void M_RAIIstring()
 
 	MyString_02 = MyString_03;   // Calls the 'AssignmentOperator()' default branch
 	MyString_03 = MyString_03;   // Calls the 'self-assignment' branch [ does nothing ]
+}
+
+class TestClass
+{
+public:
+
+	explicit TestClass() { cout << "A new 'TestClass' object was created! " << endl; };   // Default Constructor()
+	~TestClass() { cout << "The 'TestClass' object was deleted! " << endl; };    // Default Destructor()
+
+	// 'Conversion Operator' special member function that converts this object from a 'TestClass' type into a 'bool' type
+	explicit operator bool() const {   // In this case, the 'bPowered' data member will be returned by this object when the expression expects a 'bool' type
+		cout << "Calling the 'this-to-bool' ConversionOperator()..." << endl;
+		return bPowered;
+	};
+
+	// 'Conversion Operator' special member function that converts this object from a 'TestClass' type into an 'int' type
+	operator int() const {   // In this case, the 'iPower' data member will be returned by this object when the expression expects an 'int' type
+		cout << "Calling the 'this-to-int' ConversionOperator()..." << endl;
+		return iPower;
+	};
+
+	bool bPowered = false;
+	int  iPower = 35;
+
+protected:
+
+private:
+
+	// bool bPowered = false;
+	// int  iPower = 35;
+};
+
+void M_ConversionOperator()
+{
+	TestClass NewTest_01;
+	TestClass NewTest_02;
+	cout << endl;
+
+	int iCounter = 8;
+	iCounter += NewTest_01;   // The 'Conversion Operator' for the 'int' type will be called
+
+	cout << "Object 01   Power:  " << NewTest_01.iPower << endl;
+	cout << "Total added Power:  " << iCounter << endl;
+	cout << endl;
+
+	if (NewTest_02)   // The 'Conversion Operator' for the 'bool' type will be called
+	{
+		cout << "Object 02 is powered!" << endl;
+	}
+	else
+	{
+		cout << "Object 02 is not powered!" << endl;
+	}
+
+	NewTest_02.bPowered = true;
+
+	if (NewTest_02)   // The 'Conversion Operator' for the 'bool' type will be called
+	{
+		cout << "Object 02 is now powered!" << endl;
+	}
+	else
+	{
+		cout << "Object 02 is now not powered!" << endl;
+	}
+	cout << endl;
+
+	cout << NewTest_01 << endl;   // Will cause an 'implicit conversion' error, since it could ask for either 2 or more 'ConversionOperator()' functions defined
+	// [ error: 'the operator << is ambiguous' ], the error could be solved by setting all the 'ConversionOperator()' functions 'explicit' excepting one [ this one will be used
+    // on implicit conversions, in this case, the 'int' Conversion Operator ]
+
+	// Asking specifically for the 'operator int()' [ explicit conversion ]
+	cout << NewTest_01.operator int() << endl;
+
+	// Asking specifically for the types by casting [ casting also calls the 'ConversionOperator()' special member functions ]
+	cout << "Bool value:  " << static_cast<bool>(NewTest_02) << ".  Int value: " << static_cast<int>(NewTest_02) << ". " << endl;
+
+	cout << endl;
+
+}
+
+class CompilerClass
+{
+public:
+
+	// Explicitly forcing the compiler to call this constructor, even if there are other constructors declared
+	
+	// Forcing the compiler to create a synthesized default Constructor()
+	CompilerClass() = default;
+
+	// Forcing the compiler to delete the synthesized CopyConstructor()
+	CompilerClass(const CompilerClass& New) =delete;   // This '=delete' keyword makes the class's objects uncopyable
+
+	// Forcing the compiler to delete the synthesized AssignmentOperator()
+	CompilerClass& operator=(const CompilerClass& New) =delete;   // This '=delete' keyword makes the class's objects uncopyable
+
+	// Forcing the compiler to create a synthesized default Destructor(), but does nothing
+	~CompilerClass() =default;
+
+
+protected:
+
+private:
+
+	bool bPowered = true;
+	int  iPower = 23;
+
+};
+
+void M_DefaultDelete()
+{
+	CompilerClass NewObject_01;
+	CompilerClass NewObject_02;
+
+	// NewObject_01 = NewObject_02;   // This will cause an error [ ' operator= function was explicitly deleted, attempting to reference a deleted function' ]
+}
+
+class OpOverload
+{
+public:
+
+	OpOverload(int iNewValue = 2, string sNewName = "B") : iValue(iNewValue), sName(sNewName) {
+		cout << "Creating a new object..." << endl;
+	};
+
+	~OpOverload() { cout << "Deleting the object..." << endl; };
+
+	OpOverload operator+(const OpOverload& InputObj)
+	{
+		cout << "Adding 2 objects of class 'OpOverload' by using '+' operator overloading, 1 argument [ unary ]... " << endl;
+
+		OpOverload NewOverloaded;
+
+		NewOverloaded.iValue = iValue + InputObj.iValue;
+		NewOverloaded.sName = sName + InputObj.sName;
+
+		cout << "The 1 result is: " << NewOverloaded.iValue << ", " << NewOverloaded.sName << "." << endl;
+
+		return NewOverloaded;
+	};
+
+	// To be used with 'Friend' keyword...
+	/*
+	OpOverload operator+(const OpOverload& InputObj01, const OpOverload& InputObj02)
+	{
+		cout << "Adding 2 objects of class 'OpOverload' by using '+' operator overloading, 2 arguments [ binary ]... " << endl;
+
+		int iNewValue = InputObj01.iValue + InputObj02.iValue;
+		string sNewName = InputObj01.sName + InputObj02.sName;
+
+		OpOverload NewOverloaded(iNewValue, sNewName);
+
+		cout << "The 2 result is: " << NewOverloaded.iValue << ", " << NewOverloaded.sName << "." << endl;
+
+		return NewOverloaded;
+	};
+	*/
+
+protected:
+
+private:
+
+	int iValue{ 3 };
+	string sName{ "C" };
+};
+
+
+void M_OperatorsOverloads()
+{
+	cout << endl << "   [1] Creating objects..." << endl;
+	OpOverload NewObject_01;
+	OpOverload NewObject_02(7,"X");
+	OpOverload NewObject_03(8,"Z");
+
+	cout << endl << "   [2] Adding objects..." << endl;
+	NewObject_01 = NewObject_02 + NewObject_03;
+
+	cout << endl << "   [3] Deleting objects..." << endl;
 }

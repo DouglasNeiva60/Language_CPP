@@ -28,6 +28,13 @@ void AnyFunction(const int &i_Integer)   Pass by Constant Reference: also called
 void AnyFunction(int *i_Integer)   Pass by pointer: should be used only when 'nullptr' is a valid value, otherwise use 'pass-by-reference' since references can't be NULL
                                    Re-assigns the pointer passed as an argument  [ fast ]; pointers can be re-assigned while references cannot; pointers can act as iterators over the memory
 
+Literal V.S. Keyword V.S. Expression V.S. Statement
+
+A literal is a pure value from a variable type
+A keyword is a specific word that is used by C++ to write code
+An expression is anything that returns a value whether or not the value is used
+A statement is analogous to a line of code. It may do many things but it's treated as a unit of execution, and is always terminated with a semicolon.
+
 
    >>> Namespaces
 
@@ -503,6 +510,36 @@ If class's special member functions [ like 'constructor()', 'destructor()' 'copy
 by the C++ developer, they will be 'synthesized' by the compiler [ Modern C++ also introduced new special member functions, like 'move semantics', and they will be synthesized
 only if certain other special member functions are not defined ]
 
+	   >> Conversion Operator
+
+The 'ConversionOperator()' is a class's special member function that converts an object from a class into some other class type [ casting ], and it can be used to define custom 'casting'
+A Class can define 'ConversionOperator()' special member functions that gets called whenever a class's object is used on an expression that expects an specific variable type, and the 
+'ConversionOperator()' converts the object from the class-type into another variable-type [ casting ]
+
+	   >> Implicit Conversion
+
+Implicit conversions are often used by the compiler when the C++ developer don't explicitly ask for the exact type on an expression, and could lead to unexpected behaviors and software errors
+In Modern C++, implicit conversions now will cause errors, and the C++ developer needs to explicitly ask for the exact type by casting [ casting also calls the 'ConversionOperator()'
+member function designed for the 'casted-to' type ]
+* A constructor with a single argument could act as an 'implicit conversion operator', causing unexpected results when passing an object as a function argument [ in this case, the
+'explicit' keyword could be used immediately before the constructor, preventing errors and ensuring that only explicitly-created objects  ]
+
+	   >> 'Default' and 'Delete' keywords on special member functions
+
+		  > Default
+
+Modern C++ allows developers to force the compiler to synthesize special member functions by writing '=default' after the function's parameter list
+The advantages of 'defaulted' member functions are:
+	- easier to see which special member function does the class have
+	- sets the default behavior of the class for special member functions
+	- if data members are added or removed, the compiler will automatically update the special member function definition
+* Sometimes the compiler won't be able to synthesize '=default' member functions [ when the class has a member that cannot be default-initialized ]
+
+		  > Delete
+
+To prevent objects from being copied, the 'CopyConstructor()' and the 'AssignmentOperator()' should be on the class's 'private' section for Classical C++,
+or using the keyword '=delete' at the end of the function on Modern C++, often used for copy operators and conversion operators [ and even non-member functions can be deleted ]
+* If the C++ compiler tries to synthesize a member function and that member function doesn't work, the '=delete' keyword will be added to the compiler-created member function
 
    >>> Copying
 
@@ -547,11 +584,54 @@ using another variable, but the another variable is unused by the C++ software [
 [ most compilers supply an option to disable it using  '-fno-elide-constructors' ], and for Visual C++ it requires disabling all optimizations
 'Copy Elision' is applied even if the 'CopyConstructor()' [ to be elided ] was explicitly written with custom functionality, and could change the behavior of the C++ software
 
+	   >> Making a class uncopyable
+
+To prevent objects from being copied, the 'CopyConstructor()' and the 'AssignmentOperator()' should be on the class's 'private' section for Classical C++,
+or using the keyword '=delete' at the end of the function on Modern C++
 
 
+   >>> Operators and Overloading
 
+C++ defines operators for built-in types [ e.g  for the 'int' type, the '+' operator will add, the '++' operator will increment by 1, the '==' operator will compare, and so on... ]
+For every operator, a 'operator function' is defined on the type [ e.g.  the function 'explicit bool operator==(int)' is defined on the 'int' type to compare two 'int' variables, and
+the function 'explicit int operator+(int,int)' is defined on the 'int' type to add two 'int' variables ]
 
+When a custom C++ class is created by the C++ developer, the C++ compiler does not provide operators for it [ '+','-','==', etc. ]; however, these operators can be defined on the Class's
+body the same way as the 'AssignmentOperator()' [ this is a programming technique called 'operator overloading', creating custom functionality for custom-created classes, allowing its
+objects to behave the same as the built-in types when using standard operators like adding or subtracting, using the same syntax with same semantics for the same built-in symbols ]
 
+	   >> Unary (one argument) Binary (two arguments) and Ternary (three arguments)
+
+An operator that takes a single argument is called 'unary' [ e.g.  c = -b ], inverts the signal of the value
+An operator that takes two arguments is called 'binary' [ e.g.  c = a - b ], subtracts one value from another
+An operator that takes three arguments is called 'ternary' [ e.g.  the expression  'a ? b : c'  is the same as  'if (a) then (b) else (c)' ]
+
+	   >> Which operators to overload?
+
+Only provide needed operators for custom classes, and the return value should correspond to the built-in C++ equivalent operator
+
+In general programming, the most useful operators are:
+- '='   assignment
+- '=='  equality
+- '!='  inequality
+- '<'   less than
+- '()'  function call
+
+There are other operators useful for math-related classes:
+- '+'   addition
+- '-'   subtraction
+- '*'   multiplication
+- '/'   division
+
+There are some operators which should not be overloaded:
+- '&&'  logical AND
+- '||'  logical OR
+- '&'   address-of
+- ','   comma [ writing several expressions into a single statement ]
+- '::'  scope-resolution [ access namespaces or class's members ]
+- '.'   dot [ access struct members or class's members ]
+- '.*'  dot-star [ member-function pointers ]
+- '?:'  ternary operator [ if-then-else ]
 
 
 
