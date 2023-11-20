@@ -541,6 +541,18 @@ To prevent objects from being copied, the 'CopyConstructor()' and the 'Assignmen
 or using the keyword '=delete' at the end of the function on Modern C++, often used for copy operators and conversion operators [ and even non-member functions can be deleted ]
 * If the C++ compiler tries to synthesize a member function and that member function doesn't work, the '=delete' keyword will be added to the compiler-created member function
 
+	   >> The 'Friend' keyword
+
+If a non-member function takes a class's object as an argument, the function can only access the class's public members
+In this case, the class can declare [ and also define ] a non-member function to be a 'friend', allowing the function to access all the class's members [ public / protected / private ]
+As well as functions, another classes can also be declared as a 'friend' within the Class's body, accessing all its public / protected / private members
+[ e.g.  a 'Log' class could have member functions that takes another class's objects as arguments, and the 'Log' class could be declared as a 'friend' inside other classes  ]
+* Using the 'friend' keyword on non-member functions reduces the 'encapsulation' property of Object-Oriented-Programming, so instead of giving non-member functions full access
+   to the class's protected and private members, the C++ developer could write the function inside of the class's body [ public member function ] that implements the functionality,
+   and then the non-member function [ that was previously designed to be a 'friend' ] just calls the public member function of the class's object [ keeping encapsulation by
+   'delegating' the function call from an non-member function to a public member-function using the class's object ]
+
+
    >>> Copying
 
 Using a Class with the RAII idiom [ Resource Acquisition Is Initialization ] to manage a resource means that:

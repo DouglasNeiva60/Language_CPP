@@ -2131,9 +2131,11 @@ public:
 
 	~OpOverload() { cout << "Deleting the object..." << endl; };
 
-	OpOverload operator+(const OpOverload& InputObj)
+	// This function [ declared and defined within the class's body ] have the same behavior as the 'Friend' function [ defined outside the class's body ]
+	
+	OpOverload operator+(const OpOverload& InputObj)   // Built-in operator'+' overload, only accessible by the class's object
 	{
-		cout << "Adding 2 objects of class 'OpOverload' by using '+' operator overloading, 1 argument [ unary ]... " << endl;
+		cout << "  Built-in(): Adding 2 objects of class 'OpOverload' by using '+' operator overloading, 1 argument [ unary ]... " << endl;
 
 		OpOverload NewOverloaded;
 
@@ -2144,42 +2146,62 @@ public:
 
 		return NewOverloaded;
 	};
+	
+	// Breaking the 'encapsulation' property by using the 'friend' keyword
+	// friend OpOverload operator+(const OpOverload& InputObj01, const OpOverload& InputObj02);   // Friend operator'+' overload, accessible anywhere
+																							      // Declared within the class's body, defined outside of the class's scope
 
-	// To be used with 'Friend' keyword...
-	/*
-	OpOverload operator+(const OpOverload& InputObj01, const OpOverload& InputObj02)
-	{
-		cout << "Adding 2 objects of class 'OpOverload' by using '+' operator overloading, 2 arguments [ binary ]... " << endl;
-
-		int iNewValue = InputObj01.iValue + InputObj02.iValue;
-		string sNewName = InputObj01.sName + InputObj02.sName;
-
-		OpOverload NewOverloaded(iNewValue, sNewName);
-
-		cout << "The 2 result is: " << NewOverloaded.iValue << ", " << NewOverloaded.sName << "." << endl;
-
-		return NewOverloaded;
-	};
-	*/
+	// Avoiding the 'friend' keyword by delegating external a non-member-function call [ that takes this class's object as an argument ] to this member-function [ must be 'const' ]
+	void PrintContent() const { cout << "Object content:  " << iValue << ", " << sName << "." << endl; };   // Public member function with access to protected / private members
 
 protected:
 
 private:
 
 	int iValue{ 3 };
-	string sName{ "C" };
+	string sName{ "Y" };
+
 };
 
+// Breaking the 'encapsulation' property by using the 'friend' keyword
+// Friend operator'+' overload, accessible anywhere [ declared within the class's body, defined outside of the class's scope ]
+/*
+OpOverload operator+(const OpOverload& InputObj01, const OpOverload& InputObj02)   // Friend operator'+' overload, accessible anywhere
+{
+	cout << "Friend(): Adding 2 objects of class 'OpOverload' by using '+' operator overloading, 2 arguments [ binary ]... " << endl;
+
+	int iNewValue = InputObj01.iValue + InputObj02.iValue;
+	string sNewName = InputObj01.sName + InputObj02.sName;
+
+	OpOverload NewOverloaded(iNewValue, sNewName);
+
+	cout << "The 2 result is: " << NewOverloaded.iValue << ", " << NewOverloaded.sName << "." << endl;
+
+	return NewOverloaded;
+};
+*/
+
+// Avoiding the 'friend' keyword by delegating external a non-member function call [ that takes this class's object as an argument ] to this member function
+void PrintObjectContent(const OpOverload& Object)   // Non-member function that delegates the function call to the public member function
+{
+	Object.PrintContent();   // When delegating a non-member-function call to a member-function call, the member-function must be 'const'
+							 // to avoid any changes on the class's members
+}
 
 void M_OperatorsOverloads()
 {
 	cout << endl << "   [1] Creating objects..." << endl;
 	OpOverload NewObject_01;
-	OpOverload NewObject_02(7,"X");
+	OpOverload NewObject_02(7,"H");
 	OpOverload NewObject_03(8,"Z");
 
 	cout << endl << "   [2] Adding objects..." << endl;
 	NewObject_01 = NewObject_02 + NewObject_03;
 
-	cout << endl << "   [3] Deleting objects..." << endl;
+	cout << endl << "   [3] Printing object contents..." << endl;
+	PrintObjectContent(NewObject_01);
+	PrintObjectContent(NewObject_03);
+
+	cout << endl << "   [4] Deleting objects..." << endl;
 }
+
