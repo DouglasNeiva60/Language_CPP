@@ -67,6 +67,7 @@ void M_RAIIstring();
 void M_ConversionOperator();
 void M_DefaultDelete();
 void M_OperatorsOverloads();
+void M_MemberOperators();
 
 
 
@@ -80,8 +81,7 @@ int main()
 // ====================================================================================================
 // Section 01 - Runs only once, before the loop                                                     1 V
 
-	M_OperatorsOverloads();
-
+	M_MemberOperators();
 
 
 
@@ -2205,3 +2205,7 @@ void M_OperatorsOverloads()
 	cout << endl << "   [4] Deleting objects..." << endl;
 }
 
+void M_MemberOperators()
+{
+
+}

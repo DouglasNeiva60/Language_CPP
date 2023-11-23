@@ -645,6 +645,35 @@ There are some operators which should not be overloaded:
 - '.*'  dot-star [ member-function pointers ]
 - '?:'  ternary operator [ if-then-else ]
 
+	   >> Member operators
+
+Operators which change the state of the object are best impelmented as member-functions [ compound assignments  += -= *= /=  , increments  ++  and decrements  --  ]
+Operators which are closely related to data-member types are best implemented as member functions [ dereference operator *, which returns an object of the same type of the data-member ]
+
+
+Most operators can be implemented as either member-functions or non-member-functions [ by using delegates and the 'friend' keyword ], but they should be implemented as member functions
+[ keeping Class's encapsulation and providing access to private data members ], however some operators cannot be implemented as member-functions [ in this case, they must be non-members ]
+
+E.g.  binary [ function with 2 arguments ] member operators don't work if a type conversion is needed [ like implicitly converting String literals into String objects ]
+      In this case, the member-function-operators will only work with object of the same class, but won't work with implicit type-conversion [ will cause a compiler error ],
+	  and a binary non-member-function [ function with 2 arguments ] must be defined [ using the 'friend' keyword ], and the compiler will implicitly convert the type with no errors
+	  [ the difference is, on a member-function, the first argument is implicit, and should be a class's object; but on a non-member-function, the first argument is explicitly typed,
+	  allowing the compiler to make an implicit conversion from the type passed as an argument to a class's object ]
+
+Some operators must be defined as member functions:
+	- assignment     =
+	- subscript      []   [ this operator is used on arrays and vectors, which takes an integer as an argument and returns the element at the integer's index ]
+	- function call  ()
+	- arrow          ->
+
+Binary [ function with 2 arguments ] operators which might require type-conversion should be friend-non-member-functions
+	- arithmetic operators
+	- equality and relational operators
+	- bitwise operators
+
+Input / Output bitwise operators 'left-shift  <<' and 'right-shift  >>' should be non-member-functions for syntax compatibility
+
+
 
 
 
