@@ -648,8 +648,8 @@ There are some operators which should not be overloaded:
 	   >> Member operators
 
 Operators which change the state of the object are best impelmented as member-functions [ compound assignments  += -= *= /=  , increments  ++  and decrements  --  ]
-Operators which are closely related to data-member types are best implemented as member functions [ dereference operator *, which returns an object of the same type of the data-member ]
-
+Operators which are closely related to data-member types are best implemented as member-functions [ dereference operator *, which returns an object of the same type of the data-member ]
+* For compound assignments, the '+=' operator should behave the same as the '+' operator, so the '+' operator should delegate to the '+=' operator C++ code [ DRY technique ]
 
 Most operators can be implemented as either member-functions or non-member-functions [ by using delegates and the 'friend' keyword ], but they should be implemented as member functions
 [ keeping Class's encapsulation and providing access to private data members ], however some operators cannot be implemented as member-functions [ in this case, they must be non-members ]
@@ -659,8 +659,9 @@ E.g.  binary [ function with 2 arguments ] member operators don't work if a type
 	  and a binary non-member-function [ function with 2 arguments ] must be defined [ using the 'friend' keyword ], and the compiler will implicitly convert the type with no errors
 	  [ the difference is, on a member-function, the first argument is implicit, and should be a class's object; but on a non-member-function, the first argument is explicitly typed,
 	  allowing the compiler to make an implicit conversion from the type passed as an argument to a class's object ]
+	  For instance, all binary operators should be non-member functions, while member-functions should be unary operators
 
-Some operators must be defined as member functions:
+Some operators must be defined as member functions [ and they could take only one argument ] :
 	- assignment     =
 	- subscript      []   [ this operator is used on arrays and vectors, which takes an integer as an argument and returns the element at the integer's index ]
 	- function call  ()
@@ -670,9 +671,7 @@ Binary [ function with 2 arguments ] operators which might require type-conversi
 	- arithmetic operators
 	- equality and relational operators
 	- bitwise operators
-
-Input / Output bitwise operators 'left-shift  <<' and 'right-shift  >>' should be non-member-functions for syntax compatibility
-
+* Input / Output bitwise operators 'left-shift  <<' and 'right-shift  >>' should be non-member-functions for syntax compatibility
 
 
 

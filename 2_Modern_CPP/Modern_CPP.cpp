@@ -2133,7 +2133,7 @@ public:
 
 	// This function [ declared and defined within the class's body ] have the same behavior as the 'Friend' function [ defined outside the class's body ]
 	
-	OpOverload operator+(const OpOverload& InputObj)   // Built-in operator'+' overload, only accessible by the class's object
+	OpOverload operator+(const OpOverload& InputObj)   // Built-in operator'+' overload, only accessible by the class's object, but takes only one argument
 	{
 		cout << "  Built-in(): Adding 2 objects of class 'OpOverload' by using '+' operator overloading, 1 argument [ unary ]... " << endl;
 
@@ -2205,7 +2205,76 @@ void M_OperatorsOverloads()
 	cout << endl << "   [4] Deleting objects..." << endl;
 }
 
+class MemberOps
+{
+public:
+
+	MemberOps() {   // Default constructor
+		cout << "A new object was created!" << endl;
+		cout << "Printing obj values:  " << iCounter << ",  " << fRange << ". " << endl;
+	};
+	
+	MemberOps(const MemberOps& NewCopy) : iCounter(NewCopy.iCounter), fRange(NewCopy.fRange) {   // Copy constructor
+		cout << "Calling the 'copy constructor'!" << endl;
+		cout << "Printing new values:  " << iCounter << ",  " << fRange << ". " << endl;
+	};
+
+	~MemberOps() { cout << "The object was deleted!" << endl; };   // Default destructor
+
+	MemberOps operator +=(const MemberOps& NewObj) {   // '+=' operator [ compound assignment ]
+
+		cout << "Calling the '+=' operator..." << endl;
+
+		iCounter += NewObj.iCounter;
+		fRange += NewObj.fRange;
+
+		return *this;
+	};
+
+	friend MemberOps operator +(const MemberOps& NewObj_01, const MemberOps& NewObj_02);   // '+' operator [ delegating to the compound assignment ]
+
+
+protected:
+
+// private:
+public:
+
+	int iCounter{ 2 };
+	float fRange{ 2.718281f };
+};
+
+MemberOps operator +(const MemberOps& NewObj_01, const MemberOps& NewObj_02) {
+
+	cout << "Calling the '+'  operator..." << endl;
+
+	MemberOps NewObj_03{ NewObj_01 };   // The class needs to implement the copy constructor
+
+	NewObj_03 += NewObj_02;
+
+	// NewObj_03.iCounter = NewObj_01.iCounter + NewObj_02.iCounter;   // Already implemented on the '+=' operator
+	// NewObj_03.fRange = NewObj_01.fRange + NewObj_02.fRange;         // Already implemented on the '+=' operator
+
+	return NewObj_03;
+};
+
 void M_MemberOperators()
 {
+	MemberOps Obj_01;
+	MemberOps Obj_02;
+	cout << endl << endl;
+
+	Obj_02.iCounter = 5;
+	Obj_02.fRange = 3.141592f;
+
+	MemberOps Obj_03{ Obj_02 };
+	cout << endl << endl;
+
+	Obj_02 += Obj_03;
+	cout << endl << endl;
+
+	Obj_01 = Obj_02 + Obj_03;
+	cout << endl << endl;
+
+	cout << "Printing final values:  " << Obj_01.iCounter << ",  " << Obj_01.fRange << ". " << endl;
 
 }
