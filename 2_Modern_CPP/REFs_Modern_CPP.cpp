@@ -649,7 +649,7 @@ There are some operators which should not be overloaded:
 
 Operators which change the state of the object are best impelmented as member-functions [ compound assignments  += -= *= /=  , increments  ++  and decrements  --  ]
 Operators which are closely related to data-member types are best implemented as member-functions [ dereference operator *, which returns an object of the same type of the data-member ]
-* For compound assignments, the '+=' operator should behave the same as the '+' operator, so the '+' operator should delegate to the '+=' operator C++ code [ DRY technique ]
+* For compound assignments, the '+=' operator should behave the same as the '+' operator, so the '+' operator should delegate to the '+=' operator C++ code [ DRY coding technique ]
 
 Most operators can be implemented as either member-functions or non-member-functions [ by using delegates and the 'friend' keyword ], but they should be implemented as member functions
 [ keeping Class's encapsulation and providing access to private data members ], however some operators cannot be implemented as member-functions [ in this case, they must be non-members ]

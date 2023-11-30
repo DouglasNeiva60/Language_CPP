@@ -2209,7 +2209,7 @@ class MemberOps
 {
 public:
 
-	MemberOps() {   // Default constructor
+	MemberOps(int iC = 0, float fR = 0.0f) : iCounter(iC), fRange(fR) {   // Default initializer constructor
 		cout << "A new object was created!" << endl;
 		cout << "Printing obj values:  " << iCounter << ",  " << fRange << ". " << endl;
 	};
@@ -2228,10 +2228,24 @@ public:
 		iCounter += NewObj.iCounter;
 		fRange += NewObj.fRange;
 
-		return *this;
+		return *this;   // Returns the modified object by reference [ dereferencing the 'this' pointer ]
 	};
 
 	friend MemberOps operator +(const MemberOps& NewObj_01, const MemberOps& NewObj_02);   // '+' operator [ delegating to the compound assignment ]
+
+
+	// Equality operator [ should be a non-member-function since it's binary, taking 2 arguments ]
+	friend bool operator ==(const MemberOps& NewObj_01, const MemberOps& NewObj_02);
+
+	// Inequality operator, the inverse of the 'equality' operator [ should be a non-member-function since it's binary, taking 2 arguments ]
+	friend bool operator !=(const MemberOps& NewObj_01, const MemberOps& NewObj_02);
+
+
+	// More-than operator [ should be a non-member-function since it's binary, taking 2 arguments ]
+	friend bool operator >(const MemberOps& NewObj_01, const MemberOps& NewObj_02);
+
+	// Less-than operator, the inverse of the 'more-than' operator [ should be a non-member-function since it's binary, taking 2 arguments ]
+	friend bool operator <(const MemberOps& NewObj_01, const MemberOps& NewObj_02);
 
 
 protected:
@@ -2243,13 +2257,14 @@ public:
 	float fRange{ 2.718281f };
 };
 
+// Addition operator
 MemberOps operator +(const MemberOps& NewObj_01, const MemberOps& NewObj_02) {
 
 	cout << "Calling the '+'  operator..." << endl;
 
 	MemberOps NewObj_03{ NewObj_01 };   // The class needs to implement the copy constructor
 
-	NewObj_03 += NewObj_02;
+	NewObj_03 += NewObj_02;   // Delegating to the 'compound-assignment addition' operator
 
 	// NewObj_03.iCounter = NewObj_01.iCounter + NewObj_02.iCounter;   // Already implemented on the '+=' operator
 	// NewObj_03.fRange = NewObj_01.fRange + NewObj_02.fRange;         // Already implemented on the '+=' operator
@@ -2257,14 +2272,72 @@ MemberOps operator +(const MemberOps& NewObj_01, const MemberOps& NewObj_02) {
 	return NewObj_03;
 };
 
+// Equality operator
+bool operator ==(const MemberOps& NewObj_01, const MemberOps& NewObj_02) {
+
+	cout << "Calling the '==' operator..." << endl;
+
+	if (NewObj_01.iCounter == NewObj_02.iCounter)
+	{
+		if (NewObj_01.fRange == NewObj_02.fRange)
+		{
+			return true;
+		}
+	}
+
+	return false;
+};
+
+// Inequality operator
+bool operator !=(const MemberOps& NewObj_01, const MemberOps& NewObj_02) {
+
+	cout << "Calling the '!=' operator..." << endl;
+
+	bool bInequality = (NewObj_01 == NewObj_01);
+
+	return (!bInequality);
+};
+
+
+// More-than operator
+bool operator >(const MemberOps& NewObj_01, const MemberOps& NewObj_02)
+{
+	cout << "Calling the '>' operator..." << endl;
+
+	if (NewObj_01.iCounter > NewObj_02.iCounter)
+	{
+		if (NewObj_01.fRange > NewObj_02.fRange)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
+// Less-than operator
+bool operator <(const MemberOps& NewObj_01, const MemberOps& NewObj_02)
+{
+	cout << "Calling the '<' operator..." << endl;
+
+	if (NewObj_01.iCounter < NewObj_02.iCounter)
+	{
+		if (NewObj_01.fRange < NewObj_02.fRange)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
 void M_MemberOperators()
 {
-	MemberOps Obj_01;
-	MemberOps Obj_02;
-	cout << endl << endl;
+	// Addition operators [ simple '+' and compound '+=' ]
 
-	Obj_02.iCounter = 5;
-	Obj_02.fRange = 3.141592f;
+	MemberOps Obj_01(3, 3.141592f);
+	MemberOps Obj_02(7, 1.618034f);
+	cout << endl << endl;
 
 	MemberOps Obj_03{ Obj_02 };
 	cout << endl << endl;
@@ -2276,5 +2349,48 @@ void M_MemberOperators()
 	cout << endl << endl;
 
 	cout << "Printing final values:  " << Obj_01.iCounter << ",  " << Obj_01.fRange << ". " << endl;
+	cout << endl << endl;
+
+	MemberOps Obj_04(Obj_02);
+
+	// Equality and inequality operators
+	if (Obj_01 == Obj_03)
+	{
+		cout << "The 2 objects are equal!" << endl;
+	}
+	else
+	{
+		cout << "The 2 objects are different!" << endl;
+	}
+
+	if (Obj_02 != Obj_04)
+	{
+		cout << "The 2 objects are different!" << endl;
+	}
+	else
+	{
+		cout << "The 2 objects are equal!" << endl;
+	}
+
+
+	// More-than and Less-than operators
+	if (Obj_01 > Obj_03)
+	{
+		cout << "The first object is bigger!" << endl;
+	}
+	else
+	{
+		cout << "The second object is bigger!" << endl;
+	}
+
+	if (Obj_02 < Obj_04)
+	{
+		cout << "The second object is bigger!" << endl;
+	}
+	else
+	{
+		cout << "The first object is bigger!" << endl;
+	}
+
 
 }
