@@ -14,6 +14,7 @@
 #include <sstream>
 #include <iterator>
 #include <cstdint>
+#include <algorithm>
 
 
 using namespace std;             // 3 - Global Namespaces [the main global namespace has no name]
@@ -68,7 +69,7 @@ void M_ConversionOperator();
 void M_DefaultDelete();
 void M_OperatorsOverloads();
 void M_MemberOperators();
-
+void M_VectorSort();
 
 
 
@@ -81,7 +82,7 @@ int main()
 // ====================================================================================================
 // Section 01 - Runs only once, before the loop                                                     1 V
 
-	M_MemberOperators();
+	M_VectorSort();
 
 
 
@@ -2391,6 +2392,28 @@ void M_MemberOperators()
 	{
 		cout << "The first object is bigger!" << endl;
 	}
+}
 
+void M_VectorSort()
+{
+	cout << "Sorting elements of a vector..." << endl;
 
+	vector<string> sNames = { "Stephen", "James", "Djow", "Biel", "Bueno", "T" };
+
+	cout << "Vector [of strings] before sorting: ";
+	for (string Name : sNames)
+	{
+		cout << Name << ", ";
+	}
+	cout << endl;
+
+	// std::sort is defined on the <algorithm> Standard Library
+	sort((begin(sNames)), (end(sNames)));   // Sorts the vector variable and makes a permanent change on the element's order
+
+	cout << "Vector [of strings] after sorting: ";
+	for (string Name : sNames)
+	{
+		cout << Name << ", ";
+	}
+	cout << endl;
 }

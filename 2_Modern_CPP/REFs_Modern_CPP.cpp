@@ -673,6 +673,19 @@ Binary [ function with 2 arguments ] operators which might require type-conversi
 	- bitwise operators
 * Input / Output bitwise operators 'left-shift  <<' and 'right-shift  >>' should be non-member-functions for syntax compatibility
 
+		  > Less-than [ and More-than ] operator
+
+'More-than' and 'Less-than' operators are important non-member-functions for sorting and ordering class's objects [ used by the C++ Standard Library ]
+If the C++ developer tries to sort container variables [ like strings, arrays or vectors ] and its elements don't have the 'More-than' and 'Less-than' operators implemented,
+the C++ code won't compile [ and this scenario it's also valid when the C++ developer tries to insert elements into a sorted container ], so the ob
+When a class implements '<' and '>' operators, the operators '<=', '>=', '==' and '!=' should be implemented as well [ and class's objects should behave consistently among all operators ]
+
+   >>> Sorting a Vector
+
+C++ Standard Library defines a 'std::sort()' function in <algorithm>, sorting elements in an iterator range by taking 2 arguments: iterator.begin and iterator.end
+To sort all the elements of a vector, just pass the return values from 'begin()' and 'end()' [ e.g.  sort((begin(sNames)),(end(sNames))); ]
+This will sort the elements in ascending order [ and the 'less-than <' operator will be used on each element of the vector to determine the elements order; and if the 
+vector elements are std::strings, the elements will be sorted in alphabetical order ]
 
 
 
