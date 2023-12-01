@@ -680,12 +680,41 @@ If the C++ developer tries to sort container variables [ like strings, arrays or
 the C++ code won't compile [ and this scenario it's also valid when the C++ developer tries to insert elements into a sorted container ], so the ob
 When a class implements '<' and '>' operators, the operators '<=', '>=', '==' and '!=' should be implemented as well [ and class's objects should behave consistently among all operators ]
 
-   >>> Sorting a Vector
+		  > Prefix and Postfix operators
+
+Prefix  increment   ++i   -   equivalent to i+=1; i;  [ increment, then return ]
+Postfix increment   i++   -   equivalent to temp=i; i+=1; temp;  [ create a copy, increment, then return the copy ]
+
+Prefix  decrement   --i   -   equivalent to i-=1; i;  [ decrement, then return ]
+Postfix decrement   i--   -   equivalent to temp=i; i-=1; temp;  [ create a copy, decrement, then return the copy ]
+
+* Incrementing / Decrementing a pointer-to-array variable will move the pointer to the address of the next / previous element in the array,
+  and the '++' / '--' operators combined with a pointer are useful to iterate over arrays and other container types [ like vectors ]
+
+     >>> Sorting a Vector
 
 C++ Standard Library defines a 'std::sort()' function in <algorithm>, sorting elements in an iterator range by taking 2 arguments: iterator.begin and iterator.end
 To sort all the elements of a vector, just pass the return values from 'begin()' and 'end()' [ e.g.  sort((begin(sNames)),(end(sNames))); ]
 This will sort the elements in ascending order [ and the 'less-than <' operator will be used on each element of the vector to determine the elements order; and if the 
 vector elements are std::strings, the elements will be sorted in alphabetical order ]
+
+
+   >>> Procedural and Functional Programming
+
+In C++, a 'procedural' programming involves a sequence of commands, while a 'functional' programming involves a tree of function calls which transforms data
+[ e.g. procedurally processing a vector:  a loop that processes one element at a time on each iteration of the loop ]
+[ e.g. functionally processing a vector:  a function that takes one element as an input, processes the element and returns data, to become input for another function ]
+
+In C++, Callable Objects are used to implement functional programming
+
+	   >> Callable Objects
+
+C++ allows the developer to create 'callable objects' by defining a 'function-call' operator:
+	- define a non-member-function with custom input-signature
+	- create a pointer-to-function variable, and assign the non-member-function to it
+	- the 'pointer-to-function' is a data-member, that can be invoked like a function
+
+A C++ class which implements a function-call operator is called 'functor'; an object of the class is a data variable, and the object can be called like a function
 
 
 

@@ -70,6 +70,8 @@ void M_DefaultDelete();
 void M_OperatorsOverloads();
 void M_MemberOperators();
 void M_VectorSort();
+void M_PointerIterator();
+void M_FunctionCallOp();
 
 
 
@@ -82,7 +84,7 @@ int main()
 // ====================================================================================================
 // Section 01 - Runs only once, before the loop                                                     1 V
 
-	M_VectorSort();
+	M_FunctionCallOp();
 
 
 
@@ -2248,6 +2250,24 @@ public:
 	// Less-than operator, the inverse of the 'more-than' operator [ should be a non-member-function since it's binary, taking 2 arguments ]
 	friend bool operator <(const MemberOps& NewObj_01, const MemberOps& NewObj_02);
 
+	// Prefix-increment '++' operator
+	MemberOps& operator ++() {
+		cout << "Calling the 'prefix-increment' ++ operator" << endl;
+
+		++iCounter;
+		++fRange;
+		return *this;   // Returns by reference
+	};
+
+	// Postfix-increment '++' operator [ needs a different input signature to be recognized as a postfix operator, and uses an 'int' argument ]
+	MemberOps operator ++(int iDummy) {   // Since there is no difference on both '++' operator functions, the postfix operators needs a 'dummy' 'int' argument
+		cout << "Calling the 'postfix-increment' ++ operator" << endl;
+
+		MemberOps temp(*this);   // Needs a 'copy-constructor' function
+		++iCounter;
+		++fRange;
+		return temp;   // Returns by value
+	};
 
 protected:
 
@@ -2416,4 +2436,51 @@ void M_VectorSort()
 		cout << Name << ", ";
 	}
 	cout << endl;
+}
+
+void M_PointerIterator()
+{
+	char aChars[] = {'D', 'O', 'U', 'G', 'L', 'A', 'S' };
+
+	char* pIterator = aChars;    // The 'pointer-to-string' variable will point at the very first element of the vector [ the variable receiver the vector without the 'address-of' operator ]
+
+	for (int i=0; i<7; ++i)      // Iterator using the number of vector's elements
+	{
+		cout << *pIterator;      // Dereferences the pointer, accessing the element pointed-to on the vector
+		++pIterator;             // Iterates the pointer, so the pointer moves to the next address [ the next element of the vector, since it's a container, a compound data structure ]
+	}
+	cout << endl;
+}
+
+class Callable
+{
+public:
+
+	Callable() { cout << "A new object was created!" << endl; };
+	~Callable() { cout << "The object was deleted!" << endl; };
+
+	void NMF(int i1, int i2);   // Non-member-function, declared with default arguments
+
+	int iCounter{ 0 };
+
+	// void (*pfNMF)(int, int) = &NMF;   // Creating a 'pointer-to-function' with the same input-signature data-types
+
+protected:
+
+private:
+
+};
+
+void Callable::NMF(int i1, int i2)
+{
+	cout << "Calling the NMF with the values: " << i1 << ", " << i2 << ". " << endl;
+	iCounter = (i1 + i2);
+}
+
+void M_FunctionCallOp()
+{
+	Callable Obj_01;
+	
+	// Obj_01.pfNMF(3, 4);
+
 }
