@@ -730,6 +730,25 @@ Functors are classes only used to 'wrap' functions, and they could contain membe
 
    >>> Algorithms
 
+An algorithm is a set of steps used to solve a problem, similar to a 'recipe in cooking'
+In computing, 'algorithms' often refers to techniques for sorting and searching data [ it can also mean a technique to solve specific problems ]
+The C++ Standard Library defines a number of functions in the <algorithm> library header that implements a lot of classic algorithms, as well as useful routines,
+and they are generic global functions which will work with any kind of Standard Template Library (STL) containers [ e.g.  std::string ]
+
+The <algorithm> library has a wide range of useful features with shorter and clearer C++ code [ avoiding explicit loops ], highly flexible and reusable
+[ e.g.  the std::string container class has a 'find()' member function that performs searching on std::string objects ]
+
+	   >> Typical Algorithm
+
+Typically, an STL algorithm is passed an iterator range that specify which elements in the container will be processed by the algorithm [ often, 'begin()' and 'end()' for the entire container ];
+and then the algorithm will iterate over this range and call a function on each element, returning either a result value or the iterator itself [ some container doesn't support 'indexing' ]
+
+	   >> Algorithms with Predicates
+
+Many algorithms call a function on each element which returns bool, known as 'predicate' [ e.g.  'std::find()' calls the '==' operator for each element to compare it to the target value ]
+These algorithms allows the C++ developer to supply a custom predicate, passing a callable object as an optional extra argument to the algorithm call
+[ e.g.  the 'std::sort()' algorithm works by comparing pairs of elements, calling the 'less-than <' operator on each pair of elements and moving the smallest element to the front of the container ]
+
 
 
 

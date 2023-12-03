@@ -25,6 +25,7 @@ using namespace std::literals;
 // Function declarations [compiler-aware]
 // ====================================================================================================
 
+// Introduction
 void M_Initialization();
 void M_Pointers();
 void M_IntSizes();
@@ -39,6 +40,8 @@ void M_NameSpaces();
 void M_NameSpaces_OutOfScope_01();
 void M_NameSpaces_OutOfScope_02();
 void M_FunctionPointers();
+
+// String Interface
 void M_BasicStringOperations();
 void M_SearchingStrings();
 void M_AddingStringElements();
@@ -48,6 +51,8 @@ void M_MiscStringOperations();
 void M_CharacterFunctions();
 void M_CompareStrings();
 void M_SimpleAddMultiply();
+
+// Files and Streams
 void M_FileStreamRead();
 void M_FileStreamOverWrite();
 void M_StreamBuffering();
@@ -62,6 +67,8 @@ void M_StreamRandomAccess();
 void M_StreamIterator();
 void M_BinaryFiles();
 void M_BinaryFileBitmap();   // Uses several structs [ compound types ], written right above the function
+
+// Special member functions
 void M_MemberFunctions();
 void M_CopyConstructor();
 void M_RAIIstring();
@@ -73,7 +80,8 @@ void M_VectorSort();
 void M_PointerIterator();
 void M_FunctionCallOp();
 
-
+// Algorithms and Lambda Expressions
+void M_StringAlgorithms();
 
 
 
@@ -86,7 +94,7 @@ int main()
 // ====================================================================================================
 // Section 01 - Runs only once, before the loop                                                     1 V
 
-	M_FunctionCallOp();
+	M_StringAlgorithms();
 
 
 
@@ -2510,4 +2518,63 @@ void M_FunctionCallOp()
 	Obj_01.print(cout);   // A generic member function that prints the object's data using an output stream as an argument [ can be cout, ofstream or any other output stream ]
 
 	cout << endl << Obj_01;   // Using the binary 'left-shift <<' overloaded operator designed to use the 'Callable' class's object
+}
+
+// Defining a custom 'predicate' function [ that compares the size of 2 strings and returns a 'bool' value ]
+bool is_shorter(const string& sName1, const string& sName2)
+{
+	return ((sName1.size()) < (sName2.size()));
+}
+
+void M_StringAlgorithms()
+{
+	std::string sName{ "Douglas"s };
+	char cSearch{ 'T' };
+
+	cout << "Find() using the std::string" << endl;
+	cout << "The string is:  " << sName << endl;
+	cout << "The '" << cSearch << "' letter is at the position: " << (sName.find(cSearch)) << endl;   // This 'find()' [ from std::string ] returns an index
+	cout << endl;
+
+
+	cout << "Find() using the std::find <algorithm>" << endl;
+	cout << "The string is:  " << sName << endl;
+
+	auto cResult = find(cbegin(sName), cend(sName), cSearch);   // The 'cend()' is the 'one after last' element [ next memory address out of the container ]
+
+	if (cResult != cend(sName))   // If the character is not found, the iterator will return the 'one after last' element
+	{
+		cout << "The '" << cSearch << "' letter is at the position: " << (distance((cbegin(sName)), cResult)) << endl;   // This 'find()' [ from std::string ] returns an index
+	}
+	else
+	{
+		cout << "The '" << cSearch << "' letter was not found." << endl;
+	}
+	cout << endl;
+
+	vector<string> sNames = { "Stephen"s, "James"s, "Djow"s, "Biel"s, "Bueno"s, "T"s };
+
+	cout << "Vector before sorting..." << endl;   // Prints the vector's content
+	for (string Name : sNames)
+	{
+		cout << Name << ", ";
+	}
+	cout << endl << endl;
+
+	sort((begin(sNames)), (end(sNames)));   // Uses the default predicate for the 'less-than <' operator, built-in on std::string
+	cout << "Vector after sorting alphabetically [ default predicate ]..." << endl;
+	for (string Name : sNames)
+	{
+		cout << Name << ", ";
+	}
+	cout << endl << endl;
+
+	sort((begin(sNames)), (end(sNames)), is_shorter);   // Uses the custom predicate for the 'less-than <' operator, created by the C++ developer [ 'function-pointer' third argument ]
+	cout << "Vector after sorting by length [ custom predicate ]..." << endl;
+	for (string Name : sNames)
+	{
+		cout << Name << ", ";
+	}
+	cout << endl << endl;
+
 }
