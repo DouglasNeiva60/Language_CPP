@@ -691,6 +691,15 @@ Postfix decrement   i--   -   equivalent to temp=i; i-=1; temp;  [ create a copy
 * Incrementing / Decrementing a pointer-to-array variable will move the pointer to the address of the next / previous element in the array,
   and the '++' / '--' operators combined with a pointer are useful to iterate over arrays and other container types [ like vectors ]
 
+		  > The 'left-shift' operator
+
+The C++ Standard Library provides standalone functions which overload the 'left-shift binary operator <<' for all the built-in types [ and also the library types ]
+[ e.g.  int i{2};  cout << i << endl;   is invoked as   operator<<(cout, i); ]
+Since the 'left-shift <<' is a binary operator [ takes an output stream and an object as the input signature ], it cannot be a class's member function,
+and the function definition must return the output stream object to allow 'nested-calls' [ e.g.  OutStream& operator <<(OutStream&, ClassObj) ]
+* The '<<' operator allows 'Nested-Calls', chaining together multiple calls of the same operator [ e.g.  cout << i << j << k << endl; ]
+
+
      >>> Sorting a Vector
 
 C++ Standard Library defines a 'std::sort()' function in <algorithm>, sorting elements in an iterator range by taking 2 arguments: iterator.begin and iterator.end
@@ -707,14 +716,21 @@ In C++, a 'procedural' programming involves a sequence of commands, while a 'fun
 
 In C++, Callable Objects are used to implement functional programming
 
-	   >> Callable Objects
+	   >> Callable Objects [ Functors ]
 
-C++ allows the developer to create 'callable objects' by defining a 'function-call' operator:
+C allows the developer to create 'callable objects' by defining a 'function-call' operator:
 	- define a non-member-function with custom input-signature
 	- create a pointer-to-function variable, and assign the non-member-function to it
 	- the 'pointer-to-function' is a data-member, that can be invoked like a function
 
-A C++ class which implements a function-call operator is called 'functor'; an object of the class is a data variable, and the object can be called like a function
+A C++ class which defines a function-call-operator is called 'functor'; an object of the class is a data variable, and the object can be called like a function
+Functors are classes only used to 'wrap' functions, and they could contain member functions and data members to store values which need to be kept between function calls
+[ and data members will store the object's states as the function-operators gets called ]
+
+
+   >>> Algorithms
+
+
 
 
 

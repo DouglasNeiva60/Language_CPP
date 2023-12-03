@@ -75,6 +75,8 @@ void M_FunctionCallOp();
 
 
 
+
+
 // Standard "main" function - C++
 // ====================================================================================================
 int main()
@@ -2462,8 +2464,20 @@ public:
 	void NMF(int i1, int i2);   // Non-member-function, declared with default arguments
 
 	int iCounter{ 0 };
+	float fRange{ 3.141592f };
 
-	// void (*pfNMF)(int, int) = &NMF;   // Creating a 'pointer-to-function' with the same input-signature data-types
+	// void (*pfNMF)(int, int) = &NMF;   // Creating a 'pointer-to-function' with the same input-signature data-types [ C-style ]
+
+	// Function-call '()' operator, can take any input signature and can return anything [ supports overloading ]
+	void operator()(int i3) {
+		cout << "Calling the function-call-operator(), argument:  " << i3 << endl;
+
+	}
+
+	void print(ostream& OutputStream) const {   // The 'const' keyword means that the function is 'read-only'. and doesn't modify data
+		OutputStream << "Object data: " << iCounter << ", " << fRange << ". " << endl;
+	}
+
 
 protected:
 
@@ -2477,10 +2491,23 @@ void Callable::NMF(int i1, int i2)
 	iCounter = (i1 + i2);
 }
 
+std::ostream& operator <<(std::ostream& OutStream, const Callable& Obj)   // Since it's an 'operator overload', it not needed to be a 'friend' class's member
+{
+	cout << "Calling the 'left-shift operator <<' overload for a 'Callable' object... " << endl;
+	Obj.print(OutStream);
+	return OutStream;
+}
+
 void M_FunctionCallOp()
 {
-	Callable Obj_01;
+	Callable Obj_01;   // In this case, the 'Obj_01' is a 'functor' object [ its class defines an 'function-call operator()' ]
 	
 	// Obj_01.pfNMF(3, 4);
 
+	Obj_01(14);   // Calling the 'Function-call operator ()', using the same input signature [ the same as Obj_01.operator()(...) ]
+	Obj_01.operator()(23);   // In this case, the 'Callable' class is a 'functor' [ defines an 'function-call operator()' ]
+
+	Obj_01.print(cout);   // A generic member function that prints the object's data using an output stream as an argument [ can be cout, ofstream or any other output stream ]
+
+	cout << endl << Obj_01;   // Using the binary 'left-shift <<' overloaded operator designed to use the 'Callable' class's object
 }
