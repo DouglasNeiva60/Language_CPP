@@ -82,7 +82,7 @@ void M_FunctionCallOp();
 
 // Algorithms and Lambda Expressions
 void M_StringAlgorithms();
-
+void M_PredicateFunction();
 
 
 // Standard "main" function - C++
@@ -94,7 +94,7 @@ int main()
 // ====================================================================================================
 // Section 01 - Runs only once, before the loop                                                     1 V
 
-	M_StringAlgorithms();
+	M_PredicateFunction();
 
 
 
@@ -2577,4 +2577,69 @@ void M_StringAlgorithms()
 	}
 	cout << endl << endl;
 
+}
+
+class FunctorMt
+{
+public:
+
+	FunctorMt(const int iChars) : iCharacters(iChars) { cout << "A new object was created!  Value: " << iCharacters << endl; };
+	~FunctorMt() { cout << "The object was deleted!" << endl; };
+
+	// Overloaded Function-Call operator(), acting as the 'Function predicate argument' [ returns a 'bool' value ] for the <algorithm> 'std::find_if()' function
+	bool operator()(const string& sVar) const {   // Evaluates if the string size is bigger than the desired number of characters
+
+		// cout << "Function-call operator() called, function predicate..." << endl;
+		return ((sVar.size()) > iCharacters);
+	}
+
+protected:
+
+private:
+
+	const int iCharacters{ 1 };   // This variable can be called as the 'functor-state'
+};
+
+void M_PredicateFunction()
+{
+	vector<string> sNames = { "Stephen"s, "James"s, "Douglas"s, "Biel"s, "Bueno"s, "T"s };
+	FunctorMt NewFunctor(4);
+
+	cout << "Printing vector content..." << endl;
+	for (string Name : sNames)
+	{
+		cout << Name << ", ";
+	}
+	cout << endl << endl;
+
+	// Non-algorithm C++ code
+	for (string Name : sNames)   // Ranged 'for-loop'
+	{
+		if (NewFunctor(Name))   // Calls the 'function-call-operator' that takes one string as input signature
+		{
+			cout << "[Manual] The name  '" << Name << "' has more than 4 characters." << endl;
+		}
+	}
+	cout << endl;
+
+	// Algorithm C++ code '_if()'
+	auto Result1 = find_if((cbegin(sNames)), (cend(sNames)), FunctorMt(4));   // Calls the 'std::find_if()' [ defined on the <algorithm> library ] wiht the 'functor' as the predicate
+
+	// In this case, the 'predicate function' input signature on the 'functor' class should have 1 argument and match the variable type, because the 'std::find_if()'
+	// will call the 'functor' on each element of the iteration, and the 'Result' variable is the 'pointer' iterator returned by the 'std::find_if()'
+
+	if (Result1 != (cend(sNames)))   // The 'std::find_if()' returns only the first result
+	{
+		cout << "[Algorithm] The name  '" << (*Result1) << "' is the first with more than 4 characters." << endl;   // Since the 'Result' is a 'pointer' variable, it should be dereferenced
+	}
+	cout << endl;
+
+	// Algorithm C++ code '_if_not()'
+	auto Result2 = find_if_not((cbegin(sNames)), (cend(sNames)), FunctorMt(4));   // Setting the 'state of the functor' with the value 4
+
+	if (Result2 != (cend(sNames)))   // The 'std::find_if_not()' returns only the first result
+	{
+		cout << "[Algorithm] The name  '" << (*Result2) << "' is the first with 4 characters or less." << endl;
+	}
+	cout << endl;
 }

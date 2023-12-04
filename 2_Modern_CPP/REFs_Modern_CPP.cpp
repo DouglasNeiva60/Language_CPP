@@ -749,6 +749,23 @@ Many algorithms call a function on each element which returns bool, known as 'pr
 These algorithms allows the C++ developer to supply a custom predicate, passing a callable object as an optional extra argument to the algorithm call
 [ e.g.  the 'std::sort()' algorithm works by comparing pairs of elements, calling the 'less-than <' operator on each pair of elements and moving the smallest element to the front of the container ]
 
+	   >> Algorithms with '_if()' versions
+
+Many algorithms have 2 versions: the base version [ that takes a value argument ] and the '_if()' version [ that takes a predicate argument, a function that returns a 'bool' value ]
+[ e.g.  'std::find()' takes a value and searches for the first element equal to this value ]
+[ e.g.  'std::find_if()' takes a predicate function and search for the first element that returns true on the predicate function ]
+* Functors can be used to provide the predicate function as an argument for the '_if()' by taking a single argument and returning a 'bool' value
+
+
+   >>> Lambda Expressions
+
+The C++ developer can customize the way STL algorithms process elements: by passing an object of a 'functor' class [ with a 'function-call' operator defined, returning a 'bool' value ]
+or by passing a 'non-member-function-pointer' [ that returns a 'bool' value on binary-argument evaluation ] as the 'function predicate' argument of the <algorithm> function call
+
+Lambda Expressions [ anonymous local functions, 'closures' ] allows the C++ developer to write the evaluation code [ the 'predicate' function ] right inside the <algorithm> function call
+
+
+
 
 
 
