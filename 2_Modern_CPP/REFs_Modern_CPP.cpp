@@ -763,9 +763,20 @@ The C++ developer can customize the way STL algorithms process elements: by pass
 or by passing a 'non-member-function-pointer' [ that returns a 'bool' value on binary-argument evaluation ] as the 'function predicate' argument of the <algorithm> function call
 
 Lambda Expressions [ anonymous local functions, 'closures' ] allows the C++ developer to write the evaluation code [ the 'predicate' function ] right inside the <algorithm> function call
+When the compiler encounters a 'lambda expression', it will generate C++ code that defines a 'functor' Class:
+	- this 'functor' Class will have an unique name chosen by the compiler
+	- the 'function-call-operator()' of the 'functor' will have the same body as the 'lambda expression', with the same return type
+	- the compiler will add the necessary C++ code to create the 'functor' class's object
 
+Lambda Expressions are anonymous, defined inline:   [ e.g.  [](int iEven) { return ((iEven % 2) == 0); };  ]
+- the function name is defined with 'square-brackets []', the start of the expression
+- the function arguments is written the same way as a normal function
+- the function body is written the same way as an inline function
+- the Lambda Expression is a 'single-statement-function' that causes the compiler to create a 'functor' object, and the return type is always deduced by the compiler
 
-
+In C++11, the Lambda Expression's return type is only deduced if the lambda expression is a single statement that returns a value; otherwise, the return type is deduced as 'void'
+For more complex expressions, the C++ developer needs to provide a 'trailing return type' [ explicitly writing the Lambda Expression's return type ]
+[ e.g.  [](int iValue)->bool { ... } ]   In C++17, it's no longer required, the return type is always deduced automatically
 
 
 

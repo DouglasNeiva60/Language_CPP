@@ -2642,4 +2642,17 @@ void M_PredicateFunction()
 		cout << "[Algorithm] The name  '" << (*Result2) << "' is the first with 4 characters or less." << endl;
 	}
 	cout << endl;
+
+	// Algorithm C++ code '_if()' with a 'Lambda Expression'
+	cout << "Using a Lambda Expression!" << endl;
+	auto Result3 = find_if((cbegin(sNames)), (cend(sNames)), [](string sMyName)->bool { return (sMyName == "Douglas"); } );
+	// The argument-type of the lambda expression should match the iterator's type, and the 'bool' return type was explicitly written
+
+	if (Result3 != (cend(sNames)))   // The 'std::find_if_not()' returns only the first result
+	{
+		cout << "[Algorithm] The name  '" << (*Result3) << "' was recognized as the Developer's Name." << endl;
+	}
+	cout << endl;
+
+
 }
