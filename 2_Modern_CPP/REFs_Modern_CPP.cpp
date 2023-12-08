@@ -743,6 +743,17 @@ The <algorithm> library has a wide range of useful features with shorter and cle
 Typically, an STL algorithm is passed an iterator range that specify which elements in the container will be processed by the algorithm [ often, 'begin()' and 'end()' for the entire container ];
 and then the algorithm will iterate over this range and call a function on each element, returning either a result value or the iterator itself [ some container doesn't support 'indexing' ]
 
+		  > 'equal()' Algorithm
+
+The 'equal()' algorithm can be used to compare the elements in two containers, taking 4 inputs: cbegin and cend of the first container, cbegin and cend of the second container
+[ e.g.  bool bCompare = (equal((cbegin(ct1)),(cend(ct1)),(cbegin(ct2)),(cend(ct2)))) ]   This algorithm iterates through each element in ct1 and compares it to the corresponding element in ct2
+The 'equal()' algorithm returns false as soon as it encounters a mismatch [ if ct1 has more elements than ct2, it always returns false; if ct2 has more elements than ct1, extra elements will be ignored ]
+By default, the 'equal()' operator is used to compare the elements [ if the containers are std::string, the comparison will be case-sensitive ]
+
+The 'equal()' algorithm has an overloaded function which takes a predicate function [ custom evaluation ], and the 'predicate function' will be called instead of the 'equality ==' operator
+[ so the C++ developer can define a custom 'equality' evaluation by using a custom 'predicate function', often used on std::string to compare string case-non-sensitive after converting to upper-case ]
+
+
 	   >> Algorithms with Predicates
 
 Many algorithms call a function on each element which returns bool, known as 'predicate' [ e.g.  'std::find()' calls the '==' operator for each element to compare it to the target value ]
@@ -777,6 +788,13 @@ Lambda Expressions are anonymous, defined inline:   [ e.g.  [](int iEven) { retu
 In C++11, the Lambda Expression's return type is only deduced if the lambda expression is a single statement that returns a value; otherwise, the return type is deduced as 'void'
 For more complex expressions, the C++ developer needs to provide a 'trailing return type' [ explicitly writing the Lambda Expression's return type ]
 [ e.g.  [](int iValue)->bool { ... } ]   In C++17, it's no longer required, the return type is always deduced automatically
+
+	   >> Lambda Expression and variables
+
+A lambda expression has access global variables [ like a regular function ], and it also has access to static variables in the same scope
+But, by default, lambda expressions have very limited access to local variables [ the scope where the algorithm is being called ]
+A lambda expression can access local variables which are 'const references'; and a lambda expression can read but not modify variables [ since they are 'const' ]
+
 
 
 

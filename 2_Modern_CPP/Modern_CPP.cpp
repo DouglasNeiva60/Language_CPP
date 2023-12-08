@@ -83,6 +83,8 @@ void M_FunctionCallOp();
 // Algorithms and Lambda Expressions
 void M_StringAlgorithms();
 void M_PredicateFunction();
+void M_CompareStringsLambda();
+
 
 
 // Standard "main" function - C++
@@ -94,7 +96,7 @@ int main()
 // ====================================================================================================
 // Section 01 - Runs only once, before the loop                                                     1 V
 
-	M_PredicateFunction();
+	M_CompareStringsLambda();
 
 
 
@@ -2655,4 +2657,26 @@ void M_PredicateFunction()
 	cout << endl;
 
 
+}
+
+bool equal_strings(const string& ct1, const string& ct2)
+{
+	// Calling the 'equal()' algorithm overloaded [ with a Lambda Expression as the Predicate Function ]
+
+	return (equal((cbegin(ct1)),(cend(ct1)),(cbegin(ct2)),(cend(ct2)),      // In this case, the 'equal()' algorithm compares each character between 2 std::string containers
+		[](char cC1, char cC2) { return (toupper(cC1) == toupper(cC2)); }   // The Lambda Expression converts all character to upper-case [ case-non-sensitive ]
+		));
+}
+
+void test_strings(const string& st1, const string& st2)
+{
+	// Calling the 'equal_strings' function to compare 2 elements [ with the 'equal()' algorithm defined within the function ]
+
+	cout << st1 << " and " << st2 << " are" << ((equal_strings(st1, st2)) ? "" : " not") << " equal." << endl;   // Using the 'single-line if-statement'
+}
+
+void M_CompareStringsLambda()
+{
+	test_strings("Lambda", "lambda");
+	test_strings("Lambda", "lembda");
 }
