@@ -845,8 +845,15 @@ On C++17, '[this]' will capture the object by reference, and '[*this]' will capt
 
 Even if lambda expressions are mainly used for implementing temporary functions, the are 'first-class objects' [ they can be stored on a variable, using the variable as the predicate ]
 Since lambda expressions are converted to objects from a generated 'functor' Class by the C++ compiler, the variable-type must be 'auto'
-
 Lambda expressions can also be returned from a function call using the 'auto' return-type [ returning a variable that stores the lambda expression ]
+
+		  > Functional Programming
+
+In C++, Callable Objects are used to implement functional programming
+'Partial Evaluation' is when data is processed in stages [ reduces computation time, makes processing simpler and could be applied on database queries, scientific computing and AI ]
+[ e.g.  instead of formatting all the pages of a large PDF document before displaying it to the user, the software formats and displays the page as soon as the user needs to view it ]
+
+'Partial Evaluation' can be implemented with Lambda Expressions and Captures
 
 
 

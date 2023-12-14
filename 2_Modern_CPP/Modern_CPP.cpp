@@ -86,6 +86,8 @@ void M_PredicateFunction();
 void M_CompareStringsLambda();
 void M_LambdaCaptures();
 void M_PartialEvaluation();
+void M_DanglingReference();
+
 
 
 
@@ -98,7 +100,7 @@ int main()
 // ====================================================================================================
 // Section 01 - Runs only once, before the loop                                                     1 V
 
-	M_PartialEvaluation();
+	M_DanglingReference();
 
 
 
@@ -2753,5 +2755,31 @@ void M_PartialEvaluation()
 	auto LEO = FTRALE("Name_01"s);   // 'LEO' stands for 'Lambda Expression Object'; it will be a Lambda which takes the 'sInput_02' string as an argument and adds the "Name_01"s string to it
 
 	cout << LEO("Name_02"s) << endl;   // In this case, the value "Name_01"s is defined on the 'LEO' Lambda-Variable initialization, that receives the "Name_02"s as an argument
+
+	// In this case, 'Partial Evaluation' was implemented by the 'LEO' variable that only needs the second name as an argument [ the first name was already defined on the variable's initialization ]
+	// Another 'Partial Evaluations' could be implemented by creating a new 'FTRALE' variable, initializing it with a different 'Name_01' value
+}
+
+int& DanglingFunction()   // Returns a 'ref-to-int' variable [ alias ]
+{
+	int X{ 7 };   // Local variable 'X'
+	return X;     // The local variable 'X' is destroyed as soon as the function returns
+}
+
+void M_DanglingReference()
+{
+	cout << DanglingFunction() << endl;
+
+	int Y{ 3 };
+	Y -= (--(DanglingFunction()));   // Could crash the C++ software, since the variable 'X' is being destroyed on its scope
+	cout << Y << endl;
+
+	int& Z = DanglingFunction();   // 'Z', acting as an alias, receives the reference of the local variable 'X' [ about to be destroyed on its scope ]
+	--Z;
+	cout << Z << endl;
+	cout << endl;
+
+	auto LEO = [&](const string sDef = "Default_Lambda_String"s) { cout << sDef << endl;  cout << Z << endl;  return true; };   // Captures all the variables by reference
+	cout << (LEO()) << endl;   // Since the Lambda Expression has captured 'Z' [ and alias of 'X' ], and since 'X' was deleted [ out of scope ], the 'X' address now contains garbage data
 
 }
