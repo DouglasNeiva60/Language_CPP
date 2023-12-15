@@ -852,8 +852,34 @@ Lambda expressions can also be returned from a function call using the 'auto' re
 In C++, Callable Objects are used to implement functional programming
 'Partial Evaluation' is when data is processed in stages [ reduces computation time, makes processing simpler and could be applied on database queries, scientific computing and AI ]
 [ e.g.  instead of formatting all the pages of a large PDF document before displaying it to the user, the software formats and displays the page as soon as the user needs to view it ]
+'Partial Evaluation' can be implemented with Lambda Expressions and Captures [ the first evaluation initializes the lambda variable, and the second evaluation is the variable's lambda call ]
 
-'Partial Evaluation' can be implemented with Lambda Expressions and Captures
+	   >> Generic Lambda Expressions
+
+In C++14, the compiler can always deduce the return-type of a Lambda Expression [ in fact, the return-type is implicitly 'auto' ]
+The 'auto' type can also be used for the Lambda Expression's arguments [ creating a 'Generic Lambda' or 'Polymorphic Lambda' ], a feature often used in C++14
+[ 'Generic Lambdas' or 'Polymorphic Lambdas' works the same way as Template Functions, creating a generic code that works with any type of variable-type ]
+The C++ software implements 'Generic Polymorphic Lambdas' by generating a 'functor' object with a Templated 'function-call operator()'
+
+C++14 also allows Lambda Expressions to create local variables [ immutable by default ] in the 'Capture Specifier []', being implicitly 'auto' type and needing to be initialized
+'Generic Polymorphic Lambdas' allows 'Capture by Move' [ create local variables inside Lambda's body, initializing local variables with captured variables ], a feature often used in C++14
+* Very useful on C++ 'Move Semantics'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
