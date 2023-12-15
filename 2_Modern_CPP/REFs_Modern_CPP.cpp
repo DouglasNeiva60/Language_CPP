@@ -866,21 +866,26 @@ C++14 also allows Lambda Expressions to create local variables [ immutable by de
 * Very useful on C++ 'Move Semantics'
 
 
+   >>> C++ Pair Type
+
+std::pair is defined in <utility> STL header, and it has 2 public data members that can be of different types, and they are accessed as 'pair.first' and 'pair.second'
+std::pair can be used to return 2 related data items [ a pair of objects ] from a function, and it's used by some of the containers in the C++ Standard Template Library
+
+Since 'std::pair' is a templated type, the variable-type of both members need to be specified on the pair's constructor [ e.g.  pair<string, string> FullName{"Douglas"s, "Neiva"s} ]
+The 'make_pair()' expression creates a 'std::pair' variable by combining 2 different variables [ or literals ]  [ e.g.  auto FullName{ make_pair("Douglas"s, "Neiva"s) } ]
 
 
+   >>> Insert Iterators
 
+An output stream iterator inserts data into an output stream, and an 'insert iterator' adds new elements to a container [ to add a new element, the value needs to be assigned to the insert iterator ]
+There are 3 types of 'insert iterator' which adds elements at different positions:
+- std::back_insert_iterator   adds a new element at the  end        of the container      back_inserter()
+- std::front_insert_iterator  adds a new element at the  beginning  of the container      front_inserter()
+- std::insert_iterator        adds a new element at any given position of the container   inserter()
 
-
-
-
-
-
-
-
-
-
-
-
+To get an insert iterator, the 'inserter function' of the stream must be called, passing the container object as the argument to the 'inserter function'
+[ e.g.  call the 'back_inserter()' function to get the 'back_insert_iterator'; assigning the value "NewValue"s to the 'insert iterator' will call the object's 'push_back()' member function;
+every time a new value is assigned to the 'back_insert_iterator', a new element is added at the back of the container by calling its 'push_back()' member function, passing the value as the argument ]
 
 
 // ====================================================================================================

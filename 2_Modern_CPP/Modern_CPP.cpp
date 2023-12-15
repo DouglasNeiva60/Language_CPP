@@ -88,6 +88,8 @@ void M_LambdaCaptures();
 void M_PartialEvaluation();
 void M_DanglingReference();
 void M_GenericLambdas();
+void M_PairType();
+
 
 
 
@@ -100,7 +102,7 @@ int main()
 // ====================================================================================================
 // Section 01 - Runs only once, before the loop                                                     1 V
 
-	M_GenericLambdas();
+	M_PairType();
 
 
 
@@ -2822,3 +2824,70 @@ void M_GenericLambdas()
 
 }
 
+pair<int, string> FindIndex(const vector<string>& vInput, const int& iLength)   // A function that returns a 'std::pair' object
+{
+	int iIndex{ -1 };   // Iterator's index
+
+	// The 'Result' type is  vector<string>::const_iterator
+	auto Result = find_if((cbegin(vInput)), (cend(vInput)),   // Algorithm call that iterates over a vector of strings
+		[iLength, &iIndex](const string& Word) { ++iIndex;  return ((Word.size()) == iLength); }   // Lambda Expression [ predicate ] that captures 'iLength' by value and 'iIndex' by reference
+	);
+
+	if (Result != (cend(vInput)))   // Checks if the iterator is on the next address after the last element [ not found ]
+	{
+		// cout << "String found!   Index:  " << iIndex << ", String:  " << (*Result) << ". " << endl;
+		return (make_pair(iIndex, *Result));
+	}
+	else
+	{
+		// cout << "String not found..." << endl;
+		return (make_pair(iIndex, "Not found"s));
+	}
+
+}
+
+void M_PairType()
+{
+
+	pair<string, string> FullName{ "Douglas"s, "Neiva"s };   // Constructor call of the std::pair
+
+	cout << "First Name:  " << FullName.first << endl;
+	cout << "Last  Name:  " << FullName.second << endl;
+
+	auto Profession_01{ make_pair("Electrical"s, "Engineer"s) };   // The pair variable will have its type deduced by the C++ compiler
+
+	// C++17 Class Template Argument Deduction (CTAD)
+	// pair Profession_02{ "Game"s, "Developer"s };   // In C++17, the C++ compiler can deduce the variable's types [ avoiding explicitly typing the variable's types ]
+
+	vector<string> sNames{ "Biel"s, "Bueno"s, "Djow"s, "T"s, "Mu"s };   // A new vector of strings with 5 elements
+	int iLengthSearch{ 8 };
+	pair<int, string> pResult;
+
+	cout << "'FindIndex()' by the length " << iLengthSearch << " returns...  ";
+	pResult = (FindIndex(sNames, iLengthSearch));
+	cout << "Name:  " << pResult.second << ",   Index:  " << pResult.first << endl;
+	cout << endl;
+
+	cout << "The previous 'sNames' vector's size was:  " << (sNames.size()) << endl;
+
+	// The std::vector and the std::string doesn't have the 'push_front()' member functions defined
+	// auto  Iterator1 = front_inserter(sNames);   // Calls the 'front_inserter()' function to get the 'front_insert_iterator' of the container [ adds to the beginning ]
+	auto  Iterator2 = back_inserter(sNames);    // Calls the 'back_inserter()'  function to get the 'back_insert_iterator'  of the container [ adds to the end ]
+
+	// *Iterator1 = "Stephen"s;    // Assigns a new value [ in this case, a string literal ] to the 'front_insert_iterator'
+	*Iterator2 = "Ulibarri"s;   // it calls the 'pushback()' member function of the container, passing the new value as the argument [ sNames.push_back("Ulibarri"s); ]
+
+	cout << "The current  'sNames' vector's size is:   " << (sNames.size()) << endl;
+
+	cout << "'FindIndex()' by the length " << iLengthSearch << " returns...  ";
+	pResult = (FindIndex(sNames, iLengthSearch));
+	cout << "Name:  " << pResult.second << ",   Index:  " << pResult.first << endl;
+	cout << endl;
+
+	cout << "'sNames' vector's content: ";
+	for (auto Element : sNames)
+	{
+		cout << Element << "  ";
+	}
+	cout << endl;
+}
