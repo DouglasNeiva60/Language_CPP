@@ -2991,6 +2991,47 @@ void M_SearchingAlgorithms()
 {
 	string Name{ "DOUGLAS" };   // String to use 'find_first_of()' member function [ case-sensitive ]
 	string Vowels{ "AEIOU" };   // Character-by-character evaluation
-	cout << "Vowel at index:  " << (Name.find_first_of(Vowels)) << endl;   // Returns a 'size-type' variable-type	
+	cout << "First vowel at index:  " << (Name.find_first_of(Vowels)) << endl;   // Returns a 'size-type' variable-type, using the std::string.find_first_of()
+
+	auto Vowel1 = find_first_of((cbegin(Name)), (cend(Name)), (cbegin(Vowels)), (cend(Vowels)));   // Returns an iterator to the first vowel, using the std::find_first_of [ from <algorithm> ]
+
+	if (Vowel1 != (cend(Name)))
+	{
+		cout << "The first  vowel on the string is:  " << *Vowel1 << ",  at index:  " << (distance((cbegin(Name)), Vowel1)) << endl;
+	}
+
+	// To find the next vowel, pass the string's iterator range starting from the previous search address [ and not from 'cbegin()' ]
+	auto Vowel2 = find_first_of((next(Vowel1)), (cend(Name)), (cbegin(Vowels)), (cend(Vowels)));   // Returns an iterator to the second vowel, using the std::find_first_of [ from <algorithm> ]
+
+	if (Vowel2 != (cend(Name)))
+	{
+		cout << "The second vowel on the string is:  " << *Vowel2 << ",  at index:  " << (distance((cbegin(Name)), Vowel2)) << endl;
+	}
+	cout << endl << endl;
+
+	string Teachers{ "Stephen Ulibarri and Jamess Raynard" };
+
+	auto Adj1 = adjacent_find((cbegin(Teachers)), (cend(Teachers)));
+
+	if (Adj1 != (cend(Teachers)))
+	{
+		cout << "Found         2 adjacent elements with value:  " << (*Adj1) << ", at index:  " << (distance((cbegin(Teachers)), Adj1)) << endl;
+	}
+
+	auto Adj2 = adjacent_find((next(Adj1)), (cend(Teachers)));
+
+	if (Adj2 != (cend(Teachers)))
+	{
+		cout << "Found another 2 adjacent elements with value:  " << (*Adj2) << ", at index:  " << (distance((cbegin(Teachers)), Adj2)) << endl;
+	}
+	cout << endl << endl;
+
+	string MyName{ "James" };
+	auto FindMyName = search((cbegin(Teachers)), (cend(Teachers)), (cbegin(MyName)), (cend(MyName)));
+
+	if (FindMyName != (cend(Teachers)))
+	{
+		cout << "The name " << MyName << " was found at the index:  " << (distance((cbegin(Teachers)), FindMyName)) << ",  with the value:  " << (*FindMyName) << endl;
+	}
 
 }

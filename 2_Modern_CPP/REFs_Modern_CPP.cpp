@@ -916,8 +916,13 @@ std::bit_and 'Y & Z',  std::bit_or 'Y | Z',  std::bit_exor 'Y ^ Z',  std::bit_no
 
 Algorithms that searches within iterators ranges
 std::string has a member function 'find_first_of()' that returns the index of the first match on a string [ e.g.  string Name{"DOUGLAS"};  string Vowels{"AEIOU"};  Name.find_first_of(Vowels); ]
+On the <algorithm> STL header, there is a generic algorithm function std::find_first_of()  [ and, by default, the '==' operator of the element type is used ] that takes 2 iterator ranges
 
+'std::adjacent_find()' finds 2 adjacent elements with the same value, returning an iterator to the first element of the first 'equal-and-adjacent' match [ by default, the '==' operator is used ]
 
+'std::search()' finds the second iterator range inside the first iterator range [ similar to find a sub-string in a string ], returning an iterator to the first occurrence [ uses the '==' operator ]
+
+'std::search_n()' looks for a sequence of 'n' successive elements which have the same given value, returning an iterator to the first element of the sequence [ uses the '==' operator ]
 
 
 
