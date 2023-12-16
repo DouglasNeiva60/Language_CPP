@@ -877,7 +877,8 @@ The 'make_pair()' expression creates a 'std::pair' variable by combining 2 diffe
 
    >>> Insert Iterators
 
-An output stream iterator inserts data into an output stream, and an 'insert iterator' adds new elements to a container [ to add a new element, the value needs to be assigned to the insert iterator ]
+The same ways as an output stream iterator inserts data into an output stream,
+an 'insert iterator' adds new elements to a container [ to add a new element, the value needs to be assigned to the insert iterator ]
 There are 3 types of 'insert iterator' which adds elements at different positions:
 - std::back_insert_iterator   adds a new element at the  end        of the container      back_inserter()
 - std::front_insert_iterator  adds a new element at the  beginning  of the container      front_inserter()
@@ -886,6 +887,38 @@ There are 3 types of 'insert iterator' which adds elements at different position
 To get an insert iterator, the 'inserter function' of the stream must be called, passing the container object as the argument to the 'inserter function'
 [ e.g.  call the 'back_inserter()' function to get the 'back_insert_iterator'; assigning the value "NewValue"s to the 'insert iterator' will call the object's 'push_back()' member function;
 every time a new value is assigned to the 'back_insert_iterator', a new element is added at the back of the container by calling its 'push_back()' member function, passing the value as the argument ]
+
+The 'inserter()' function takes 2 arguments: the new value to be added to the container, and the 'positional iterator' [ that represents the position where the new element will be added ]
+To add a new value at the given position [ specified at the 'insert_iterator' initialization ], assign the new value to the 'insert_iterator'
+'insert_iterators' can be used anywhere where a positional iterator is expected, useful for populating containers [ stream iterators and copy algorithms ]
+
+   >>> Standard Template Library - Function Objects
+
+The C++ STL provides some 'Function Objects', classes with completely generic operators for arithmetic, logical and relational operations, implemented as 'Templated Functors'
+Some of the 'STL Function Objects' are
+
+		  > Arithmetic Operators
+std::plus 'Y + Z',  std::minus 'Y - Z',  std::multiplies 'Y * Z',  std::divides 'Y / Z',  std::modulus 'Y % Z',  std::negative '-Y'
+
+		  > Relational Operators
+std::equal_to 'Y == Z',  std::not_equal_to 'Y != Z',  std::greater 'Y > Z',  std::less 'Y < Z',  std::greater_equal 'Y >= Z',  std::less_equal 'Y <= Z'
+
+		  > Logical Operators
+std::logical_and 'Y && Z',  std::logical_or 'Y || Z',  std::logical_not '!Y'
+
+		  > Bitwise Operators
+std::bit_and 'Y & Z',  std::bit_or 'Y | Z',  std::bit_exor 'Y ^ Z',  std::bit_not '~Y' (C++14)
+
+
+   >>> Algorithms [ continued ]
+
+	   >> Searching Algorithms
+
+Algorithms that searches within iterators ranges
+std::string has a member function 'find_first_of()' that returns the index of the first match on a string [ e.g.  string Name{"DOUGLAS"};  string Vowels{"AEIOU"};  Name.find_first_of(Vowels); ]
+
+
+
 
 
 // ====================================================================================================

@@ -89,6 +89,12 @@ void M_PartialEvaluation();
 void M_DanglingReference();
 void M_GenericLambdas();
 void M_PairType();
+void M_InsertIterators();
+void M_STLFunctionObjects();
+
+// Algorithms continued
+void M_SearchingAlgorithms();
+
 
 
 
@@ -102,7 +108,7 @@ int main()
 // ====================================================================================================
 // Section 01 - Runs only once, before the loop                                                     1 V
 
-	M_PairType();
+	M_SearchingAlgorithms();
 
 
 
@@ -2884,10 +2890,107 @@ void M_PairType()
 	cout << "Name:  " << pResult.second << ",   Index:  " << pResult.first << endl;
 	cout << endl;
 
-	cout << "'sNames' vector's content: ";
+	cout << "'sNames' previous vector's content: ";
 	for (auto Element : sNames)
 	{
 		cout << Element << "  ";
 	}
 	cout << endl;
+
+	auto Element3 = (next(next(begin(sNames))));   // Gets the position of the third element of the container
+	auto Iterator3 = inserter(sNames, Element3);   // Gets the 'insert_iterator' [ adds at any given position ] of the 'sNames' std::vector container [ of std::strings ]
+	*Iterator3 = "Bjarne"s;                        // Adds the new value at the given position [ defined at the 'insert_iterator' initialization ]
+	*Iterator3 = "Stroustrup"s;                    // Since the vector has done a memory rearrangement, the insert iterator [ and all iterators before it ] are no longer valid on the vector
+
+	cout << "'sNames' current  vector's content: ";
+	for (auto Element : sNames)
+	{
+		cout << Element << "  ";
+	}
+	cout << endl;
+	cout << "The current  'sNames' vector's size is:   " << (sNames.size()) << endl;
+
+}
+void M_InsertIterators()
+{
+	cout << "Enter some words:   " << endl << endl;
+
+	istream_iterator<string> ISI_1(cin);   // Binding the 'cin' input stream to an 'input stream iterator'
+	istream_iterator<string> ISI_2;        // Creating a second empty 'input stream iterator', to be used as 'end-line-character detector'
+
+	vector<string> InputData;                       // Creating an empty vector [ to store the 'cin input stream's' input ]
+	auto BackIterator = back_inserter(InputData);   // Getting the 'back_insert_iterator' from the 'InputData' vector using its 'back_inserter()' member function
+													// Assigning a value to the 'back_insert_iterator' calls the 'InputData' vector's 'push_back()' function, passing the assigned value as an argument
+
+	// The loop will take each string as a value, separated by spaces or by ENTER; the 'end-line-character' is Ctrl+Z on the Windows Terminal
+	while (ISI_1 != ISI_2)   // Starts reading the 'cin' input stream [ bound to the 'ISI_1' ], checking when the input stream reads the 'end-line-character' [ comparing-it to an empty input stream ]
+	{
+		*BackIterator = *ISI_1;   // Assigns the 'cin' value to the 'InputData' vector [ calling its 'push_back()' member function ]
+		++ISI_1;                  // Moves to the next address
+	}
+
+	cout << "The " << (InputData.size()) << " words read by the terminal were:   ";
+	for (string Word : InputData)   // Ranged for-loop
+	{
+		cout << Word << ", ";   // Prints each character of the std::vector container
+	}
+	cout << endl << endl;   // Flushes the output stream
+}
+
+// Pseudo-code for the C++ STL 'less' object [ that implements the 'less-than' operator ]
+template <typename GenericType>   // Templated variable to be used on the Class [ tha generates Templated Functor Objects ]
+class LessThan                    // A Templated Class that implements the 'less-than <' operator
+{
+public:
+
+	bool operator()(GenericType arg1, GenericType arg2) { return (arg1 < arg2); };   // The 'function-call-operator()' of the 'functor' class, implementing the 'less-than <' operator
+
+};
+
+void M_STLFunctionObjects()
+{
+	vector<string> sNames{ "Bjarne"s, "Biel"s, "Stephen"s, "Bueno"s, "Ulibarri"s, "Djow"s, "T"s, "Mu"s, "Stroustrup"s };   // A new vector of strings with 5 elements
+	int iIndex{ -1 };
+
+	cout << "Vector before sorting..." << endl;
+	iIndex = 0;
+	for (string Name : sNames)   // Ranged for-loop
+	{
+		cout << iIndex << "   - " << Name << "\n";   // Prints each character of the std::vector container
+		++iIndex;
+	}
+	cout << endl << endl;   // Flushes the output stream
+
+	// sort((begin(sNames)), (end(sNames)), LessThan<string>());   // Uses the 'LessThan' Custom Templated Class as the 'Function Predicate' for the std::sort algorithm
+	sort((begin(sNames)), (end(sNames)), less<string>());   // Uses the 'less' C++ STL as the 'Function Predicate' for the std::sort algorithm
+
+	cout << "Vector after  sorting using 'less'..." << endl;
+	iIndex = 0;
+	for (string Name : sNames)   // Ranged for-loop
+	{
+		cout << iIndex << "   - " << Name << "\n";   // Prints each character of the std::vector container
+		++iIndex;
+	}
+	cout << endl;   // Flushes the output stream
+
+	sort((begin(sNames)), (end(sNames)), greater<string>());   // Uses the 'greater' C++ STL as the 'Function Predicate' for the std::sort algorithm
+
+	cout << "Vector after  sorting using 'greater'..." << endl;
+	iIndex = 0;
+	for (string Name : sNames)   // Ranged for-loop
+	{
+		cout << iIndex << "   - " << Name << "\n";   // Prints each character of the std::vector container
+		++iIndex;
+	}
+	cout << endl;   // Flushes the output stream
+
+
+}
+
+void M_SearchingAlgorithms()
+{
+	string Name{ "DOUGLAS" };   // String to use 'find_first_of()' member function [ case-sensitive ]
+	string Vowels{ "AEIOU" };   // Character-by-character evaluation
+	cout << "Vowel at index:  " << (Name.find_first_of(Vowels)) << endl;   // Returns a 'size-type' variable-type	
+
 }
