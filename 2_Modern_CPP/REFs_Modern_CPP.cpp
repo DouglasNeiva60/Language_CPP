@@ -924,6 +924,37 @@ On the <algorithm> STL header, there is a generic algorithm function std::find_f
 
 'std::search_n()' looks for a sequence of 'n' successive elements which have the same given value, returning an iterator to the first element of the sequence [ uses the '==' operator ]
 
+'std::mismatch()' takes 2 iterator ranges and looks for differences between the 2 ranges, and returns a pair to the first element that has a different value in each range [ uses the '==' operator ]
+
+'std::binary_search()'  [ is similar to std::find() ]  assumes that the iterator range is sorted [ much faster searches ] and searches for any element that matches the value on the container [ '==' ]
+
+'std::includes()' takes 2 iterator ranges and returns a bool if all the elements on the second range are present on the first range [ using '==' and assuming that both ranges are sorted ]
+
+	   >> 'Some_of()' - Algorithms with an iterator range and a predicate
+
+'std::all_of()'  returns 'true' if the predicate is 'true' for every element
+'std::any_of()'  returns 'true' if the predicate is 'true' for at least one element
+'std::none_of()' returns 'true' if the predicate is 'false' for every element
+
+[ e.g.  std::any_of((cbegin(iVec)), (cend(iVec)), is_odd);  ]
+
+	   >> Numeric Algorithms
+
+The C++ STL also defined some numeric algorithms on the <numeric> header, useful for numerical processing of container elements
+
+'std::'
+
+'std::iota()'  populates an iterator range with 'int' values increased by 1, starting from the specified number [ takes an iterator range and an 'int' starting value of the first element ]
+
+'std::accumulate()'  returns the sum of all the elements in an iterator range [ uses the '+' operator; takes an iterator range and an 'int' starting value to be the first value added, usually 0 ]
+                     to perform a custom operation, an extra argument [ Lambda Expression or Callable Object ] can be passed to 'std::accumulate'
+					 [ the Lambda Expression's first argument is the total sum, and the second argument is the current element ]
+
+
+
+
+
+
 
 
 // ====================================================================================================

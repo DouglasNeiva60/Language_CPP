@@ -15,6 +15,7 @@
 #include <iterator>
 #include <cstdint>
 #include <algorithm>
+#include <numeric>
 
 
 using namespace std;             // 3 - Global Namespaces [the main global namespace has no name]
@@ -94,7 +95,7 @@ void M_STLFunctionObjects();
 
 // Algorithms continued
 void M_SearchingAlgorithms();
-
+void M_NumericAlgorithms();
 
 
 
@@ -108,7 +109,7 @@ int main()
 // ====================================================================================================
 // Section 01 - Runs only once, before the loop                                                     1 V
 
-	M_SearchingAlgorithms();
+	M_NumericAlgorithms();
 
 
 
@@ -3033,5 +3034,60 @@ void M_SearchingAlgorithms()
 	{
 		cout << "The name " << MyName << " was found at the index:  " << (distance((cbegin(Teachers)), FindMyName)) << ",  with the value:  " << (*FindMyName) << endl;
 	}
+	cout << endl << endl;
 
+	vector<int> vValues1{ 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+	vector<int> vValues2{ 1, 2, 8, 4, 5, 6, 3, 8, 9 };
+
+	auto Result = mismatch((cbegin(vValues1)), (cend(vValues1)), (cbegin(vValues2)), (cend(vValues2)));   // Returns a 'pair' variable-type
+
+	if ((Result.first != (cend(vValues1))) && (Result.second != (cend(vValues2))))   // Since 'std::mismatch()' returns a pair of iterators, both first and second elements has to be checked
+	{
+		cout << "The mismatched values are on index:  " << (distance((cbegin(vValues1)), Result.first)) << endl;
+		cout << "The mismatched values are:  " << (*Result.first) << " on Vector1,  " << (*Result.second) << " on Vector2." << endl;   // The first element is the iterator of the first range
+	}
+
+	auto is_odd  = [=](const int& iInput) { return ((iInput % 2) == 1); };
+	auto is_even = [=](const int& iInput) { return ((iInput % 2) == 0); };
+
+	if (any_of((cbegin(vValues1)), (cend(vValues1)), is_odd))
+	{
+		cout << "There are at least 1 odd number on the vector" << endl;
+	}
+	else
+	{
+		cout << "There are no odd numbers on the vector" << endl;
+	}
+
+	int iElementToSearch{ 3 };   // Searches for the value '3' among the vector's elements
+	if (binary_search((cbegin(vValues2)), (cend(vValues2)), iElementToSearch))   // Much faster than 'std::find()', since assumes that the values are sorted [ won't work with random orders ]
+	{
+		cout << "The 'vValues2' vector has the element " << iElementToSearch << endl;
+	}
+
+	vector<int> vValues3{ 3, 5, 7 };
+	if (includes((cbegin(vValues1)), (cend(vValues1)), (cbegin(vValues3)), (cend(vValues3))))   // Both vectors needs to be sorted, similar to 'std::binary_search()' 
+																								// [ otherwise, the C++ software will crash ]
+	{
+		cout << "All the elements of the vector 'vValues3' are present on the vector 'vValues1'." << endl;
+	}
+
+}
+
+void M_NumericAlgorithms()
+{
+	vector<int> iVector(10);   // Create a vector with 10 elements
+
+	iota((begin(iVector)), (end(iVector)), 3);   // Populates the vector with values [ starting from 3, incremented by 1 ]
+
+	for (int Value : iVector)   // Prints the content of the vector
+	{
+		cout << Value << ", ";
+	}
+	cout << endl;
+
+	cout << "The sum of all vector's elements is:      " << (accumulate((cbegin(iVector)), (cend(iVector)), 0)) << endl;
+	cout << "The sum of all vector's even numbers is:  " << (accumulate((cbegin(iVector)), (cend(iVector)), 0,   // In this case, the last argument of the Lambda Expression will be the input element
+		[](int iSum, const int& iInput) { return (((iInput % 2) == 0) ? (iSum + iInput) : (iSum)); }   // Single-line 'if statement'
+	)) << endl;
 }
