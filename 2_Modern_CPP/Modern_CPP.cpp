@@ -96,7 +96,7 @@ void M_STLFunctionObjects();
 // Algorithms continued
 void M_SearchingAlgorithms();
 void M_NumericAlgorithms();
-
+void M_WriteOnlyAlgorithms();
 
 
 
@@ -109,7 +109,7 @@ int main()
 // ====================================================================================================
 // Section 01 - Runs only once, before the loop                                                     1 V
 
-	M_NumericAlgorithms();
+	M_WriteOnlyAlgorithms();
 
 
 
@@ -509,6 +509,16 @@ void M_NameSpaces_OutOfScope_02()
 
 	cout << "After the 'using' keyword: " << NewDouble << endl;   // Now it refers to the 'NewDouble' varibale declared within the 'CustomNameSpace' scope, due to the 'using' keyword
 
+}
+
+template <typename V_Container>
+void M_Print(const V_Container& Input)
+{
+	for (auto Element : Input)
+	{
+		cout << Element << ", ";
+	}
+	cout << endl;
 }
 
 void M_FunctionPointers()
@@ -3090,4 +3100,57 @@ void M_NumericAlgorithms()
 	cout << "The sum of all vector's even numbers is:  " << (accumulate((cbegin(iVector)), (cend(iVector)), 0,   // In this case, the last argument of the Lambda Expression will be the input element
 		[](int iSum, const int& iInput) { return (((iInput % 2) == 0) ? (iSum + iInput) : (iSum)); }   // Single-line 'if statement'
 	)) << endl;
+
+	M_Print(iVector);
+}
+
+class Square   // Callable object that returns n-squared
+{
+public:
+
+	int operator()() { ++n;  return (n * n); };
+
+protected:
+
+private:
+
+	int n{ 0 };
+};
+
+void M_WriteOnlyAlgorithms()
+{
+	vector<string> sNames(7);   // Creates a new vector of strings with 7 elements
+
+	fill((begin(sNames)), (end(sNames)), "X");
+	M_Print(sNames);
+	cout << endl;
+
+	auto FirstX = (fill_n((begin(sNames)), 3, "Z"));
+	cout << "Value " << * FirstX << " at index " << (distance((begin(sNames)), FirstX)) << "." << endl;
+	cout << endl;
+
+	auto SecondX = (++FirstX);
+	(fill_n(SecondX, 3, "Y"));   // 'fill_n' could crash the C++ software, since it doesn't have 'end-of-container' detection [ doesn't check the size of the container ]
+	M_Print(sNames);
+	cout << endl;
+
+	vector<int> iValues1(9);
+	generate((begin(iValues1)), (end(iValues1)), Square());   // Populates the vector using the functor callable-object 'Square'
+	for_each((cbegin(iValues1)), (cend(iValues1)), [](const int& iValue) { cout << iValue << " - "; } );
+	cout << endl;
+
+	vector<int> iValues2(iValues1.size());   // Creates an empty vector with the same size, to be used with the 'std::copy' algorithm and the 'begin()' iterator
+	copy((cbegin(iValues1)), (cend(iValues1)), (begin(iValues2)));
+
+	vector<int> iValues3;   // Creates an empty vector, no size defined
+	auto BackIterator = back_inserter(iValues3);   // Getting the 'back_insert_iterator' from the 'iValues3' vector using its 'back_inserter()' member function
+
+	copy_if((cbegin(iValues1)), (cend(iValues1)), (BackIterator),   // Uses the 'back_insert_iterator' to call the container's 'push_back()' function every time the predicate returns 'true'
+		[](int Input) { return ((Input % 2) == 0); }   // Function Predicate [ implemented with a Lambda Expression ] that returns 'true' for even numbers [ only copying even numbers ]
+		);
+
+	M_Print(iValues1);
+	M_Print(iValues2);
+	M_Print(iValues3);
+	cout << endl;
 }

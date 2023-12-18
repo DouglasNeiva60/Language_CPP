@@ -138,6 +138,8 @@ std::vector has a 'data()' member function that returns a pointer to the contain
 
 swap()   swaps the data between two vector elements [ this function is very fast when compared to a 'manual swap', without memory operations or copying data ]
 
+*Vectors will always expand it memory buffer new elements are added, but the memory buffer never shrinks [ even removing elements ] until a 'swap()' function gets called [ or the vector gets destroyed ]
+
 	   >> Character   [ C++ is 'case-sensitive' ]
 
 The C++ standard library has many character fucntions inherited from C. Some of the most useful are:
@@ -942,17 +944,45 @@ On the <algorithm> STL header, there is a generic algorithm function std::find_f
 
 The C++ STL also defined some numeric algorithms on the <numeric> header, useful for numerical processing of container elements
 
-'std::'
-
 'std::iota()'  populates an iterator range with 'int' values increased by 1, starting from the specified number [ takes an iterator range and an 'int' starting value of the first element ]
 
 'std::accumulate()'  returns the sum of all the elements in an iterator range [ uses the '+' operator; takes an iterator range and an 'int' starting value to be the first value added, usually 0 ]
                      to perform a custom operation, an extra argument [ Lambda Expression or Callable Object ] can be passed to 'std::accumulate'
 					 [ the Lambda Expression's first argument is the total sum, and the second argument is the current element ]
+					 this algorithm is specified to execute sequentially [ it means that each operation must be completed before the next operation start ], and doesn't support parallel processing
 
+'std::reduce()'  [ C++17 ] is an alternative implementation of 'std::accumulate()' that is compatible with parallel processing [ performs the addition in any order ] - 'Multithreading' topic!
 
+	   >> Write-only Algorithms
 
+'Write-only' algorithms [ can't read any container's element ] are intended to populate sequential containers
 
+'std::fill()'  assigns a given value to all the elements in an iterator range [ equivalent to a 'for-loop' assignment ]
+
+'std::fill_n()'  assigns a given value to 'n' elements, starting from an iterator, and returns an iterator pointing to the element after the last assigned element
+
+'std::generate()' uses the value returned from calling a function to assign to all the elements on an iterator range
+
+'std::generate_n()' uses the value returned from calling a function to assign to 'n' elements, starting from an iterator, and returns an iterator pointing to the element after the last assignment
+
+	   >> for_each() Algorithm
+
+'std::for_each()'  takes an iterator range and a callable object, calling the function on every element in an iterator range
+                   [ the std::for_each() was replaced by ranged for-loops, introduced in C++11, but is still useful when the iterator range is not the entire container ]
+
+	   >> Copying Algorithms
+
+Copying algorithms copy elements from one iterator range into another iterator range, often used to populate sequential containers [ the target container must be large enough ]
+
+'std::'
+
+'std::copy()'  takes an iterator range of the first container and an iterator of the first element of second container to be populated [ the 'back_inserter()' could be used on empty containers ]
+
+'std::copy_n()'  takes an iterator of the first container, the number of elements to be copied, and an iterator of the first element of second container to be populated
+
+'std::copy_if()'  takes an iterator range of the first container, an iterator of the first element of second container to be populated, and a predicate function for copy-evaluation [ acts like a filter ]
+
+	   >> Write Algorithms
 
 
 
