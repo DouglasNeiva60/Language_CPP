@@ -97,6 +97,7 @@ void M_STLFunctionObjects();
 void M_SearchingAlgorithms();
 void M_NumericAlgorithms();
 void M_WriteOnlyAlgorithms();
+void M_RemovingAlgorithms();
 
 
 
@@ -109,7 +110,7 @@ int main()
 // ====================================================================================================
 // Section 01 - Runs only once, before the loop                                                     1 V
 
-	M_WriteOnlyAlgorithms();
+	M_RemovingAlgorithms();
 
 
 
@@ -3149,8 +3150,45 @@ void M_WriteOnlyAlgorithms()
 		[](int Input) { return ((Input % 2) == 0); }   // Function Predicate [ implemented with a Lambda Expression ] that returns 'true' for even numbers [ only copying even numbers ]
 		);
 
+	iValues3.push_back(33);
+	replace((begin(iValues3)), (end(iValues3)), 16, 400);
+	replace_if((begin(iValues3)), (end(iValues3)),   // Replaces all occurrences of the value '16' by the value '400' on the 'iValues3' vector of 'int' under a given condition [ predicate ]
+		[](const int& iInput) { return ((iInput % 2) == 1); },   // The third argument is the predicate [ callable object ]; in this case, 
+		999);   // If the number is an odd number [ evaluated by the Lambda Expression ], it will be replaced by the value 999
+
+	vector<int> iValues4;   // Creates an empty vector, no size defined
+
+	replace_copy_if((cbegin(iValues2)), (cend(iValues2)), (back_inserter(iValues4)),   // Using the '_copy()' version, preserving the original data and populating another container
+		[](const int& iInput) { return ((iInput % 2) == 1); },   // The Lambda Expression returns 'true' with odd numbers
+		0);
+
 	M_Print(iValues1);
 	M_Print(iValues2);
 	M_Print(iValues3);
+	M_Print(iValues4);
+
 	cout << endl;
+}
+
+void M_RemovingAlgorithms()
+{
+	vector<int> iNumbers1{ 1, 3, 5, 3, 7, 3, 9 };
+
+	cout << "The vector size is:      " << (iNumbers1.size()) << endl;
+
+	auto FirstRemoved = (remove((begin(iNumbers1)), (end(iNumbers1)), 3));   // Calling 'std::remove()' will re-arrange the vector's elements on the memory block 
+																			 // This will move all the removed elements to the back of the container, but won't change its size 
+																			 // The 'iNumbers1' vector now contains:  { 1, 5, 7, 9, ?, ?, ? }
+	cout << "The vector size still:   " << (iNumbers1.size()) << endl << endl;
+
+	cout << "Vector's elements:  ";
+	M_Print(iNumbers1);   // Undefined behavior for the removed elements [ since their values are now undefined ]
+
+	vector<int> iNumbers2;
+	// copy((cbegin(iNumbers1)), (FirstRemoved), (begin(iNumbers2)));   // Why it doesn't work?   The 'FirstRemoved' variable is not acceptable
+
+	iNumbers1.erase(FirstRemoved, (end(iNumbers1)));   // Physically deleted the removed elements from the container
+
+	cout << "The vector size is now:  " << (iNumbers1.size()) << endl;
+
 }

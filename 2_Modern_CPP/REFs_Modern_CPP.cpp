@@ -249,8 +249,8 @@ For 'ofstream' [ and general output streams, like 'cout' ] the stream buffer is 
 and 'ofstream' is only flushed when the buffer is full [ the same way as 'ifstream', minimizing calls to the operating system ]
 
 std::flush  allows the C++ program to control when the stream's buffer is flushed, and all the data in the buffer is immediately sent to its destination  [ e.g.  cout << iMyInt << flush; ]
-*This approach significantly reduces the program's perfomance, and should only be used if the data really needs to be immediately up-to-date  [ e.g.  log files on debugging tests to find crashes ]
-*The 'endl' keyword has similar results when compared to 'flsuh'  [ because the stream buffer is flushed at the end of every line ]
+*This approach significantly reduces the program's performance, and should only be used if the data really needs to be immediately up-to-date  [ e.g.  log files on debugging tests to find crashes ]
+*The 'endl' keyword has similar results when compared to 'flush'  [ because the stream buffer is flushed at the end of every line ]
 
 	   >> Unbuffered Input - Output
 
@@ -914,6 +914,10 @@ std::bit_and 'Y & Z',  std::bit_or 'Y | Z',  std::bit_exor 'Y ^ Z',  std::bit_no
 
    >>> Algorithms [ continued ]
 
+Algorithms that modifies the data on an iterator range [ changing the element's values ] have 2 versions:  the base version [ that overwrites the original data ],
+and the '_copy()' version [ which writes the data to a different iterator range ] that preserves the original data for later use, useful for working with 'associative containers'
+
+
 	   >> Searching Algorithms
 
 Algorithms that searches within iterators ranges
@@ -974,8 +978,6 @@ The C++ STL also defined some numeric algorithms on the <numeric> header, useful
 
 Copying algorithms copy elements from one iterator range into another iterator range, often used to populate sequential containers [ the target container must be large enough ]
 
-'std::'
-
 'std::copy()'  takes an iterator range of the first container and an iterator of the first element of second container to be populated [ the 'back_inserter()' could be used on empty containers ]
 
 'std::copy_n()'  takes an iterator of the first container, the number of elements to be copied, and an iterator of the first element of second container to be populated
@@ -984,6 +986,22 @@ Copying algorithms copy elements from one iterator range into another iterator r
 
 	   >> Write Algorithms
 
+'std::replace()'  takes an iterator range and changes all elements with a given value to another given value
+
+'std::replace_if()'  does the same as 'std::replace()', using a predicate [ callable object ] to evaluate the replacement [ replaces only when the predicate returns 'true' ]
+
+'std::replace_copy()'  the '_copy()' version of the algorithm that writes data into another memory destination [ preserving the original data ]
+
+	   >> Removing Algorithms
+
+Removing algorithms will 'logically' remove elements from a container, but won't delete the element's memory [ the 'removed' elements will still be physically present on the container's memory ]
+[ calling the 'size()' member function of the container will return the same value as if no element was deleted ]
+
+'std::remove()'  will find the element on the iterator range and move-it to the end [ back ] of the container deleting its value, and returns an iterator to the first removed element
+
+To physically remove container's elements, the container's 'erase()' member function should be called, passing the returned iterator [ from the 'std::remove()' algorithms as the first argument ]
+
+'container::erase()'  takes an iterator range and physically removes all the elements on the given range
 
 
 
