@@ -999,9 +999,22 @@ Removing algorithms will 'logically' remove elements from a container, but won't
 
 'std::remove()'  will find the element on the iterator range and move-it to the end [ back ] of the container deleting its value, and returns an iterator to the first removed element
 
+*'std::remove()'  uses the 'equality ==' operator
+*'std::remove()'  also have the '_if()' version [ which takes a predicate ] and a '_copy()' version [ which writes the data to a destination, keeping the original data unchanged ]
+
 To physically remove container's elements, the container's 'erase()' member function should be called, passing the returned iterator [ from the 'std::remove()' algorithms as the first argument ]
 
 'container::erase()'  takes an iterator range and physically removes all the elements on the given range
+
+'std::unique()'  removes duplicate adjacent elements on a sorted container, behaving similarly to 'std::remove()' by moving the duplicate elements to the back of the container [ logically removed ]
+                 std::unique() takes the vector's iterator range and returns an iterator pointing to the first duplicated element [ at the back of the container ], often used with 'container::erase()'
+
+*'std::unique()'  uses the 'equality ==' operator, but accepts a predicate as the third argument, using the current and the previous values as inputs for the callable object
+*'std::unique()'  also have the '_if()' version [ which takes a predicate ] and a '_copy()' version [ which writes the data to a destination, keeping the original data unchanged ]
+*The 'std::unique_copy()'  version can also take a predicate as a fourth argument [ callable object for custom evaluation ]
+
+	   >> Transform Algorithm
+
 
 
 

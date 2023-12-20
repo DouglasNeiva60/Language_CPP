@@ -98,6 +98,7 @@ void M_SearchingAlgorithms();
 void M_NumericAlgorithms();
 void M_WriteOnlyAlgorithms();
 void M_RemovingAlgorithms();
+void M_TransformAlgorithm();
 
 
 
@@ -110,8 +111,7 @@ int main()
 // ====================================================================================================
 // Section 01 - Runs only once, before the loop                                                     1 V
 
-	M_RemovingAlgorithms();
-
+	M_TransformAlgorithm();
 
 
 // Section 01 - END                                                                                 1 A
@@ -3172,23 +3172,63 @@ void M_WriteOnlyAlgorithms()
 
 void M_RemovingAlgorithms()
 {
-	vector<int> iNumbers1{ 1, 3, 5, 3, 7, 3, 9 };
+	vector<int> iNumbers1{ 5, 5, 5, 3, 1, 1, 1, 3, 9, 9, 9, 3, 7, 7, 7 };
+
+	cout << "Vector's elements:  ";
+	M_Print(iNumbers1);
 
 	cout << "The vector size is:      " << (iNumbers1.size()) << endl;
 
-	auto FirstRemoved = (remove((begin(iNumbers1)), (end(iNumbers1)), 3));   // Calling 'std::remove()' will re-arrange the vector's elements on the memory block 
+	auto FirstRemoved1 = (remove((begin(iNumbers1)), (end(iNumbers1)), 3));   // Calling 'std::remove()' will re-arrange the vector's elements on the memory block 
 																			 // This will move all the removed elements to the back of the container, but won't change its size 
 																			 // The 'iNumbers1' vector now contains:  { 1, 5, 7, 9, ?, ?, ? }
-	cout << "The vector size still:   " << (iNumbers1.size()) << endl << endl;
+	cout << "Called 'std::remove()', logically removing... The vector size still:   " << (iNumbers1.size()) << endl << endl;
 
 	cout << "Vector's elements:  ";
 	M_Print(iNumbers1);   // Undefined behavior for the removed elements [ since their values are now undefined ]
 
-	vector<int> iNumbers2;
+	// vector<int> iNumbers2;
 	// copy((cbegin(iNumbers1)), (FirstRemoved), (begin(iNumbers2)));   // Why it doesn't work?   The 'FirstRemoved' variable is not acceptable
 
-	iNumbers1.erase(FirstRemoved, (end(iNumbers1)));   // Physically deleted the removed elements from the container
+	iNumbers1.erase(FirstRemoved1, (end(iNumbers1)));   // Physically deleted the removed elements from the container
 
 	cout << "The vector size is now:  " << (iNumbers1.size()) << endl;
+
+	cout << "Vector1's elements:  ";
+	M_Print(iNumbers1);   // Undefined behavior for the removed elements [ since their values are now undefined ]
+
+	vector<int> iNumbers2;
+	auto FirstRemoved2 = (remove_copy_if( (cbegin(iNumbers1)), (cend(iNumbers1)), (back_inserter(iNumbers2)),
+		[](const int& iInput) { return ((iInput % 3) == 0); }   // Removes the number 9, since it divisible by 3 with 0 remainder
+	));
+
+	cout << "Vector2's elements:  ";
+	M_Print(iNumbers2);
+	cout << endl;
+
+	sort((begin(iNumbers2)), (end(iNumbers2)));
+	auto Duplicated1 = (unique((begin(iNumbers2)), (end(iNumbers2))));   // Removed all adjacent duplicated after sorting
+	iNumbers2.erase(Duplicated1, (end(iNumbers2)));
+
+	*(back_inserter(iNumbers2)) = 8;
+	*(back_inserter(iNumbers2)) = 8;
+	*(back_inserter(iNumbers2)) = 8;
+	cout << "Vector2's elements:  ";
+	M_Print(iNumbers2);
+
+	auto Consecutive1 = (unique((begin(iNumbers2)), (end(iNumbers2)),   // Removes all adjacent values based on Lambda Expression's evaluation
+		[](const int& iInput1, const int& iInput2) { return ((iInput2 == (iInput1 + 1)) ? (true) : (false)); }   // Returns 'true' [ and logically removes ] consecutive values
+																											     // if the current value is the increment of the previous value
+		)); // The evaluation will always keep the first element and erase all the adjacent elements after it that matches the evaluation ]
+
+	iNumbers2.erase(Consecutive1, (end(iNumbers2)));   // Physically removes [ erases from the container's memory block ] the evaluated elements [ moved to the end of the container ]
+
+	cout << "Vector2's elements:  ";
+	M_Print(iNumbers2);
+
+}
+
+void M_TransformAlgorithm()
+{
 
 }
