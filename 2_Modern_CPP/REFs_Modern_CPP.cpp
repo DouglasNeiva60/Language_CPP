@@ -1015,6 +1015,27 @@ To physically remove container's elements, the container's 'erase()' member func
 
 	   >> Transform Algorithm
 
+'std::transform()'  will call a given function on every element in the iterator range, and the result is copied to a destination; and this algorithm has an overloaded function
+                    which takes: an iterator range [ first container ] , an iterator [ start of the second container ], the destination and a callable object [ combining 2 containers ]
+
+	   >> Merging Algorithm
+
+Merging algorithms takes 2 iterator ranges, assumes that the containers are sorted, combines the elements from both ranges and write the result into a destination
+
+'std::'
+
+'std::merge()'  combines 2 sorted iterator ranges into a destination [ the destination will contain all the elements from both ranges in order ]
+                by default, the 'less-than <' operator is used to order the elements of the destination container [ all containers must have the same type ]
+
+'std::set_intersection()'  is similar to 'std::merge' [ combines 2 sorted iterator ranges into a destination ], but the destination will contain only the elements which exists on both ranges
+				           by default, the 'less-than <' operator is used to order the elements of the destination container [ all containers must have the same type ]
+
+'std::set_union()'  
+
+
+
+
+
 
 
 

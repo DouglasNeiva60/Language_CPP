@@ -99,6 +99,7 @@ void M_NumericAlgorithms();
 void M_WriteOnlyAlgorithms();
 void M_RemovingAlgorithms();
 void M_TransformAlgorithm();
+void M_MergingAlgorithm();
 
 
 
@@ -111,7 +112,7 @@ int main()
 // ====================================================================================================
 // Section 01 - Runs only once, before the loop                                                     1 V
 
-	M_TransformAlgorithm();
+	M_MergingAlgorithm();
 
 
 // Section 01 - END                                                                                 1 A
@@ -3230,5 +3231,43 @@ void M_RemovingAlgorithms()
 
 void M_TransformAlgorithm()
 {
+	vector<string> sNames{ "Lucas"s, "Douglas"s, "Gabriel"s, "Breno"s, "Matheus"s, "Neiva"s };
+	vector<string> sResults;
+
+	vector<int> iValues{ 1, 3, 5, 7, 9 };
+	vector<int> iResults;
+
+	transform((cbegin(iValues)), (cend(iValues)), (back_inserter(iResults)),   // To perform an 'in-place transformation', use (begin(iValues)) instead of the (back_inserter(iResults))
+		[](const int& iInput) { return (iInput * 2); }                         // 'In-place transformation' means that the algorithm will overwrite the data on the vector with the results
+	);
+
+	M_Print(iResults);
+
+	transform((cbegin(iValues)), (cend(iValues)), (cbegin(sNames)), (back_inserter(sResults)),
+		[](const int& iInput, const string& sInput) { return (sInput + (" ") + (to_string(iInput))); }
+	);
+
+	M_Print(sResults);
+
+}
+
+void M_MergingAlgorithm()
+{
+	vector<int> iValues1{ 7, 5, 3, 9, 1 };   // 'std::vector' container [ of 'int' ] with 5 elements
+	vector<int> iResults1;
+
+	vector<int> iValues2{ 8, 2, 5, 4, 6 };   // 'std::vector' container [ of 'int' ] with 5 elements
+	vector<int> iResults2;
+
+	sort((begin(iValues1)), (end(iValues1)));
+	sort((begin(iValues2)), (end(iValues2)));
+
+	merge((cbegin(iValues1)), (cend(iValues1)), (cbegin(iValues2)), (cend(iValues2)), (back_inserter(iResults1)));   // Merges all the elements of both containers into the destination
+
+	M_Print(iResults1);   // Prints all the elements from both containers
+
+	set_intersection((cbegin(iValues1)), (cend(iValues1)), (cbegin(iValues2)), (cend(iValues2)), (back_inserter(iResults2)));   // Merges the elements which exists on both containers into the destination
+
+	M_Print(iResults2);   // Prints only the elements which exists on both containers
 
 }
