@@ -100,6 +100,9 @@ void M_WriteOnlyAlgorithms();
 void M_RemovingAlgorithms();
 void M_TransformAlgorithm();
 void M_MergingAlgorithm();
+void M_ReorderingAlgorithm();
+void M_PartitioningAlgorithm();
+
 
 
 
@@ -112,7 +115,8 @@ int main()
 // ====================================================================================================
 // Section 01 - Runs only once, before the loop                                                     1 V
 
-	M_MergingAlgorithm();
+	M_PartitioningAlgorithm();
+
 
 
 // Section 01 - END                                                                                 1 A
@@ -3269,5 +3273,53 @@ void M_MergingAlgorithm()
 	set_intersection((cbegin(iValues1)), (cend(iValues1)), (cbegin(iValues2)), (cend(iValues2)), (back_inserter(iResults2)));   // Merges the elements which exists on both containers into the destination
 
 	M_Print(iResults2);   // Prints only the elements which exists on both containers
+
+	vector<int> iResults3;
+	set_union((cbegin(iValues1)), (cend(iValues1)), (cbegin(iValues2)), (cend(iValues2)), (back_inserter(iResults3)));   // Union of all the elements from both containers, without repetition
+
+	M_Print(iResults3);   // Prints the union of both containers
+
+}
+
+void M_ReorderingAlgorithm()
+{
+	vector<int> iValues1{ 7, 5, 2, 3, 9, 4, 1 };   // 'std::vector' container [ of 'int' ] with 7 elements
+	M_Print(iValues1);
+
+	vector<int> iResults1;
+	reverse_copy((cbegin(iValues1)), (cend(iValues1)), (back_inserter(iResults1)));   // Leaves the original container unmodified, and reverses its order, writing to a destination container
+	M_Print(iResults1);
+
+	vector<int> iResults2 = iResults1;
+	// auto PivotElement = (++(++(begin(iResults2))));   // Picks the third element of the container
+	auto PivotElement = (begin(iResults2));              // Picks the first element of the container
+	advance(PivotElement, 2);                            // Moves to the third element of the container
+	rotate((begin(iResults2)), (PivotElement), (end(iResults2)));
+	M_Print(iResults2);
+
+}
+
+void M_PartitioningAlgorithm()
+{
+	cout << "Original container:             ";
+	vector<int> iValues1{ 7, 5, 2, 6, 3, 9, 4, 1, 8 };   // 'std::vector' container [ of 'int' ] with 9 elements
+	M_Print(iValues1);
+
+	cout << "Partitioned container:          ";
+	vector<int> iResults1;
+	partition((begin(iValues1)), (end(iValues1)),
+		[](const int& iInput) { return ((iInput % 2) == 0); }   // Evaluates if the number is an even number [ even numbers before the 'partition point'; odd numbers after it ]
+	);
+	M_Print(iValues1);
+
+	cout << "Sorted container:               ";
+    sort((begin(iValues1)), (end(iValues1)));
+	M_Print(iValues1);
+
+	cout << "Stable-partitioned container:   ";
+	stable_partition((begin(iValues1)), (end(iValues1)),
+		[](const int& iInput) { return ((iInput % 2) == 0); }   // Evaluates if the number is an even number [ even numbers before the 'partition point'; odd numbers after it ]
+	);
+	M_Print(iValues1);
 
 }

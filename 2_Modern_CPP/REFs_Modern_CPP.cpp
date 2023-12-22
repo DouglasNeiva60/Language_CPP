@@ -1022,15 +1022,41 @@ To physically remove container's elements, the container's 'erase()' member func
 
 Merging algorithms takes 2 iterator ranges, assumes that the containers are sorted, combines the elements from both ranges and write the result into a destination
 
-'std::'
-
 'std::merge()'  combines 2 sorted iterator ranges into a destination [ the destination will contain all the elements from both ranges in order ]
-                by default, the 'less-than <' operator is used to order the elements of the destination container [ all containers must have the same type ]
+                by default, the 'less-than <' operator is used to order the elements of the destination container [ all the 3 containers must have the same type ]
 
 'std::set_intersection()'  is similar to 'std::merge' [ combines 2 sorted iterator ranges into a destination ], but the destination will contain only the elements which exists on both ranges
-				           by default, the 'less-than <' operator is used to order the elements of the destination container [ all containers must have the same type ]
+			               by default, the 'less-than <' operator is used to order the elements of the destination container [ all the 3 containers must have the same type ]
 
-'std::set_union()'  
+'std::set_union()'  combines 2 sorted iterator ranges into a destination, and the destination will contain all the elements from both ranges in order [ without repeating values like std::merge() ]
+			      	by default, the 'less-than <' operator is used to order the elements of the destination container [ all the 3 containers must have the same type ]
+
+	   >> Reordering Algorithm
+
+A reordering algorithm re-arranges the elements inside an iterator range, but won't change the element's values [ a re-ordering algorithm is different from 'std::sort()' ]
+
+'std::reverse()'  takes the elements on an iterator range and reverses their current order on the container [ there's also a '_copy()' version which takes a destination iterator ]
+
+'std::rotate()'  moves all the elements before the given element to the back of the container [ keeping its original order ], and the given 'pivot' element will be the first on the container
+                 it takes 3 arguments: the beginning iterator of the range, the iterator of the 'pivot' element, and the end iterator of the range
+				 its '_copy()' version will take an extra argument [ the destination iterator ] and will return the 'end' iterator [ the last written element's address + 1, useful for appending ] 
+
+	   >> Partitioning Algorithm
+
+'Partitioning' a container means that the container's elements will be divided in 2 different groups with a custom evaluation [ and the 'partition point' marks the boundary between the 2 groups ]
+moving the elements that returns 'true' from the evaluation to the front of the container, and moving the elements that returns 'false' from the evaluation to the back of the container
+
+'Partitioning' is very useful on interactive applications since the elements with a given property are moved to the front of the container [ unread above read, selected above unselected, etc ]
+
+'std::partition()'  takes an iterator range and a predicate function [ for custom evaluation ], and the partitioned elements within each group may not be in order
+                    all the elements that returns 'true'  from the predicate are moved to the front of the range
+					all the elements that returns 'false' from the predicate are moved to the back  of the range
+
+'std::stable_partition()'  is the same as 'std::partition()', but keeps the original relative order of the elements within the groups [ longer execution time ]
+
+
+
+
 
 
 
