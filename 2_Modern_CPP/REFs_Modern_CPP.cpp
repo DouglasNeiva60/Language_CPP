@@ -123,7 +123,7 @@ string 2D_Array_Names[2][4] = {
    >>> Function pointers
 
 Every executable code is stored on the memory, and its possible to create a pointer that points to a function [the address of the executable code's starting point]
-A pointer-to-function variable is a 'callable object' that beahves like a variable but can be called like a function by dereferencing the pointer
+A pointer-to-function variable is a 'callable object' that behaves like a variable but can be called like a function by dereferencing the pointer
 A pointer-to-function variable is also a 'first-class-object', that can be passed as an argument to another function or can be returned from another function
 
 
@@ -142,7 +142,7 @@ swap()   swaps the data between two vector elements [ this function is very fast
 
 	   >> Character   [ C++ is 'case-sensitive' ]
 
-The C++ standard library has many character fucntions inherited from C. Some of the most useful are:
+The C++ standard library has many character functions inherited from C. Some of the most useful are:
 
 isdigit(char)   returns true if 'char' is a digit  [ 0-9 ]
 
@@ -1053,6 +1053,48 @@ moving the elements that returns 'true' from the evaluation to the front of the 
 					all the elements that returns 'false' from the predicate are moved to the back  of the range
 
 'std::stable_partition()'  is the same as 'std::partition()', but keeps the original relative order of the elements within the groups [ longer execution time ]
+
+'std::is_partitioned()'  takes an iterator range and a predicate fucntion, returning a 'bool' if the range of elements is already partitioned by the same predicate [ checks the 'std::partition()' ]
+
+'std::partition_point()'  takes the same arguments as 'std::is_partitioned()', returning an iterator to the first element of the second group [ that returns 'false' for the predicate evaluation ]
+                          *the 'std::partition_point()' algorithm should always be preceded by the 'std::is_partitioned()' algorithm, to avoid returning an iterator for non-partitioned containers
+
+
+	   >> Sorting Algorithms
+
+Sorting algorithms will put the container's elements [ from an iterator range ] in order, using the 'less-than <' operator for ordering [ but a custom 'comparison function' can be provided ]
+
+'std::sort'  orders the elements in ascending order, usually implemented as a 'quicksort' [ elements which have the same key may have their order changed ]
+[ e.g.  std::sort((begin(Students)), (end(Students))) will sort the 'Student' container using the 'less-than' operator ]
+'std::sort()'  has a third optional argument which is the function predicate [ that replaces the 'less-than <' operator, ordering the container's elements based on the 'comparison function' ]
+
+'std::is_sorted()'  checks if the conteiner's elements are sorted, using the same 'std:sort()' input signature, returning a 'bool' [ 'true' for sorted, 'false' for non-sorted ]
+
+'std::is_sorted_until()'  returns an iterator to the first element which is not in order [ takes an iterator range and a third optional argument which is the 'comparison function' ]
+
+'std::partial_sort()'  [ faster than a complete sort ] will sort and order only the first 'n' elements of an iterator range [ e.g.  order the container and display only the first 20 elements ]
+
+'std::partial_sort_sopy()'  takes the first iterator range [ the container to be sorted ], and writes the result into a second iterator range [ the destination ]
+
+'std::nth_element()'  takes an iterator to the element in the range, and rearranges the elements in a way that the element pointed-to would be at the given position if the range was sorted, and then
+                      performs a partition on the range, with the given element as the 'partition-point' [ will order all the elements like 'std::sort', but with a custom 'partition-point' ]
+                      
+
+	   >> Permutations
+
+'Permutations' is the number of every possible arrangements of a number of elements, and a 'permutation' is a possible arrangement
+[ there are STL algorithms to find the next and previous permutation in the sequence, using the 'less-than <' operator by default, but a custom function predicate can be provided ]
+
+'std::next_permutation()'  takes an iterator range, analyse the current element's order, and reorders the elements to give the next permutation in the sequence, ascending order
+                           [ e.g.  the next permutation of 'abc' is 'acb';   for 'abc', there are 8 permutations;   the permutation sequence is:   abc, acb, bac, bca, cab, cba ]
+						   'std::next_permutation()' returns a 'bool' depending on whether there is a next permutation
+						   
+'std::prev_permutation()'  reorders the elements to the previous permutation [ similar to 'std::next_permutation()' ], returning 'false' when the first possible permutation is reached
+                           *to get all the permutations in reverse, the elements must be sorted in descending order [ by using a custom function predicate implementing the 'greater-than >' operator ]
+
+
+
+
 
 
 

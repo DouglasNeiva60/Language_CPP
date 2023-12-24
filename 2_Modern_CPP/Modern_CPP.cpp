@@ -102,8 +102,8 @@ void M_TransformAlgorithm();
 void M_MergingAlgorithm();
 void M_ReorderingAlgorithm();
 void M_PartitioningAlgorithm();
-
-
+void M_SortingAlgorithm();
+void M_Permutations();
 
 
 // Standard "main" function - C++
@@ -115,7 +115,7 @@ int main()
 // ====================================================================================================
 // Section 01 - Runs only once, before the loop                                                     1 V
 
-	M_PartitioningAlgorithm();
+	M_Permutations();
 
 
 
@@ -3299,15 +3299,33 @@ void M_ReorderingAlgorithm()
 
 }
 
+void Verify_Partition(const vector<int>& Input_Container)   // For using callable objects as function argument, they must be functors [ 'auto' types are not supported ]
+{
+	auto is_even = [](const int& iInput) { return ((iInput % 2) == 0); };   // Storing a Lambda Expression into a variable [ must be 'auto' ]
+
+	cout << "Is the container's elements already partitioned by even numbers?   ";
+	if (
+		(is_partitioned((cbegin(Input_Container)), (cend(Input_Container)), is_even))
+		)
+	{
+		cout << "Yes." << endl;
+	}
+	else
+	{
+		cout << "No." << endl;
+	}
+}
+
 void M_PartitioningAlgorithm()
 {
+	auto is_even = [](const int& iInput) { return ((iInput % 2) == 0); };   // Storing a Lambda Expression into a variable [ must be 'auto' ]
+
 	cout << "Original container:             ";
 	vector<int> iValues1{ 7, 5, 2, 6, 3, 9, 4, 1, 8 };   // 'std::vector' container [ of 'int' ] with 9 elements
 	M_Print(iValues1);
 
 	cout << "Partitioned container:          ";
-	vector<int> iResults1;
-	partition((begin(iValues1)), (end(iValues1)),
+	partition((begin(iValues1)), (end(iValues1)),               // 'std::partition()' will change the element's relative order [ faster ]
 		[](const int& iInput) { return ((iInput % 2) == 0); }   // Evaluates if the number is an even number [ even numbers before the 'partition point'; odd numbers after it ]
 	);
 	M_Print(iValues1);
@@ -3316,10 +3334,90 @@ void M_PartitioningAlgorithm()
     sort((begin(iValues1)), (end(iValues1)));
 	M_Print(iValues1);
 
+	Verify_Partition(iValues1);
+
 	cout << "Stable-partitioned container:   ";
-	stable_partition((begin(iValues1)), (end(iValues1)),
-		[](const int& iInput) { return ((iInput % 2) == 0); }   // Evaluates if the number is an even number [ even numbers before the 'partition point'; odd numbers after it ]
+	stable_partition((begin(iValues1)), (end(iValues1)),        // 'std::stable_partition()' will keep the element's relative order [ slower ]
+		// [](const int& iInput) { return ((iInput % 2) == 0); }   // Evaluates if the number is an even number [ even numbers before the 'partition point'; odd numbers after it ]
+		is_even
 	);
 	M_Print(iValues1);
 
+	Verify_Partition(iValues1);
+
+	cout << "The first non-even number is:   ";
+	auto SecondGroup = (partition_point((cbegin(iValues1)), (cend(iValues1)), is_even));
+	cout << (*SecondGroup) << endl;
+	cout << "The first non-even number is at the index:   " << (distance((cbegin(iValues1)), SecondGroup)) << endl;
+}
+
+void M_SortingAlgorithm()
+{
+	cout << "Original container:             ";
+	vector<int> iValues1{ 7, 5, 2, 6, 3, 9, 4, 1, 8 };   // 'std::vector' container [ of 'int' ] with 9 elements
+	M_Print(iValues1);
+
+	cout << "Sorted container:               ";
+	sort((begin(iValues1)), (end(iValues1)), [](const int& iFirst, const int& iLast) { return  (iFirst > iLast); });   // Applies the 'greater-than >' operator for ordering
+	M_Print(iValues1);
+
+	cout << "The container is sorted using the 'less-than <'    operator?   ";
+	if (
+		(is_sorted((cbegin(iValues1)), (cend(iValues1))))
+		)
+	{
+		cout << "Yes." << endl;
+	}
+	else
+	{
+		cout << "No." << endl;
+	}
+
+	cout << "The container is sorted using the 'greater-than >' operator?   ";
+	if (
+		(is_sorted((cbegin(iValues1)), (cend(iValues1)), [](const int& iFirst, const int& iLast) { return  (iFirst > iLast); }))
+		)
+	{
+		cout << "Yes." << endl;
+	}
+	else
+	{
+		cout << "No." << endl;
+	}
+
+	cout << "Partially sorting...:           ";
+	partial_sort((begin(iValues1)), ((begin(iValues1)) + 5), (end(iValues1)));   // Sort and order only the first 5 elements of the container
+	M_Print(iValues1);
+
+	auto Mid = ((begin(iValues1)) + 3);   // Takes the iterator pointer, pointing to the address of the fourth element in the container [ the first element is 'begin() + 0' ]
+	nth_element((begin(iValues1)), Mid, (end(iValues1)));
+	cout << "The 'mid' value is:   " << (*Mid) << endl;
+	M_Print(iValues1);
+
+}
+
+void M_Permutations()
+{
+	string ABC{ "bca"s };   // 'std::string' is a container of 'char' elements
+
+	cout << "Sorting with 'less-than <' default operator...   " << endl;
+	sort((begin(ABC)), (end(ABC)));   // Sorts the elements using the 'less-than <' default operator
+	do 
+	{
+		M_Print(ABC);
+
+	} while ((next_permutation((begin(ABC)), (end(ABC)))));   // The expression will return false when the last permutation is reached
+	cout << endl;
+
+	cout << "Sorting with 'greater-than >' custom operator...   " << endl;
+	sort((begin(ABC)), (end(ABC)),
+		// [](const char& cFirst, const char& cLast) { return (cFirst < cLast); }   // Sorts the elements using the 'less-than <   ' custom operator
+		   [](const char& cFirst, const char& cLast) { return (cFirst > cLast); }   // Sorts the elements using the 'greater-than <' custom operator
+		);
+	do
+	{
+		M_Print(ABC);
+
+	} while ((prev_permutation((begin(ABC)), (end(ABC)))));   // The expression will return false when the last permutation is reached
+	cout << endl;
 }
