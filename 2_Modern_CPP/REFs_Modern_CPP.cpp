@@ -1127,11 +1127,29 @@ C++17 also provides a number of special function in <cmath> library header  [ be
 
 	   >> Introduction
 
+A random number is a number that appears to be chosen by chance, and usually is assumed that:
+	- any number is equally likely to be chosen [ uniform distribution ]
+	- the next choice of number will not be affected by the current choice [ independent ]
+Random numbers are very useful in games, simulations, cryptography and authentication
 
+Software-derived random numbers are deterministic, so it cannot produce 'true-random-number'; however, there are 'pseudo-random' number generators (PRNG)
+To initialize a PRNG, an initial value [ called 'seed' ] should be provided to produce a sequence of numbers based on the 'seed' number, and each 'seed' will produce a different sequence
+[ this technique is also deterministic, since using the same 'seed' value will always produce the same sequence of numbers, useful for testing ]
 
+Hardware-derived random numbers [ by measuring physical processes that produces random results ] are non-deterministic, and it's possible to create a True Random Number Generator (TRNG)
+[ on modern hardware, random numbers can be collected from the data available to the system at runtime [ entropy ], like ProcessID, input activity, temperature, noises, system clock, etc ]
 
+	   >> Random numbers in Classical C++
 
+'rand()' is a C++ function inherited from C, and it's declared in <cstdlib> [ means 'C Standard Library' ]
+'rand()' is deterministic [ software-derived ], and will return the next 'int' number from a generated sequence of pseudo-random-numbers on each call [ between 0 and RAND_MAX inclusive ]
 
+To 'seed' the Pseudo-Random-Number-Generator (PRNG) used by 'rand()' the 'srand()' should be called, usually passing the 'time(0)' [ current system time ] as the argument
+*'time(0)' is a C-derived function, defined in <ctime>, and it value gets updated only at every second, and it also doesn't work to be a True Random Number Generator
+
+Even using 'srand((time(0)))' and 'rand()', the generated sequence of Pseudo-Random-Numbers has poor cryptographic security [ the sequence has some predictability ]
+
+	   >> Random numbers in Modern C++
 
 
 

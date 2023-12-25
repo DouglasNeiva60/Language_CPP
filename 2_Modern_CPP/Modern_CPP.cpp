@@ -131,7 +131,7 @@ int main()
 // ====================================================================================================
 // Section 02 - Loop                                                                                2 V
 
-		
+		// cout << (time(0)) << endl;
 
 // Section 02 - END                                                                                 2 A
 // ====================================================================================================
@@ -3517,5 +3517,15 @@ void M_NumericAlgorithms2()
 
 void M_RandomNumbers1()
 {
+	// Prints-out a pseudo-random integer [ deterministic ]
+	cout << rand() << endl;
+	cout << rand() << endl;
+	cout << rand() << endl << endl;
+
+	// 'Seeds' the PRNG with the current system time
+	srand(time(0));
+	cout << rand() << endl;
+	cout << rand() << endl;
+	cout << rand() << endl << endl;
 
 }
