@@ -16,6 +16,8 @@
 #include <cstdint>
 #include <algorithm>
 #include <numeric>
+#include <random>
+#include <thread>
 
 
 using namespace std;             // 3 - Global Namespaces [the main global namespace has no name]
@@ -106,8 +108,14 @@ void M_SortingAlgorithm();
 void M_Permutations();
 void M_MinMaxAlgorithms();
 void M_NumericAlgorithms2();
-void M_RandomNumbers1();
+void M_RandomNumbersSoftware();
+void M_RandomNumbersHardware();
+void M_RandomNumbersAlgorithm();
 
+void M_RandomWalk();   // Practical exercise
+
+// Containers
+void M_ContainersIntro();
 
 
 // Standard "main" function - C++
@@ -119,8 +127,7 @@ int main()
 // ====================================================================================================
 // Section 01 - Runs only once, before the loop                                                     1 V
 
-	M_RandomNumbers1();
-
+	M_RandomWalk();
 
 
 // Section 01 - END                                                                                 1 A
@@ -132,6 +139,7 @@ int main()
 // Section 02 - Loop                                                                                2 V
 
 		// cout << (time(0)) << endl;
+
 
 // Section 02 - END                                                                                 2 A
 // ====================================================================================================
@@ -266,14 +274,16 @@ void M_ArrayIterator()
 		str_Iterator++;
 	}
 
+	auto FowardIterator = (str_Iterator.base());   // Converts the 'reverse iterator' into a 'forward iterator'
+
 	// Iterators can be used on any standard containers, like strings, arrays, vectors, matrices and other library containers
 }
 
 void M_AutoKeyword()
 {
 	auto i{ 42 };   // Will be interpreted as an int literal
-	auto String_01 = "Hello";   // Will be interpreted as an array of const char[] literal
-	auto String_02 = "Welcome"s;   // Will be interpreted as an std::string object container, due to the "s" suffix
+	auto String_01 = "He,l lo";   // Will be interpreted as an array of const char[] literal
+	auto String_02 = "We lco!me"s;   // Will be interpreted as an std::string object container, due to the "s" suffix
 
 	auto first_element = String_02.begin();
 	cout << endl << *first_element << endl;
@@ -3515,17 +3525,152 @@ void M_NumericAlgorithms2()
 	cout << "Maximum error:   " << MaxError << endl;
 }
 
-void M_RandomNumbers1()
+void M_RandomNumbersSoftware()
 {
+	// Classical C++ random numbers [ software-derived ]
+	
 	// Prints-out a pseudo-random integer [ deterministic ]
-	cout << rand() << endl;
-	cout << rand() << endl;
-	cout << rand() << endl << endl;
+	cout << "5 random numbers using 'rand()':" << endl;
+	cout << rand() << "\n" << rand() << "\n" << rand() << "\n" << rand() << "\n" << rand() << "\n" << endl;
 
-	// 'Seeds' the PRNG with the current system time
+	// 'Seeds' the PRNG with the current system time [ non-deterministic, but changes only the last few digits each 1 second ]
+	cout << "5 random numbers using 'srand(0)' and 'rand()':" << endl;
 	srand(time(0));
-	cout << rand() << endl;
-	cout << rand() << endl;
-	cout << rand() << endl << endl;
+	cout << rand() << "\n" << rand() << "\n" << rand() << "\n" << rand() << "\n" << rand() << "\n" << endl;
+
+
+	// Modern C++ random numbers [ software-derived ]
+
+	// default_random_engine [ deterministic ]
+	cout << "5 random numbers using 'default_random_engine':" << endl;
+	default_random_engine RandomEngine1;   // Create a random-engine-object1 that generates the sequence of pseudo-random numbers [ deterministic ]	
+	for (int i = 0; i < 5; i++)
+	{
+		cout << RandomEngine1() << "\n";   // Uses the 'function-call operator()' of the Default_Random_Engine object1 [ functor ] to get the next random number [ deterministic ]
+	}
+	cout << endl;
+
+	// mt19937 [ deterministic ]
+	cout << "5 random numbers using 'mt19937':" << endl;
+	mt19937 RandomEngine2;   // Create a random-engine-object2 that generates the sequence of pseudo-random numbers [ deterministic ]	
+	for (int i = 0; i < 5; i++)
+	{
+		cout << RandomEngine2() << "\n";   // Uses the 'function-call operator()' of the mt19937 object2 [ functor ] to get the next random number [ deterministic ]
+	}
+	cout << endl;
+
+	// mt19937 [ deterministic ] with distribution [ deterministic ]
+	cout << "5 random numbers using 'mt19937' with 'uniform_int_distribution':" << endl;
+	uniform_int_distribution<int> Distribution1(0, 100);   // Creates an 'uniform_int_distribution' object which receives the pseudo-random-number as input, and re-scales into the given range
+	for (int i = 0; i < 5; i++)
+	{
+		cout << Distribution1(RandomEngine2) << "\n";   // Uses the 'function-call operator()' of the Distribution1 object, that receives the mt19937 pseudo-random-number [ deterministic ]
+	}
+	cout << endl;
+}
+
+void M_RandomNumbersHardware()
+{
+	// Modern C++ random numbers [ hardware-derived ]
+
+	// random_device [ non-deterministic, True Random Number ], but is slow
+	cout << "5 random numbers using 'random_device':" << endl;
+	random_device RandomDevice1;   // It's supposed to be a random device! [ not compatible with GNU C++ ]
+	for (int i = 0; i < 5; i++)
+	{
+		cout << RandomDevice1() << "\n";   // Uses the 'function-call operator()' of the RandomDevice1 object  [ non-deterministic ]
+	}
+	cout << endl;
+
+	// mt19937 [ deterministic ] with random_device as a seed [ non-deterministic ] = True Random Number Generator
+	cout << "5 random numbers using 'mt19937' seeded with 'random_device':" << endl;
+	mt19937 RandomEngine3(RandomDevice1());   // Create a random-engine-object3 that generates the sequence of pseudo-random numbers [ deterministic ], seeding-it with 'random_device' [ non-deterministic ]
+
+	for (int i = 0; i < 5; i++)
+	{
+		cout << RandomEngine3() << "\n";   // Uses the 'function-call operator()' of the mt19937 object3 [ functor ]
+	}
+	cout << endl;
+
+}
+
+void M_RandomNumbersAlgorithm()
+{
+	// Modern C++ True Random Number Generator (TRNG)
+	random_device RandomDevice;                    // Creates a new 'random_device' functor object 'RandomDevice' [ hardware-derived, non-deterministic ]
+	mt19937 RandomEngine(RandomDevice());          // Creates a new 'mt19937' functor object 'RandomEngine', and seeds the 'RandomEngine' with the 'RandomDevice' functor's output
+	uniform_int_distribution<int> Distribution(0, 9);   // Creates a new 'uniform_int_distribution' functor object 'Distribution' [ that re-scales the final output within the specified range ]
+
+	vector<int> iValues1;
+
+	for (int i = 0; i < 9; ++i)
+	{
+		auto vAdd = (back_inserter(iValues1));
+		*vAdd = (Distribution(RandomEngine));
+	}
+	M_Print(iValues1);   // Vector filled-up with 9 random elements
+
+	vector<int> iValues2{ 1,2,3,4,5,6,7,8,9 };   // Vector with all its elements in order
+	M_Print(iValues2);
+
+	shuffle((begin(iValues2)), (end(iValues2)), RandomEngine);   // Rearranges the vector into a random order of elements
+	M_Print(iValues2);
+
+	bernoulli_distribution DistBernoulli;
+
+	cout << "The 'bernoulli_distribution' functor returns:   ";
+	if (DistBernoulli(RandomEngine))   // An 'one-off' decision [ random boolean ], equivalent to 'tossing a coin'
+	{
+		cout << "TRUE." << endl;
+	}
+	else
+	{
+		cout << "FALSE." << endl;
+	}
+}
+
+void M_RandomWalk()   // Practical exercise
+{
+	// A 'random walk' occurs when a moving physical object randomly changes it direction [ also known as 'Brownian Motion' ]
+	// 'random walk' describes many natural processes [ flight path of insects, movement of gas molecules, etc ], usually used in games for unpredictable movement
+	// On Computer Graphics, the screen is a 2D space with X-pixels width and Y-pixels height, and the convention is left-to-right, top-to-bottom [ the pixel X,Y(0,0) is on the upper-left corner ]
+
+	// To 'move' the object, its new position should be calculated, generating a random displacement, positive or negative [ dX,dY ], and updating the object's position [ (X+=dX, Y+=dY) ]
+
+	mt19937 RandomEngine;                        // Create a random-engine object that generates the sequence of pseudo-random numbers [ deterministic ]
+	bernoulli_distribution DistBernoulli(0.5);   // By default, the probability bias is 0.5 [ 50% of chance to return TRUE, 50% of chance to return FALSE ]
+
+	int X{ 1 }, Y{ 1 };     // Creates 2 current-location  'int' variables [ horizontal X  and vertical Y ] - 2D space
+	int dX{ 1 }, dY{ 1 };   // Creates 2 unit-displacement 'int' variables [ horizontal X  and vertical Y ] - 2D space
+
+	const int TerminalWidth{ 40 };          // Sets the length of a blank line - 1D space
+	string BlankLine(TerminalWidth, ' ');   // Sets a 'blank line' string with space-characters - 1D space
+
+	// Sets the object's starting point - 2D space
+	X = (TerminalWidth / 2);
+	Y = (TerminalWidth / 2);
+
+	for (;;)   // Infinite for-loop
+	{
+		dX = ((DistBernoulli(RandomEngine)) ? (+dX) : (-dX));   // If false, reverse horizontal motion
+		dY = ((DistBernoulli(RandomEngine)) ? (+dY) : (-dY));   // If false, reverse vertical   motion
+
+		X += (((X + dX) == TerminalWidth) ? (-dX) : (((X + dX) == 0) ? (-dX) : (+dX)));   // Checks if the object will reach the the boundaries, and updates the horizontal position
+		Y += (((Y + dY) == TerminalWidth) ? (-dY) : (((Y + dY) == 0) ? (-dY) : (+dY)));   // Checks if the object will reach the the boundaries, and updates the vertical   position
+
+		// Clears the line [ previous location ]
+		cout << "\r" << 'Z' << BlankLine << 'Z';   // The '\r' is the 'character-return character', moving to the start of the line and overwriting its content with the new data after it
+
+		// Writes the line [ current location ]
+		string CurrentLocation(X, ' ');   // Creates a string with 'X' spaces [ displacement width ]
+		cout << "\r" << 'Z' << CurrentLocation << 'A' << flush;
+
+		// Delay-timer
+		this_thread::sleep_for(50ms);
+	}
+}
+
+void M_ContainersIntro()
+{
 
 }

@@ -1123,6 +1123,20 @@ C++17 also provides a number of special function in <cmath> library header  [ be
 						*For parallel processing [ break a large calculation into smaller parts which can be performed independently and then combined ], use C++17 'std::transform_reduce()' instead,
 						*since 'std::accumulate()' is not suitable for parallel processing and 'std::reduce()' is compatible with parallel processing [ concurrency and multithreading ]
 
+
+	   >> Random Numbers:  The 'std::shuffle()' Algorithm
+
+'std::shuffle()'  rearranges an iterator range [ 2 arguments ] into a random order of elements, and it takes a random number engine as its third argument
+'std::shuffle()'  calls 'uniform_int_distribution' internally, and gives perfect shuffling [ all permutations are equally likely ]
+
+*'std::random_shuffle()'  uses 'rand()' instead of a custom Random Number Engine, and is now deprecated [  due to its low-security ]
+
+	   >> Random Numbers:  The 'std::bernoulli_distribution' Algorithm
+
+'std::bernoulli_distribution()'  is implemented as a functor object, and re-scales a sequence of numbers into boolean values, useful for making one-off decisions with random outcomes
+                                 it usually takes a random engine as argument [ usually mt19937 ]
+
+
    >>> Random Numbers
 
 	   >> Introduction
@@ -1150,6 +1164,49 @@ To 'seed' the Pseudo-Random-Number-Generator (PRNG) used by 'rand()' the 'srand(
 Even using 'srand((time(0)))' and 'rand()', the generated sequence of Pseudo-Random-Numbers has poor cryptographic security [ the sequence has some predictability ]
 
 	   >> Random numbers in Modern C++
+
+C++11 introduced a number of classes for working with random numbers, defined in the <random> library header
+	- <random> uses a random number engine to generate the numbers
+	- <random> uses a distribution type to rescale the range [ d(m,n) ]
+	- <random> uses a random device to seed the engine [ optional ]
+*The random device seeds the Random Number Engine, that generates a random number, which is rescaled using a distribution type, and creates a random number between 'm' and 'n'
+
+A Random Number Engine [ Class ] is implemented as a functor
+	- the constructor generates the sequence of pseudo-random numbers [ deterministic, software-derived ]
+	- when the 'function-call operator()' gets called, the next number [ from the generated sequence ] is returned [ similar to 'rand()' ]
+
+The 2 main Random Number Engine classes are:
+- default_random_engine   implementation-defined, similar to 'rand()' [ period of ((2^16)-1) ] , crypto-insecure [ easy to guess the next sequence ]
+- mt19937                 'Mersenne Twister' algorithm [ period of ((2^19937)-1) ], slow to initialize but fast to generate and crypto-secure [ hard to guess the next sequence, usually the best choice ]
+
+A Distribution [ Class ] is also implemented as a functor
+	- its constructor takes the range as arguments [ 'min' and 'max' integer values ]
+	- its overloaded 'function-call operator ()' takes a function object as argument [ the Random Number Engine functor object ]; and the function object returns a number each time it's called
+	- the distribution functor will then re-scale this number [ returned from the function object ] to fit in the range, and returns the Random Number
+*A distribution is general-purpose, can be used with any numerical data sequence, not just random numbers [ very useful in statistical applications ]
+
+A distribution type fits its input into a statistical distribution, and the C++ Standard Template Library [ originally designed by Alexander Stepanov ] provides a number of distributions:
+Bernoulli, Normal, Poisson, etc
+
+C++ software usually wants random numbers to be uniformly distributed [ all values on the range are equally probable ], and there are 2 options:
+	- 'int'   Random Number using   uniform_int_distribution<T>(m,n)
+	- 'float' Random Number using   uniform_real_distribution<T>(m,n)
+
+		  > Hardware-derived random numbers
+
+The 'random_device' Class [ also implemented as a functor ] produces a hardware-generated random number from system entropy data [ available in real-time ], however:
+	- the system does not provide entropy data
+	- the compiler is GNU C++, which doesn't support entropy data [ even if the system provides it ]
+	- if all the entropy data has been used up, it will stop and wait until more data becomes available
+	- random_device is much slower than mt19937, but it's crypto-secure if fully implemented [ not suitable for generating numbers in large quantities, due to its performance limitations ]
+
+To create a True Random Number Generator (TRNG), the 'random_device' is used as a seed for the 'mt19937' Random Engine [ 'srand()', 'rand()' and 'default_random_engine' are also compatible ]
+All the objects involved on True Random Number Generation [ the 'random_device', the 'mt19937' Random Engine, and the 'uniform_int_distribution' ] must be static objects [ slow to initialize ]
+Usually, is only needed 1 object of each type per C++ software [ since they are slow to initialize and to copy, the unique static object will generate random numbers for the entire C++ application ]
+*The 'random_device' documentation should always be consulted, to make sure that is a hardware-generate random number, and avoid unexpected software behaviors
+
+
+   >>> Containers
 
 
 
