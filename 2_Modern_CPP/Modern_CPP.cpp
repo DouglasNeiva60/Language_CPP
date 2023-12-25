@@ -104,6 +104,10 @@ void M_ReorderingAlgorithm();
 void M_PartitioningAlgorithm();
 void M_SortingAlgorithm();
 void M_Permutations();
+void M_MinMaxAlgorithms();
+void M_NumericAlgorithms2();
+void M_RandomNumbers1();
+
 
 
 // Standard "main" function - C++
@@ -115,7 +119,7 @@ int main()
 // ====================================================================================================
 // Section 01 - Runs only once, before the loop                                                     1 V
 
-	M_Permutations();
+	M_RandomNumbers1();
 
 
 
@@ -3420,4 +3424,98 @@ void M_Permutations()
 
 	} while ((prev_permutation((begin(ABC)), (end(ABC)))));   // The expression will return false when the last permutation is reached
 	cout << endl;
+
+	string BCA{ "abc"s };   // 'std::string' is a container of 'char' elements
+
+	if (is_permutation((cbegin(ABC)), (cend(ABC)), (cbegin(BCA)), (cend(BCA))))		
+	{
+		cout << "The second range is a permutation of the first range" << endl;
+	}
+	else
+	{
+		cout << "The second range is NOT a permutation of the first range" << endl;
+	}
+
+}
+
+void M_MinMaxAlgorithms()
+{
+	string Name1{ "Douglas"s }, Name2{ "Stephenson"s }, Name3{ "Neiva"s }, Name4{ "Ulibarri"s };
+
+	// min()  and  max()  with 2 arguments
+	string MinArgs1 = min(Name1, Name3);
+	string MaxArgs1 = max(Name2, Name4);
+
+	cout << "Min:   " << MinArgs1 << endl;
+	cout << "Max:   " << MaxArgs1 << endl;
+
+	// min()  and  max()  with 2 arguments and a function predicate [ evaluation by the size of the string ]
+	string MinArgs2 = min(Name1, Name3, [](const string& sInput1, const string& sInput2) { return ((sInput1.size()) < (sInput2.size())); });
+	string MaxArgs2 = max(Name2, Name4, [](const string& sInput1, const string& sInput2) { return ((sInput1.size()) < (sInput2.size())); });
+
+	cout << "Min:   " << MinArgs2 << endl;
+	cout << "Max:   " << MaxArgs2 << endl;
+
+	// min()  and  max()  with an initializer list, and the 'std::minmax()'
+	string MinArgs3 = min({ "Aa"s, "Bb"s, "Cc"s, "Dd"s, "Ee"s, });
+	string MaxArgs3 = max({ "Aa"s, "Bb"s, "Cc"s, "Dd"s, "Ee"s, });
+	auto MinMaxArgs3 = minmax({ "Aa"s, "Bb"s, "Cc"s, "Dd"s, "Ee"s, });   // 'std::minmax' returns a pair of variables [ based on the argument's variable-type ]
+
+	cout << "Min:   " << MinArgs3 << endl;
+	cout << "Max:   " << MaxArgs3 << endl;
+	cout << "MinMax.first:   " << MinMaxArgs3.first << ".\nMinMax.second:   " << MinMaxArgs3.second << endl;
+
+	// 'std::min_element()' and 'std::max_element()'  takes an iterator range and return an iterator
+	vector<string> sNames{ "Douglas"s, "Stephenson"s, "Neiva"s, "Ulibarri"s };
+
+	auto min_el = min_element((cbegin(sNames)), (cend(sNames)));
+	auto max_el = max_element((cbegin(sNames)), (cend(sNames)),
+		[](const string& sFirst, const string& sLast) { return ((sFirst.size()) < (sLast.size())); }   // Custom evaluation by the size of the string
+		);
+	auto minmax_el = minmax_element((cbegin(sNames)), (cend(sNames)));   // 'minmax_element' returns a 'std::pair' of iterators
+
+	cout << "Min:   " << (*min_el) << endl;
+	cout << "Max:   " << (*max_el) << endl;
+	cout << "MinMax.first:   " << (*minmax_el.first) << ".\nMinMax.second:   " << (*minmax_el.second) << endl;
+}
+
+void M_NumericAlgorithms2()
+{
+	vector<int> Source{1, 2, 3, 4, 5, 6, 7, 8, 9};
+	vector<int> Dest1;   // To be used with 'std::partial_sum()'  [ numerical integration, using '+' ]
+	vector<int> Dest2;   // To be used with 'std::adjacent_difference()'  [ numerical differentiation, using '-' ]
+	vector<int> Dest3;   // To be used with 'std::
+
+	partial_sum((cbegin(Source)), (cend(Source)), (back_inserter(Dest1)));   // Performs a numerical integration on the 'Source' container, and writes the running result on the 'Dest' container
+	M_Print(Source);
+	M_Print(Dest1);
+
+	adjacent_difference((cbegin(Dest1)), (cend(Dest1)), (back_inserter(Dest2)));   // Since 'std::adjacent_difference()' is the inverse of the 'std::partial_sum()', the values are reset to original
+	M_Print(Dest2);
+	cout << endl;
+
+	vector<int> Values1{ 2,4,6 };
+	vector<int> Values2{ 3,5,7 };
+	M_Print(Values1);
+	M_Print(Values2);
+
+	int Result = (inner_product((cbegin(Values1)), (cend(Values1)), (cbegin(Values2)), 0));   // Calculates the scalar product of 2 vectors
+
+	cout << "Scalar product result:   " << Result << endl;
+
+	// Exempli Gratia:  find the biggest difference [ max error ] between corresponding elements in 2 vectors
+	vector<float> vExpected{ 1.618034f, 2.718281f, 3.141592f };
+	vector<float> vMeasured{ 1.628234f, 2.728481f, 3.181594f };   // The maximum error [ biggest discrepancy ] is '3.141592' - '3.181594' = 0.040002
+
+	float MaxError = (inner_product( (cbegin(vExpected)), (cend(vExpected)), (cbegin(vMeasured)), 0.0f,   // Initial max error
+		[](const float& fFirst, const float& fLast) { return (max(fFirst, fLast)); },   // 'Reduce'   operation [ replaces the '+' operator ]
+		[](const float& fFirst, const float& fLast) { return (fabs(fFirst-fLast)); }    // 'Tranform' operation [ replaces the '*' operator ]
+	));   // 'fabs' stands for 'find the absolute value'
+
+	cout << "Maximum error:   " << MaxError << endl;
+}
+
+void M_RandomNumbers1()
+{
+
 }

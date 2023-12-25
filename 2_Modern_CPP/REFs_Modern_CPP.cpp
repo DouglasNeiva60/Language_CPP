@@ -1077,8 +1077,7 @@ Sorting algorithms will put the container's elements [ from an iterator range ] 
 'std::partial_sort_sopy()'  takes the first iterator range [ the container to be sorted ], and writes the result into a second iterator range [ the destination ]
 
 'std::nth_element()'  takes an iterator to the element in the range, and rearranges the elements in a way that the element pointed-to would be at the given position if the range was sorted, and then
-                      performs a partition on the range, with the given element as the 'partition-point' [ will order all the elements like 'std::sort', but with a custom 'partition-point' ]
-                      
+                      performs a partition on the range, with the given element as the 'partition-point' [ will order all the elements like 'std::sort', but with a custom 'partition-point' ]                      
 
 	   >> Permutations
 
@@ -1092,10 +1091,41 @@ Sorting algorithms will put the container's elements [ from an iterator range ] 
 'std::prev_permutation()'  reorders the elements to the previous permutation [ similar to 'std::next_permutation()' ], returning 'false' when the first possible permutation is reached
                            *to get all the permutations in reverse, the elements must be sorted in descending order [ by using a custom function predicate implementing the 'greater-than >' operator ]
 
+'std::is_permutation()'  takes 2 iterator ranges, and returns 'true' if both ranges contain the same elements, even if they are in a different order [ range 2 is a permutation of range 1 ]
+                         it uses the 'equal ==' operator, but a custom predicate function can be provided as the fifth argument
+
+	   >> Min / Max algorithms
+
+The C++ Standard Template Library provides a number of 'min' and 'max' algorithms that can take: 2 arguments, initializer list (C++11), or iterator range; returning the largest / smallest element
+By default, the 'min'/'max' algorithms uses the 'less-than <' operator, but a custom predicate function can be provided as the third argument
+
+	   >> Numeric Algorithms Continued
+
+There are some other algorithms in <numeric> which are useful in numerical computing, like:  std::partial_sum(),  std::adjacent_difference(),  std::inner_product
+C++17 also provides a number of special function in <cmath> library header  [ bessel functions, legendre polynomials, etc ]
+
+'std::'
+
+'std::partial_sum()'  writes the 'running total' of the source elements [ 1, 1+2, 1+2+3, 1+2+3+4 ... ] into another container [ will have 1, 3, 6, 10 ... ], performing numerical integration
+                      by default, the 'addition +' operator is used, but a custom function predicate can be provided
+
+'std::adjacent_difference()'  writes the difference between successive elements into another container, performing numerical differentiation [ the inverse of 'std::partial_sum()' ]
+					  by default, the 'subtraction -' operator is used, but a custom function predicate can be provided [ the target container will have  1, 2-1, 3-2, 4-3 ... ]
 
 
+'std::inner_product()'  takes 1 iterator range and 1 starting iterator, multiplies the corresponding elements of 2 containers together and calculates their sum, and returns the total value
+                        given the source containers [ A1, A2, A3 ] and [ B1, B2, B3 ], 'std::inner_product' will write the 'scalar product' [ A1*B1 + A2*B2 + A3*B3 ] on the destination
+						*the 'std::inner_product()' requires a final 'starting value' argument the same way as 'std::accumulate()' needs
+						*'std::inner_product()'  is equivalent to 'std::transform()' [ multiplies element from each containers ] followed by 'std::accumulate()' [ adds all elements ]
+                        'std::inner_product()'  can be overloaded by providing different binary functions instead of the default '+' and '*' operators
+						The 'addition       +' operator can be replaced by a 'accumulate()' operation
+                        The 'multiplication *' operator can be replaced by a 'transform()'  operation
+						*For parallel processing [ break a large calculation into smaller parts which can be performed independently and then combined ], use C++17 'std::transform_reduce()' instead,
+						*since 'std::accumulate()' is not suitable for parallel processing and 'std::reduce()' is compatible with parallel processing [ concurrency and multithreading ]
 
+   >>> Random Numbers
 
+	   >> Introduction
 
 
 
